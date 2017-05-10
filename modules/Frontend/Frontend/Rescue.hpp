@@ -10,6 +10,8 @@ public:
 	Rescue();
 	~Rescue();
 
+	void OnAddAction();
+
 private:
 	std::unique_ptr<Ui::MainWindow> mUi;
 };

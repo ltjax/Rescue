@@ -1,7 +1,9 @@
 set(TARGET_NAME Frontend)
 
 qt5_wrap_ui(UI_HEADERS
-  Rescue.ui)
+  Rescue.ui
+  Action.ui
+  Axis.ui)
 
 add_executable(${TARGET_NAME}
   Main.hpp
