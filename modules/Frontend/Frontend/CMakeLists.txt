@@ -10,6 +10,8 @@ add_executable(${TARGET_NAME}
   Main.cpp
   Rescue.hpp
   Rescue.cpp
+  ActionWidget.hpp
+  ActionWidget.cpp
   ${UI_HEADERS})
   
 target_link_libraries(${TARGET_NAME}
