@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <memory>
+#include <QBoxLayout>
 
 namespace Ui { class Action; }
 
@@ -13,4 +14,5 @@ public:
 	void OnAddAxis();
 private:
 	std::unique_ptr<Ui::Action> mUi;
+	QBoxLayout* mAreaLayout=nullptr;
 };

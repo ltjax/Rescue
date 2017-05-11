@@ -12,7 +12,9 @@ ActionWidget::ActionWidget(QWidget* parent)
 	{
 		OnAddAxis();
 	});
-	mUi->axisArea->setLayout(new QHBoxLayout());
+	mAreaLayout = new QHBoxLayout();
+	mAreaLayout->addStretch();
+	mUi->axisArea->setLayout(mAreaLayout);
 }
 
 ActionWidget::~ActionWidget() = default;
@@ -20,6 +22,5 @@ ActionWidget::~ActionWidget() = default;
 void ActionWidget::OnAddAxis()
 {
 	auto widget = new AxisWidget(mUi->axisArea);
-	mUi->axisArea->layout()->addWidget(widget);
-	widget->show();
+	mAreaLayout->insertWidget(0, widget);
 }

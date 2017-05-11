@@ -1,6 +1,7 @@
 #pragma once
 #include <QMainWindow>
 #include <memory>
+#include <QBoxLayout>
 
 namespace Ui { class MainWindow; }
 
@@ -14,4 +15,5 @@ public:
 
 private:
 	std::unique_ptr<Ui::MainWindow> mUi;
+	QBoxLayout* mAreaLayout=nullptr;
 };
