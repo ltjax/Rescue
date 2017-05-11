@@ -12,6 +12,8 @@ add_executable(${TARGET_NAME}
   Rescue.cpp
   ActionWidget.hpp
   ActionWidget.cpp
+  AxisWidget.hpp
+  AxisWidget.cpp
   ${UI_HEADERS})
   
 target_link_libraries(${TARGET_NAME}

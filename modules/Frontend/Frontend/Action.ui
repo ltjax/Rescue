@@ -17,7 +17,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="addAxis">
        <property name="text">
         <string>Add Axis</string>
        </property>
@@ -29,7 +29,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="actionContentFrame">
+    <widget class="QFrame" name="axisArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
@@ -45,6 +45,11 @@
     </widget>
    </item>
   </layout>
+  <action name="actionAdd_Axis">
+   <property name="text">
+    <string>Add Axis</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

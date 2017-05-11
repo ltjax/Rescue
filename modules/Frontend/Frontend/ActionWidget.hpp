@@ -9,6 +9,8 @@ class ActionWidget : public QWidget
 public:
 	ActionWidget(QWidget* parent);
 	~ActionWidget();
+
+	void OnAddAxis();
 private:
 	std::unique_ptr<Ui::Action> mUi;
 };

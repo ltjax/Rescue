@@ -21,6 +21,6 @@ Rescue::~Rescue() = default;
 void Rescue::OnAddAction()
 {
 	ActionWidget* widget = new ActionWidget(mUi->actionArea);
-	widget->show();
 	mUi->actionArea->layout()->addWidget(widget);
+	widget->show();
 }
