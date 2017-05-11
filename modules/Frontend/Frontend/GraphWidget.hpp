@@ -8,10 +8,11 @@ class GraphWidget : public QWidget
 public:
 	GraphWidget(QWidget* parent);
 
-	void setAxis(std::shared_ptr<Axis const> axis);
+	void setCurve(Curve curve);
+	Curve const& getCurve() const;
 
 
 	void paintEvent(QPaintEvent* e) override;
 private:
-	std::shared_ptr<Axis const> mAxis;
+	Curve mCurve;
 };

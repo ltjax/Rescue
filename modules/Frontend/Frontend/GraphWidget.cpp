@@ -6,24 +6,26 @@ GraphWidget::GraphWidget(QWidget* parent)
 {
 }
 
-void GraphWidget::setAxis(std::shared_ptr<Axis const> axis)
+void GraphWidget::setCurve(Curve curve)
 {
-	mAxis = std::move(axis);
+	mCurve = std::move(curve);
 	update();
+}
+
+Curve const & GraphWidget::getCurve() const
+{
+	return mCurve;
 }
 
 void GraphWidget::paintEvent(QPaintEvent* e)
 {
 	QPainter painter(this);
 	painter.fillRect(e->rect(), Qt::white);
-
-	if (mAxis == nullptr)
-		return;
-
+	
 	auto rect = this->rect();
 	auto valueFor = [&](int pixel)
 	{
-		float ry = mAxis->EvaluateFor((pixel + 0.5f) / rect.width());
+		float ry = mCurve.evaluateFor((pixel + 0.5f) / rect.width());
 		return (1.f - ry) * rect.height();
 	};
 
