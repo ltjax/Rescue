@@ -14,6 +14,8 @@ add_executable(${TARGET_NAME}
   ActionWidget.cpp
   AxisWidget.hpp
   AxisWidget.cpp
+  GraphWidget.hpp
+  GraphWidget.cpp
   ${UI_HEADERS})
   
 target_link_libraries(${TARGET_NAME}
