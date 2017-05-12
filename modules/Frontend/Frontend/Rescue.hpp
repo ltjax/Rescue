@@ -11,7 +11,12 @@ public:
 	Rescue();
 	~Rescue();
 
-	void OnAddAction();
+	void onAddAction();
+
+	void onFileSave();
+	void onFileSaveAs();
+	void onFileOpen();
+	void onFileNew();
 
 private:
 	std::unique_ptr<Ui::MainWindow> mUi;

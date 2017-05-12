@@ -1,6 +1,7 @@
 #include "Rescue.hpp"
 #include "ui_Rescue.h"
 #include "ActionWidget.hpp"
+#include <QFileDialog>
 
 Rescue::Rescue()
 : mUi(std::make_unique<Ui::MainWindow>())
@@ -9,20 +10,46 @@ Rescue::Rescue()
 
 	connect(mUi->actionAdd_Action, &QAction::triggered, [this]()
 	{
-		OnAddAction();
+		onAddAction();
 	});
 
 	mAreaLayout = new QVBoxLayout();
 	mAreaLayout->addStretch();
 	mUi->actionArea->setLayout(mAreaLayout);
 
+	connect(mUi->actionOpen, &QAction::triggered, [this] {onFileOpen(); });
+	connect(mUi->actionNew, &QAction::triggered, [this] {onFileNew(); });
+	connect(mUi->actionSave, &QAction::triggered, [this] {onFileSave(); });
+	connect(mUi->actionSaveAs, &QAction::triggered, [this] {onFileSaveAs(); });
 	//mUi->actionArea->setStyleSheet("background-color:white;");
 }
 
 Rescue::~Rescue() = default;
 
-void Rescue::OnAddAction()
+void Rescue::onAddAction()
 {
 	ActionWidget* widget = new ActionWidget(mUi->actionArea);
 	mAreaLayout->insertWidget(0, widget);
+}
+
+void Rescue::onFileSave()
+{
+}
+
+void Rescue::onFileSaveAs()
+{
+	auto filename = QFileDialog::getSaveFileName(this, "Save");
+	if (filename.isEmpty())
+		return;
+}
+
+void Rescue::onFileOpen()
+{
+	auto filename = QFileDialog::getOpenFileName(this, "Open");
+	if (filename.isEmpty())
+		return;
+}
+
+void Rescue::onFileNew()
+{
 }
