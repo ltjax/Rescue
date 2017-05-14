@@ -3,6 +3,7 @@
 #include "ActionWidget.hpp"
 #include <QFileDialog>
 #include "Domain/LoadSave.hpp"
+#include <QMessageBox>
 
 Rescue::Rescue()
 : mUi(std::make_unique<Ui::MainWindow>())
@@ -33,8 +34,14 @@ void Rescue::onAddAction()
 {
 	auto action = std::make_shared<Action>();
 	mGroup->addAction(action);
+	addActionWidget(action);
+}
+
+ActionWidget* Rescue::addActionWidget(std::shared_ptr<Action> const& action)
+{
 	ActionWidget* widget = new ActionWidget(action, mUi->actionArea);
 	mAreaLayout->insertWidget(0, widget);
+	return widget;
 }
 
 void Rescue::onFileSave()
@@ -49,8 +56,11 @@ void Rescue::onFileSaveAs()
 
 	if (mGroup == nullptr)
 		return;
-
-	LoadSave::saveTo(filename.toStdString(), mGroup);
+	
+	catchAll([&]
+	{
+		LoadSave::saveTo(filename.toStdString(), mGroup);
+	});
 }
 
 void Rescue::onFileOpen()
@@ -59,9 +69,37 @@ void Rescue::onFileOpen()
 	if (filename.isEmpty())
 		return;
 
+	catchAll([&]
+	{
+		mGroup = LoadSave::loadFrom(filename.toStdString());
+	});
 
+	for (auto action : mGroup->getActionList())
+	{
+		auto actionWidget = addActionWidget(action);
+		for (auto axis : action->getAxisList())
+		{
+			actionWidget->addAxisWidget(axis);
+		}
+	}
 }
 
 void Rescue::onFileNew()
 {
+}
+
+void Rescue::catchAll(std::function<void()> rhs)
+{
+	try
+	{
+		rhs();
+	}
+	catch (std::exception const& e)
+	{
+		QMessageBox::critical(this, "Error", e.what());
+	}
+	catch (...)
+	{
+		QMessageBox::critical(this, "Error", "Unknown error");
+	}
 }
