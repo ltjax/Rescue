@@ -63,7 +63,7 @@ std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> docume
 		for (auto const& axisNode : actionNode.children("Axis"))
 		{
 			auto axis = std::make_shared<Axis>(
-				axisNode.attribute("name").as_string(),
+				axisNode.attribute("input").as_string(),
 				loadCurveFrom(axisNode));
 			action->addAxis(axis);
 		}

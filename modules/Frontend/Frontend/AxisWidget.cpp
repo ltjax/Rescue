@@ -19,6 +19,7 @@ AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget * parent)
 {
 	mUi->setupUi(this);
 	mUi->graphWidget->setCurve(mAxis->getCurve());
+	mUi->input->setText(mAxis->getInput().c_str());
 
 	using namespace std::placeholders;
 
@@ -39,6 +40,11 @@ AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget * parent)
 			auto type = typeToString[current].first;
 			modifyCurve(std::bind(&Curve::withType, _1, type));
 		}			
+	});
+
+	connect(mUi->input, &QLineEdit::textEdited, [this](QString text)
+	{
+		mAxis->setInput(text.toStdString());
 	});
 }
 

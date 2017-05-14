@@ -57,7 +57,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QLineEdit" name="input"/>
         </item>
         <item>
          <widget class="QLabel" name="label">

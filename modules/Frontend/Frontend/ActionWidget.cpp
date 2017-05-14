@@ -9,6 +9,7 @@ ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
 {
 	mUi->setupUi(this);
 	mUi->addAxis->setDefaultAction(mUi->actionAdd_Axis);
+	mUi->name->setText(mAction->getName().c_str());
 	connect(mUi->actionAdd_Axis, &QAction::triggered, [this]()
 	{
 		onAddAxis();
@@ -16,6 +17,11 @@ ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
 	mAreaLayout = new QHBoxLayout();
 	mAreaLayout->addStretch();
 	mUi->axisArea->setLayout(mAreaLayout);
+
+	connect(mUi->name, &QLineEdit::textEdited, [this](QString text)
+	{
+		mAction->setName(text.toStdString());
+	});
 }
 
 ActionWidget::~ActionWidget() = default;

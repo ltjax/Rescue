@@ -9,9 +9,8 @@
 
 int Run(int argc, char** argv)
 {
-	//Q_INIT_RESOURCE(application);
-
 	QApplication app(argc, argv);
+	QCoreApplication::setOrganizationName("ltjax");
 	QCoreApplication::setApplicationName("Rescue");
 	QCoreApplication::setApplicationVersion(RESCUE_VERSION);
 	QCommandLineParser parser;

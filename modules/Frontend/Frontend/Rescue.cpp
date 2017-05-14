@@ -4,6 +4,13 @@
 #include <QFileDialog>
 #include "Domain/LoadSave.hpp"
 #include <QMessageBox>
+#include <QStandardPaths>
+
+namespace
+{
+
+auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
+}
 
 Rescue::Rescue()
 : mUi(std::make_unique<Ui::MainWindow>())
@@ -41,31 +48,45 @@ ActionWidget* Rescue::addActionWidget(std::shared_ptr<Action> const& action)
 {
 	ActionWidget* widget = new ActionWidget(action, mUi->actionArea);
 	mAreaLayout->insertWidget(0, widget);
+	mActionWidgetList.push_back(widget);
 	return widget;
+}
+
+void Rescue::clearActionWidgets()
+{
+	for (auto widget : mActionWidgetList)
+	{
+		delete widget;
+	}
+	mActionWidgetList.clear();
 }
 
 void Rescue::onFileSave()
 {
+	if (mCurrentFilename.isEmpty())
+	{
+		onFileSaveAs();
+		return;
+	}
+
+	saveTo(mCurrentFilename);
 }
 
 void Rescue::onFileSaveAs()
 {
-	auto filename = QFileDialog::getSaveFileName(this, "Save");
+	auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
 	if (filename.isEmpty())
 		return;
-
-	if (mGroup == nullptr)
-		return;
 	
-	catchAll([&]
-	{
-		LoadSave::saveTo(filename.toStdString(), mGroup);
-	});
+	saveTo(filename);
+	setCurrentFilename(filename);
 }
 
 void Rescue::onFileOpen()
 {
-	auto filename = QFileDialog::getOpenFileName(this, "Open");
+	auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
 	if (filename.isEmpty())
 		return;
 
@@ -73,6 +94,27 @@ void Rescue::onFileOpen()
 	{
 		mGroup = LoadSave::loadFrom(filename.toStdString());
 	});
+	setCurrentFilename(filename);
+	syncWidgets();
+}
+
+void Rescue::saveTo(QString filename)
+{
+	catchAll([&]
+	{
+		LoadSave::saveTo(filename.toStdString(), mGroup);
+	});
+}
+
+void Rescue::setCurrentFilename(QString filename)
+{
+	mCurrentFilename = filename;
+	this->setWindowTitle(QString("Rescue (%1)").arg(filename));
+}
+
+void Rescue::syncWidgets()
+{
+	clearActionWidgets();
 
 	for (auto action : mGroup->getActionList())
 	{
@@ -86,6 +128,8 @@ void Rescue::onFileOpen()
 
 void Rescue::onFileNew()
 {
+	mGroup = std::make_shared<Group>();
+	syncWidgets();
 }
 
 void Rescue::catchAll(std::function<void()> rhs)

@@ -17,6 +17,7 @@ public:
 	void onAddAction();
 
 	ActionWidget* addActionWidget(std::shared_ptr<Action> const& action);
+	void clearActionWidgets();
 
 	void onFileSave();
 	void onFileSaveAs();
@@ -24,9 +25,14 @@ public:
 	void onFileNew();
 
 private:
+	void saveTo(QString filename);
+	void setCurrentFilename(QString filename);
+	void syncWidgets();
 	void catchAll(std::function<void()> rhs);
 	std::unique_ptr<Ui::MainWindow> mUi;
 	QBoxLayout* mAreaLayout=nullptr;
+	std::vector<ActionWidget*> mActionWidgetList;
+	QString mCurrentFilename;
 
 	std::shared_ptr<Group> mGroup;
 };
