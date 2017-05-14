@@ -8,6 +8,8 @@ class Group
 public:
 	Group();
 
+	PtrList<Action> const& getActionList() const;
+	std::shared_ptr<Action> addAction();
 private:
-	std::vector<std::shared_ptr<Action>> mActionList;
+	PtrList<Action> mActionList;
 };

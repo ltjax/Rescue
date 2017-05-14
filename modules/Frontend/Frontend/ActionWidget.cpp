@@ -2,9 +2,10 @@
 #include "ui_Action.h"
 #include "AxisWidget.hpp"
 
-ActionWidget::ActionWidget(QWidget* parent)
+ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
 : QWidget(parent)
 , mUi(std::make_unique<Ui::Action>())
+, mAction(std::move(action))
 {
 	mUi->setupUi(this);
 	mUi->addAxis->setDefaultAction(mUi->actionAdd_Axis);
@@ -21,6 +22,7 @@ ActionWidget::~ActionWidget() = default;
 
 void ActionWidget::OnAddAxis()
 {
-	auto widget = new AxisWidget(mUi->axisArea);
+	auto axis = mAction->addAxis();
+	auto widget = new AxisWidget(axis, mUi->axisArea);
 	mAreaLayout->insertWidget(0, widget);
 }

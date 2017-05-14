@@ -18,6 +18,12 @@ public:
 	Curve withK(float k) const { return { mType, mM, k, mC, mB }; }
 	Curve withC(float c) const { return { mType, mM, mK, c, mB }; }
 	Curve withB(float b) const { return { mType, mM, mK, mC, b }; }
+
+	FunctionType type() const { return mType; }
+	float m() const { return mM; }
+	float k() const { return mK; }
+	float c() const { return mC; }
+	float b() const { return mB; }
 private:
 	FunctionType mType;
 	float mM;

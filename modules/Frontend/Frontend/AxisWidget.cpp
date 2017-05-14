@@ -13,28 +13,20 @@ std::vector<std::pair<Curve::FunctionType, QString>> const typeToString = {
 
 }
 
-AxisWidget::AxisWidget(QWidget * parent)
+AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget * parent)
 : mUi(std::make_unique<Ui::Axis>())
+, mAxis(std::move(axis))
 {
 	mUi->setupUi(this);
+	mUi->graphWidget->setCurve(mAxis->getCurve());
+
+	using namespace std::placeholders;
 
 	auto valueChanged = static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged);
-	connect(mUi->m, valueChanged, [this](double value)
-	{
-		mUi->graphWidget->setCurve(mUi->graphWidget->getCurve().withM(value));
-	});
-	connect(mUi->k, valueChanged, [this](double value)
-	{
-		mUi->graphWidget->setCurve(mUi->graphWidget->getCurve().withK(value));
-	});
-	connect(mUi->c, valueChanged, [this](double value)
-	{
-		mUi->graphWidget->setCurve(mUi->graphWidget->getCurve().withC(value));
-	});
-	connect(mUi->b, valueChanged, [this](double value)
-	{
-		mUi->graphWidget->setCurve(mUi->graphWidget->getCurve().withB(value));
-	});
+	connect(mUi->m, valueChanged, directTo(&Curve::withM));
+	connect(mUi->k, valueChanged, directTo(&Curve::withK));
+	connect(mUi->c, valueChanged, directTo(&Curve::withC));
+	connect(mUi->b, valueChanged, directTo(&Curve::withB));
 
 	for (int i = 0; i < typeToString.size(); ++i)
 		mUi->type->addItem(typeToString[i].second, QVariant(static_cast<int>(typeToString[i].first)));
@@ -43,9 +35,18 @@ AxisWidget::AxisWidget(QWidget * parent)
 	connect(mUi->type, currentIndexChanged, [this](int current)
 	{
 		if (current < typeToString.size())
-			mUi->graphWidget->setCurve(mUi->graphWidget->getCurve().withType(typeToString[current].first));
-			
+		{
+			auto type = typeToString[current].first;
+			modifyCurve(std::bind(&Curve::withType, _1, type));
+		}			
 	});
 }
 
 AxisWidget::~AxisWidget() = default;
+
+void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
+{
+	auto newCurve = modifier(mAxis->getCurve());
+	mUi->graphWidget->setCurve(newCurve);
+	mAxis->setCurve(newCurve);
+}

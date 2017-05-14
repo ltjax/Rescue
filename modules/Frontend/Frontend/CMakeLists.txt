@@ -16,8 +16,6 @@ add_executable(${TARGET_NAME}
   AxisWidget.cpp
   GraphWidget.hpp
   GraphWidget.cpp
-  LoadSave.hpp
-  LoadSave.cpp
   ${UI_HEADERS})
   
 target_link_libraries(${TARGET_NAME}
