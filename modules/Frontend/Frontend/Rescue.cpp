@@ -5,6 +5,7 @@
 #include "Domain/LoadSave.hpp"
 #include <QMessageBox>
 #include <QStandardPaths>
+#include <QSettings>
 
 namespace
 {
@@ -74,7 +75,7 @@ void Rescue::onFileSave()
 
 void Rescue::onFileSaveAs()
 {
-	auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	auto path = getFilePath();
 	auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
 	if (filename.isEmpty())
 		return;
@@ -85,7 +86,7 @@ void Rescue::onFileSaveAs()
 
 void Rescue::onFileOpen()
 {
-	auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	auto path = getFilePath();
 	auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
 	if (filename.isEmpty())
 		return;
@@ -108,8 +109,26 @@ void Rescue::saveTo(QString filename)
 
 void Rescue::setCurrentFilename(QString filename)
 {
+	QSettings settings;
+	settings.setValue("lastFile", filename);
 	mCurrentFilename = filename;
 	this->setWindowTitle(QString("Rescue (%1)").arg(filename));
+}
+
+QString Rescue::getFilePath() const
+{
+	QSettings settings;
+	auto result = settings.value("lastFile").toString();
+	if (!result.isEmpty())
+	{
+		result = QFileInfo(result).path();
+	}
+	else
+	{
+		result = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	}
+
+	return result;
 }
 
 void Rescue::syncWidgets()

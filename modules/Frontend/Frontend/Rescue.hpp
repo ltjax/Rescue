@@ -27,6 +27,7 @@ public:
 private:
 	void saveTo(QString filename);
 	void setCurrentFilename(QString filename);
+	QString getFilePath() const;
 	void syncWidgets();
 	void catchAll(std::function<void()> rhs);
 	std::unique_ptr<Ui::MainWindow> mUi;
