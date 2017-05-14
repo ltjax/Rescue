@@ -9,9 +9,7 @@ PtrList<Action> const & Group::getActionList() const
 	return mActionList;
 }
 
-std::shared_ptr<Action> Group::addAction()
+void Group::addAction(std::shared_ptr<Action> action)
 {
-	auto action = std::make_shared<Action>();
 	mActionList.push_back(action);
-	return action;
 }

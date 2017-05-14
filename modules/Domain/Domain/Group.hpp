@@ -9,7 +9,7 @@ public:
 	Group();
 
 	PtrList<Action> const& getActionList() const;
-	std::shared_ptr<Action> addAction();
+	void addAction(std::shared_ptr<Action> action);
 private:
 	PtrList<Action> mActionList;
 };

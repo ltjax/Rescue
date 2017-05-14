@@ -31,7 +31,8 @@ Rescue::~Rescue() = default;
 
 void Rescue::onAddAction()
 {
-	auto action = mGroup->addAction();
+	auto action = std::make_shared<Action>();
+	mGroup->addAction(action);
 	ActionWidget* widget = new ActionWidget(action, mUi->actionArea);
 	mAreaLayout->insertWidget(0, widget);
 }

@@ -22,7 +22,8 @@ ActionWidget::~ActionWidget() = default;
 
 void ActionWidget::OnAddAxis()
 {
-	auto axis = mAction->addAxis();
+	auto axis = std::make_shared<Axis>("", Curve());
+	mAction->addAxis(axis);
 	auto widget = new AxisWidget(axis, mUi->axisArea);
 	mAreaLayout->insertWidget(0, widget);
 }

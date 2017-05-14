@@ -20,7 +20,17 @@ char const* typeToString(Curve::FunctionType type)
 	throw std::runtime_error("Unsupported curve type.");
 }
 
+Curve::FunctionType typeFromString(std::string rhs)
+{
+	for (auto const& each : typeString)
+	{
+		if (each.second == rhs)
+			return each.first;
+	}
 
+	throw std::runtime_error("Unsupported curve type.");
+
+}
 
 void addCurveTo(Curve const& curve, pugi::xml_node& node)
 {
@@ -30,10 +40,36 @@ void addCurveTo(Curve const& curve, pugi::xml_node& node)
 	node.append_attribute("c").set_value(curve.c());
 	node.append_attribute("b").set_value(curve.b());
 }
+
+Curve loadCurveFrom(pugi::xml_node const& node)
+{
+	return Curve().withType(typeFromString(node.attribute("type").as_string()))
+		.withM(node.attribute("m").as_float())
+		.withK(node.attribute("k").as_float())
+		.withC(node.attribute("c").as_float())
+		.withB(node.attribute("b").as_float());
+}
 }
 std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> document)
 {
-	return std::shared_ptr<Group>();
+	auto group = std::make_shared<Group>();
+	auto groupNode = document->child("Group");
+
+	for (auto const& actionNode : groupNode.children("Action"))
+	{
+		auto action = std::make_shared<Action>();
+		action->setName(actionNode.attribute("name").as_string());
+
+		for (auto const& axisNode : actionNode.children("Axis"))
+		{
+			auto axis = std::make_shared<Axis>(
+				axisNode.attribute("name").as_string(),
+				loadCurveFrom(axisNode));
+			action->addAxis(axis);
+		}
+		group->addAction(action);
+	}
+	return group;
 }
 
 std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> group)
@@ -62,7 +98,11 @@ void LoadSave::saveTo(std::string const & filename, std::shared_ptr<Group const>
 	xml->save_file(filename.c_str());
 }
 
-std::shared_ptr<Group> LoadSave::loadFrom(std::string const & filename)
+std::shared_ptr<Group> LoadSave::loadFrom(std::string const& filename)
 {
-	return std::shared_ptr<Group>();
+	auto document = std::make_shared<pugi::xml_document>();
+	auto result = document->load_file(filename.c_str());
+	if (!result)
+		throw std::runtime_error("Error parsing file");
+	return load(document);
 }

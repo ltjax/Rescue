@@ -16,7 +16,7 @@ public:
 	std::string const& getName() const;
 	PtrList<Axis> const& getAxisList() const;
 
-	std::shared_ptr<Axis> addAxis();
+	void addAxis(std::shared_ptr<Axis> axis);
 
 private:
 	std::string mName;

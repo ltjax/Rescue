@@ -19,8 +19,7 @@ PtrList<Axis> const & Action::getAxisList() const
 	return mAxisList;
 }
 
-std::shared_ptr<Axis> Action::addAxis()
+void Action::addAxis(std::shared_ptr<Axis> axis)
 {
-	mAxisList.push_back(std::make_shared<Axis>("", Curve{}));
-	return mAxisList.back();
+	mAxisList.push_back(std::move(axis));
 }
