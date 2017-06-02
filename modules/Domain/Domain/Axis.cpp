@@ -6,7 +6,7 @@ Axis::Axis(std::string Input, Curve curve)
 {
 }
 
-float Axis::EvaluateFor(float x) const
+float Axis::evaluateFor(float x) const
 {
 	return mCurve.evaluateFor(x);
 }
@@ -29,4 +29,24 @@ std::string const & Axis::getInput() const
 void Axis::setInput(std::string rhs)
 {
 	mInput = std::move(rhs);
+}
+
+void Axis::setMin(float x)
+{
+	mMin = x;
+}
+
+float Axis::getMin() const
+{
+	return mMin;
+}
+
+void Axis::setMax(float x)
+{
+	mMax = x;
+}
+
+float Axis::getMax() const
+{
+	return mMax;
 }

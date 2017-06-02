@@ -25,17 +25,21 @@ AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget * parent)
 
 	auto valueChanged = static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged);
 	connect(mUi->m, valueChanged, directTo(&Curve::withM));
+	mUi->m->setValue(mAxis->getCurve().m());
 	connect(mUi->k, valueChanged, directTo(&Curve::withK));
+	mUi->k->setValue(mAxis->getCurve().k());
 	connect(mUi->c, valueChanged, directTo(&Curve::withC));
+	mUi->c->setValue(mAxis->getCurve().c());
 	connect(mUi->b, valueChanged, directTo(&Curve::withB));
+	mUi->b->setValue(mAxis->getCurve().b());
 
-	for (int i = 0; i < typeToString.size(); ++i)
+	for (std::size_t i = 0; i < typeToString.size(); ++i)
 		mUi->type->addItem(typeToString[i].second, QVariant(static_cast<int>(typeToString[i].first)));
 
 	auto currentIndexChanged = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 	connect(mUi->type, currentIndexChanged, [this](int current)
 	{
-		if (current < typeToString.size())
+		if (current < static_cast<int>(typeToString.size()))
 		{
 			auto type = typeToString[current].first;
 			modifyCurve(std::bind(&Curve::withType, _1, type));
@@ -46,6 +50,19 @@ AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget * parent)
 	{
 		mAxis->setInput(text.toStdString());
 	});
+
+	connect(mUi->min, valueChanged, [this](double rhs)
+	{
+		mAxis->setMin(rhs);
+	});
+	mUi->min->setValue(mAxis->getMin());
+
+	connect(mUi->max, valueChanged, [this](double rhs)
+	{
+		mAxis->setMax(rhs);
+	});
+	mUi->max->setValue(mAxis->getMax());
+
 }
 
 AxisWidget::~AxisWidget() = default;
