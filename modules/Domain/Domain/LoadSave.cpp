@@ -64,7 +64,9 @@ std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> docume
 		{
 			auto axis = std::make_shared<Axis>(
 				axisNode.attribute("input").as_string(),
-				loadCurveFrom(axisNode));
+				loadCurveFrom(axisNode),
+				axisNode.attribute("min").as_float(0.f),
+				axisNode.attribute("max").as_float(1.f));
 			action->addAxis(axis);
 		}
 		group->addAction(action);
@@ -86,6 +88,8 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> 
 			auto axisNode = actionNode.append_child("Axis");
 			axisNode.append_attribute("input").set_value(axis->getInput().c_str());
 			addCurveTo(axis->getCurve(), axisNode);
+			axisNode.append_attribute("min").set_value(axis->getMin());
+			axisNode.append_attribute("max").set_value(axis->getMax());
 		}
 	}
 

@@ -1,8 +1,8 @@
 #include "Axis.hpp"
 #include <algorithm>
 
-Axis::Axis(std::string Input, Curve curve)
-: mInput(std::move(Input)), mCurve(curve)
+Axis::Axis(std::string Input, Curve curve, float min, float max)
+: mInput(std::move(Input)), mCurve(curve), mMin(min), mMax(max)
 {
 }
 

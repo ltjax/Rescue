@@ -28,7 +28,7 @@ ActionWidget::~ActionWidget() = default;
 
 void ActionWidget::onAddAxis()
 {
-	auto axis = std::make_shared<Axis>("", Curve());
+	auto axis = std::make_shared<Axis>("", Curve(), 0.f, 1.f);
 	mAction->addAxis(axis);
 	addAxisWidget(axis);
 }

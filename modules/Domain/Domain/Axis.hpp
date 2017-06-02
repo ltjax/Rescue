@@ -5,7 +5,7 @@
 class Axis
 {
 public:
-	Axis(std::string Input, Curve curve);
+	Axis(std::string Input, Curve curve, float min, float max);
 	float evaluateFor(float x) const;
 
 	Curve const& getCurve() const;
