@@ -16,6 +16,8 @@ add_executable(${TARGET_NAME}
   AxisWidget.cpp
   GraphWidget.hpp
   GraphWidget.cpp
+  FlowLayout.hpp
+  FlowLayout.cpp
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}

@@ -7,6 +7,8 @@
 namespace Ui { class Action; }
 
 class AxisWidget;
+class FlowLayout;
+
 class ActionWidget : public QWidget
 {
 public:
@@ -18,5 +20,5 @@ public:
 private:
 	std::unique_ptr<Ui::Action> mUi;
 	std::shared_ptr<Action> mAction;
-	QBoxLayout* mAreaLayout=nullptr;
+	FlowLayout* mAreaLayout=nullptr;
 };

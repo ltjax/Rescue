@@ -1,6 +1,7 @@
 #include "ActionWidget.hpp"
 #include "ui_Action.h"
 #include "AxisWidget.hpp"
+#include "FlowLayout.hpp"
 
 ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
 : QWidget(parent)
@@ -14,8 +15,8 @@ ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
 	{
 		onAddAxis();
 	});
-	mAreaLayout = new QHBoxLayout();
-	mAreaLayout->addStretch();
+	mAreaLayout = new FlowLayout();
+	//mAreaLayout->addStretch();
 	mUi->axisArea->setLayout(mAreaLayout);
 
 	connect(mUi->name, &QLineEdit::textEdited, [this](QString text)
@@ -36,6 +37,6 @@ void ActionWidget::onAddAxis()
 AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Axis> const & axis)
 {
 	auto widget = new AxisWidget(axis, mUi->axisArea);
-	mAreaLayout->insertWidget(0, widget);
+	mAreaLayout->addWidget(widget);
 	return widget;
 }
