@@ -18,6 +18,9 @@ add_executable(${TARGET_NAME}
   GraphWidget.cpp
   ${UI_HEADERS})
   
+target_include_directories(${TARGET_NAME}
+  PUBLIC ../../../externals/optional)
+  
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
   PUBLIC Qt5::Widgets)

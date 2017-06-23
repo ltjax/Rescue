@@ -5,7 +5,7 @@
 #include <QCommandLineParser>
 #include "Rescue.hpp"
 
-#define RESCUE_VERSION "0.0.0"
+#define RESCUE_VERSION "0.0.1"
 
 int Run(int argc, char** argv)
 {

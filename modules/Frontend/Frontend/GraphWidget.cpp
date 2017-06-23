@@ -4,6 +4,7 @@
 
 GraphWidget::GraphWidget(QWidget* parent)
 {
+    setMouseTracking(true);
 }
 
 void GraphWidget::setCurve(Curve curve)
@@ -15,6 +16,18 @@ void GraphWidget::setCurve(Curve curve)
 Curve const & GraphWidget::getCurve() const
 {
 	return mCurve;
+}
+
+void GraphWidget::mouseMoveEvent(QMouseEvent* e)
+{
+    mCurrentX = e->pos().x() / static_cast<float>(rect().width());
+    update();
+}
+
+void GraphWidget::leaveEvent(QEvent* e)
+{
+    mCurrentX.reset();
+    update();
 }
 
 void GraphWidget::paintEvent(QPaintEvent* e)
@@ -36,4 +49,13 @@ void GraphWidget::paintEvent(QPaintEvent* e)
 		painter.drawLine(x - 1, lastY, x, y);
 		lastY = y;		
 	}
+
+    if (mCurrentX)
+    {
+        int px = *mCurrentX * rect.width();
+        int py = valueFor(px);
+        painter.drawEllipse({ px, py }, 5, 5);
+        auto text = QString("%1 -> %2").arg(*mCurrentX, 4, 'f', 2).arg(mCurve.evaluateFor(*mCurrentX), 4, 'f', 2);
+        painter.drawText(rect, Qt::AlignTop|Qt::AlignLeft, text);
+    }
 }
