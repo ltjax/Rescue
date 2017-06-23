@@ -1,6 +1,8 @@
 #include "Curve.hpp"
 #include <algorithm>
 
+using namespace Rescue;
+
 namespace
 {
 float Saturate(float x)

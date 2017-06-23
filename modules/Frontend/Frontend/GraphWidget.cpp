@@ -1,6 +1,8 @@
 #include "GraphWidget.hpp"
-#include <QPainter>
 #include <QPaintEvent>
+#include <QPainter>
+
+using namespace Rescue;
 
 GraphWidget::GraphWidget(QWidget* parent)
 {
@@ -9,13 +11,13 @@ GraphWidget::GraphWidget(QWidget* parent)
 
 void GraphWidget::setCurve(Curve curve)
 {
-	mCurve = std::move(curve);
-	update();
+    mCurve = std::move(curve);
+    update();
 }
 
-Curve const & GraphWidget::getCurve() const
+Curve const& GraphWidget::getCurve() const
 {
-	return mCurve;
+    return mCurve;
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent* e)
@@ -32,23 +34,22 @@ void GraphWidget::leaveEvent(QEvent* e)
 
 void GraphWidget::paintEvent(QPaintEvent* e)
 {
-	QPainter painter(this);
-	painter.fillRect(e->rect(), Qt::white);
-	
-	auto rect = this->rect();
-	auto valueFor = [&](int pixel)
-	{
-		float ry = mCurve.evaluateFor((pixel + 0.5f) / rect.width());
-		return (1.f - ry) * rect.height();
-	};
+    QPainter painter(this);
+    painter.fillRect(e->rect(), Qt::white);
 
-	int lastY = valueFor(0);
-	for (int x = 1; x < rect.width(); ++x)
-	{
-		int y = valueFor(x);
-		painter.drawLine(x - 1, lastY, x, y);
-		lastY = y;		
-	}
+    auto rect = this->rect();
+    auto valueFor = [&](int pixel) {
+        float ry = mCurve.evaluateFor((pixel + 0.5f) / rect.width());
+        return (1.f - ry) * rect.height();
+    };
+
+    int lastY = valueFor(0);
+    for (int x = 1; x < rect.width(); ++x)
+    {
+        int y = valueFor(x);
+        painter.drawLine(x - 1, lastY, x, y);
+        lastY = y;
+    }
 
     if (mCurrentX)
     {
@@ -56,6 +57,6 @@ void GraphWidget::paintEvent(QPaintEvent* e)
         int py = valueFor(px);
         painter.drawEllipse({ px, py }, 5, 5);
         auto text = QString("%1 -> %2").arg(*mCurrentX, 4, 'f', 2).arg(mCurve.evaluateFor(*mCurrentX), 4, 'f', 2);
-        painter.drawText(rect, Qt::AlignTop|Qt::AlignLeft, text);
+        painter.drawText(rect, Qt::AlignTop | Qt::AlignLeft, text);
     }
 }

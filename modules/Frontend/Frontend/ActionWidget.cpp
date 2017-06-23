@@ -3,7 +3,7 @@
 #include "FlowLayout.hpp"
 #include "ui_Action.h"
 
-ActionWidget::ActionWidget(std::shared_ptr<Action> action, QWidget* parent)
+ActionWidget::ActionWidget(std::shared_ptr<Rescue::Action> action, QWidget* parent)
 : QWidget(parent)
 , mUi(std::make_unique<Ui::Action>())
 , mAction(std::move(action))
@@ -23,12 +23,12 @@ ActionWidget::~ActionWidget() = default;
 
 void ActionWidget::onAddAxis()
 {
-    auto axis = std::make_shared<Axis>("", Curve(), 0.f, 1.f);
+    auto axis = std::make_shared<Rescue::Axis>("", Rescue::Curve(), 0.f, 1.f);
     mAction->addAxis(axis);
     addAxisWidget(axis);
 }
 
-AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Axis> const& axis)
+AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Rescue::Axis> const& axis)
 {
     auto widget = new AxisWidget(axis, mUi->axisArea);
     mAreaLayout->addWidget(widget);

@@ -1,5 +1,7 @@
 #include "LoadSave.hpp"
 
+using namespace Rescue;
+
 namespace
 {
 

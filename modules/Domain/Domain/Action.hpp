@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+namespace Rescue
+{
 template <typename T> using PtrList = std::vector<std::shared_ptr<T>>;
 
 class Action
@@ -20,3 +22,4 @@ private:
     std::string mName;
     PtrList<Axis> mAxisList;
 };
+}

@@ -8,8 +8,8 @@ qt5_wrap_ui(UI_HEADERS
 add_executable(${TARGET_NAME}
   Main.hpp
   Main.cpp
-  Rescue.hpp
-  Rescue.cpp
+  RescueMainWindow.hpp
+  RescueMainWindow.cpp
   ActionWidget.hpp
   ActionWidget.cpp
   AxisWidget.hpp

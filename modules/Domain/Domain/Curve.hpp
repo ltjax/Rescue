@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace Rescue
+{
 class Curve
 {
 public:
@@ -62,3 +64,4 @@ private:
     float mC;
     float mB;
 };
+}

@@ -1,6 +1,6 @@
 #include "Main.hpp"
 #include "Domain/Action.hpp"
-#include "Rescue.hpp"
+#include "RescueMainWindow.hpp"
 #include <QApplication>
 #include <QCommandLineParser>
 #include <stdexcept>
@@ -20,7 +20,7 @@ int Run(int argc, char** argv)
 
     parser.process(app);
 
-    Rescue mainWindow;
+    RescueMainWindow mainWindow;
     mainWindow.show();
     return app.exec();
 }

@@ -10,8 +10,8 @@ public:
     template <typename T> using Optional = nonstd::optional<T>;
     GraphWidget(QWidget* parent);
 
-    void setCurve(Curve curve);
-    Curve const& getCurve() const;
+    void setCurve(Rescue::Curve curve);
+    Rescue::Curve const& getCurve() const;
 
     void mouseMoveEvent(QMouseEvent* event) override;
     void leaveEvent(QEvent* event) override;
@@ -19,6 +19,6 @@ public:
     void paintEvent(QPaintEvent* e) override;
 
 private:
-    Curve mCurve;
+    Rescue::Curve mCurve;
     Optional<float> mCurrentX;
 };

@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+namespace Rescue
+{
 class Group
 {
 public:
@@ -14,3 +16,4 @@ public:
 private:
     PtrList<Action> mActionList;
 };
+}

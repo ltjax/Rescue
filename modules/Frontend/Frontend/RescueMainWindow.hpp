@@ -11,15 +11,15 @@ class MainWindow;
 }
 
 class ActionWidget;
-class Rescue : public QMainWindow
+class RescueMainWindow : public QMainWindow
 {
 public:
-    Rescue();
-    ~Rescue();
+    RescueMainWindow();
+    ~RescueMainWindow();
 
     void onAddAction();
 
-    ActionWidget* addActionWidget(std::shared_ptr<Action> const& action);
+    ActionWidget* addActionWidget(std::shared_ptr<Rescue::Action> const& action);
     void clearActionWidgets();
 
     void onFileSave();
@@ -38,5 +38,5 @@ private:
     std::vector<ActionWidget*> mActionWidgetList;
     QString mCurrentFilename;
 
-    std::shared_ptr<Group> mGroup;
+    std::shared_ptr<Rescue::Group> mGroup;
 };

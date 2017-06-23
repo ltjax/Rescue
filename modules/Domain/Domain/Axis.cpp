@@ -1,6 +1,8 @@
 #include "Axis.hpp"
 #include <algorithm>
 
+using namespace Rescue;
+
 Axis::Axis(std::string Input, Curve curve, float min, float max)
 : mInput(std::move(Input))
 , mCurve(curve)

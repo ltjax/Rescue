@@ -1,4 +1,4 @@
-#include "Rescue.hpp"
+#include "RescueMainWindow.hpp"
 #include "ActionWidget.hpp"
 #include "Domain/LoadSave.hpp"
 #include "ui_Rescue.h"
@@ -13,7 +13,7 @@ namespace
 auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 }
 
-Rescue::Rescue()
+RescueMainWindow::RescueMainWindow()
 : mUi(std::make_unique<Ui::MainWindow>())
 {
     mUi->setupUi(this);
@@ -30,19 +30,19 @@ Rescue::Rescue()
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
     // mUi->actionArea->setStyleSheet("background-color:white;");
 
-    mGroup = std::make_shared<Group>();
+    mGroup = std::make_shared<Rescue::Group>();
 }
 
-Rescue::~Rescue() = default;
+RescueMainWindow::~RescueMainWindow() = default;
 
-void Rescue::onAddAction()
+void RescueMainWindow::onAddAction()
 {
-    auto action = std::make_shared<Action>();
+    auto action = std::make_shared<Rescue::Action>();
     mGroup->addAction(action);
     addActionWidget(action);
 }
 
-ActionWidget* Rescue::addActionWidget(std::shared_ptr<Action> const& action)
+ActionWidget* RescueMainWindow::addActionWidget(std::shared_ptr<Rescue::Action> const& action)
 {
     ActionWidget* widget = new ActionWidget(action, mUi->actionArea);
     mAreaLayout->insertWidget(0, widget);
@@ -50,7 +50,7 @@ ActionWidget* Rescue::addActionWidget(std::shared_ptr<Action> const& action)
     return widget;
 }
 
-void Rescue::clearActionWidgets()
+void RescueMainWindow::clearActionWidgets()
 {
     for (auto widget : mActionWidgetList)
     {
@@ -59,7 +59,7 @@ void Rescue::clearActionWidgets()
     mActionWidgetList.clear();
 }
 
-void Rescue::onFileSave()
+void RescueMainWindow::onFileSave()
 {
     if (mCurrentFilename.isEmpty())
     {
@@ -70,7 +70,7 @@ void Rescue::onFileSave()
     saveTo(mCurrentFilename);
 }
 
-void Rescue::onFileSaveAs()
+void RescueMainWindow::onFileSaveAs()
 {
     auto path = getFilePath();
     auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
@@ -81,24 +81,24 @@ void Rescue::onFileSaveAs()
     setCurrentFilename(filename);
 }
 
-void Rescue::onFileOpen()
+void RescueMainWindow::onFileOpen()
 {
     auto path = getFilePath();
     auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
     if (filename.isEmpty())
         return;
 
-    catchAll([&] { mGroup = LoadSave::loadFrom(filename.toStdString()); });
+    catchAll([&] { mGroup = Rescue::LoadSave::loadFrom(filename.toStdString()); });
     setCurrentFilename(filename);
     syncWidgets();
 }
 
-void Rescue::saveTo(QString filename)
+void RescueMainWindow::saveTo(QString filename)
 {
-    catchAll([&] { LoadSave::saveTo(filename.toStdString(), mGroup); });
+    catchAll([&] { Rescue::LoadSave::saveTo(filename.toStdString(), mGroup); });
 }
 
-void Rescue::setCurrentFilename(QString filename)
+void RescueMainWindow::setCurrentFilename(QString filename)
 {
     QSettings settings;
     settings.setValue("lastFile", filename);
@@ -106,7 +106,7 @@ void Rescue::setCurrentFilename(QString filename)
     this->setWindowTitle(QString("Rescue (%1)").arg(filename));
 }
 
-QString Rescue::getFilePath() const
+QString RescueMainWindow::getFilePath() const
 {
     QSettings settings;
     auto result = settings.value("lastFile").toString();
@@ -122,7 +122,7 @@ QString Rescue::getFilePath() const
     return result;
 }
 
-void Rescue::syncWidgets()
+void RescueMainWindow::syncWidgets()
 {
     clearActionWidgets();
 
@@ -136,13 +136,13 @@ void Rescue::syncWidgets()
     }
 }
 
-void Rescue::onFileNew()
+void RescueMainWindow::onFileNew()
 {
-    mGroup = std::make_shared<Group>();
+    mGroup = std::make_shared<Rescue::Group>();
     syncWidgets();
 }
 
-void Rescue::catchAll(std::function<void()> rhs)
+void RescueMainWindow::catchAll(std::function<void()> rhs)
 {
     try
     {

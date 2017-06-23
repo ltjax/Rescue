@@ -7,6 +7,8 @@ add_library(${TARGET_NAME}
   Group.cpp
   Curve.hpp
   Curve.cpp
+  RangedCurve.hpp
+  RangedCurve.cpp
   LoadSave.hpp
   LoadSave.cpp
   Axis.hpp

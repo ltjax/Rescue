@@ -2,6 +2,8 @@
 #include "ui_Axis.h"
 #include <unordered_map>
 
+using namespace Rescue;
+
 namespace
 {
 

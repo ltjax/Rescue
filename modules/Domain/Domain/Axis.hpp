@@ -2,6 +2,8 @@
 #include "Curve.hpp"
 #include <string>
 
+namespace Rescue
+{
 class Axis
 {
 public:
@@ -26,3 +28,4 @@ private:
     float mMin = 0.f;
     float mMax = 1.f;
 };
+}
