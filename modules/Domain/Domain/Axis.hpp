@@ -1,5 +1,5 @@
 #pragma once
-#include "Curve.hpp"
+#include "RangedCurve.hpp"
 #include <string>
 
 namespace Rescue
@@ -7,25 +7,20 @@ namespace Rescue
 class Axis
 {
 public:
-    Axis(std::string Input, Curve curve, float min, float max);
+    Axis(std::string Input, RangedCurve curve);
     float evaluateFor(float x) const;
 
-    Curve const& getCurve() const;
-    void setCurve(Curve curve);
+    // TODO: remove this overload
+    RangedCurve& getCurve();
+
+    RangedCurve const& getCurve() const;
+    void setCurve(RangedCurve curve);
 
     std::string const& getInput() const;
     void setInput(std::string rhs);
 
-    void setMin(float x);
-    float getMin() const;
-
-    void setMax(float x);
-    float getMax() const;
-
 private:
     std::string mInput;
-    Curve mCurve;
-    float mMin = 0.f;
-    float mMax = 1.f;
+    RangedCurve mCurve;
 };
 }

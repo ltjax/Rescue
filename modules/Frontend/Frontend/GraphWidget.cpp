@@ -9,13 +9,13 @@ GraphWidget::GraphWidget(QWidget* parent)
     setMouseTracking(true);
 }
 
-void GraphWidget::setCurve(Curve curve)
+void GraphWidget::setRangedCurve(RangedCurve curve)
 {
     mCurve = std::move(curve);
     update();
 }
 
-Curve const& GraphWidget::getCurve() const
+RangedCurve const& GraphWidget::getRangedCurve() const
 {
     return mCurve;
 }
@@ -39,7 +39,7 @@ void GraphWidget::paintEvent(QPaintEvent* e)
 
     auto rect = this->rect();
     auto valueFor = [&](int pixel) {
-        float ry = mCurve.evaluateFor((pixel + 0.5f) / rect.width());
+        float ry = mCurve.getCurve().evaluateFor((pixel + 0.5f) / rect.width());
         return (1.f - ry) * rect.height();
     };
 
@@ -56,7 +56,10 @@ void GraphWidget::paintEvent(QPaintEvent* e)
         int px = *mCurrentX * rect.width();
         int py = valueFor(px);
         painter.drawEllipse({ px, py }, 5, 5);
-        auto text = QString("%1 -> %2").arg(*mCurrentX, 4, 'f', 2).arg(mCurve.evaluateFor(*mCurrentX), 4, 'f', 2);
+
+        float rangedX = *mCurrentX * (mCurve.getMax() - mCurve.getMin()) + mCurve.getMin();
+        auto text =
+            QString("%1 -> %2").arg(rangedX, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(*mCurrentX), 4, 'f', 2);
         painter.drawText(rect, Qt::AlignTop | Qt::AlignLeft, text);
     }
 }

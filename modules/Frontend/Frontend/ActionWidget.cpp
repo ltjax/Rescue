@@ -23,7 +23,7 @@ ActionWidget::~ActionWidget() = default;
 
 void ActionWidget::onAddAxis()
 {
-    auto axis = std::make_shared<Rescue::Axis>("", Rescue::Curve(), 0.f, 1.f);
+    auto axis = std::make_shared<Rescue::Axis>("", Rescue::RangedCurve());
     mAction->addAxis(axis);
     addAxisWidget(axis);
 }

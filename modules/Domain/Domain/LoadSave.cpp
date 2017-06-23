@@ -42,6 +42,13 @@ void addCurveTo(Curve const& curve, pugi::xml_node& node)
     node.append_attribute("b").set_value(curve.b());
 }
 
+void addRangedCurveTo(RangedCurve const& rangedCurve, pugi::xml_node& node)
+{
+    addCurveTo(rangedCurve.getCurve(), node);
+    node.append_attribute("min").set_value(rangedCurve.getMin());
+    node.append_attribute("max").set_value(rangedCurve.getMax());
+}
+
 Curve loadCurveFrom(pugi::xml_node const& node)
 {
     return Curve()
@@ -50,6 +57,11 @@ Curve loadCurveFrom(pugi::xml_node const& node)
         .withK(node.attribute("k").as_float())
         .withC(node.attribute("c").as_float())
         .withB(node.attribute("b").as_float());
+}
+
+RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
+{
+    return { loadCurveFrom(node), node.attribute("min").as_float(0.f), node.attribute("max").as_float(1.f) };
 }
 }
 std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> document)
@@ -64,9 +76,7 @@ std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> docume
 
         for (auto const& axisNode : actionNode.children("Axis"))
         {
-            auto axis = std::make_shared<Axis>(axisNode.attribute("input").as_string(), loadCurveFrom(axisNode),
-                                               axisNode.attribute("min").as_float(0.f),
-                                               axisNode.attribute("max").as_float(1.f));
+            auto axis = std::make_shared<Axis>(axisNode.attribute("input").as_string(), loadRangedCurveFrom(axisNode));
             action->addAxis(axis);
         }
         group->addAction(action);
@@ -87,9 +97,7 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> 
         {
             auto axisNode = actionNode.append_child("Axis");
             axisNode.append_attribute("input").set_value(axis->getInput().c_str());
-            addCurveTo(axis->getCurve(), axisNode);
-            axisNode.append_attribute("min").set_value(axis->getMin());
-            axisNode.append_attribute("max").set_value(axis->getMax());
+            addRangedCurveTo(axis->getCurve(), axisNode);
         }
     }
 

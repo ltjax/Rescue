@@ -20,3 +20,28 @@ float RangedCurve::evaluateFor(float Rhs) const
 
     return mCurve.evaluateFor((Rhs - mMin) / (mMax - mMin));
 }
+
+Curve Rescue::RangedCurve::getCurve() const
+{
+    return mCurve;
+}
+
+void RangedCurve::setMin(float x)
+{
+    mMin = x;
+}
+
+float RangedCurve::getMin() const
+{
+    return mMin;
+}
+
+void RangedCurve::setMax(float x)
+{
+    mMax = x;
+}
+
+float RangedCurve::getMax() const
+{
+    return mMax;
+}
