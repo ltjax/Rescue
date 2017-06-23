@@ -1,39 +1,42 @@
 #pragma once
-#include <QMainWindow>
-#include <memory>
-#include <QBoxLayout>
 #include "Domain/Group.hpp"
+#include <QBoxLayout>
+#include <QMainWindow>
 #include <functional>
+#include <memory>
 
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+class MainWindow;
+}
 
 class ActionWidget;
 class Rescue : public QMainWindow
 {
 public:
-	Rescue();
-	~Rescue();
+    Rescue();
+    ~Rescue();
 
-	void onAddAction();
+    void onAddAction();
 
-	ActionWidget* addActionWidget(std::shared_ptr<Action> const& action);
-	void clearActionWidgets();
+    ActionWidget* addActionWidget(std::shared_ptr<Action> const& action);
+    void clearActionWidgets();
 
-	void onFileSave();
-	void onFileSaveAs();
-	void onFileOpen();
-	void onFileNew();
+    void onFileSave();
+    void onFileSaveAs();
+    void onFileOpen();
+    void onFileNew();
 
 private:
-	void saveTo(QString filename);
-	void setCurrentFilename(QString filename);
-	QString getFilePath() const;
-	void syncWidgets();
-	void catchAll(std::function<void()> rhs);
-	std::unique_ptr<Ui::MainWindow> mUi;
-	QBoxLayout* mAreaLayout=nullptr;
-	std::vector<ActionWidget*> mActionWidgetList;
-	QString mCurrentFilename;
+    void saveTo(QString filename);
+    void setCurrentFilename(QString filename);
+    QString getFilePath() const;
+    void syncWidgets();
+    void catchAll(std::function<void()> rhs);
+    std::unique_ptr<Ui::MainWindow> mUi;
+    QBoxLayout* mAreaLayout = nullptr;
+    std::vector<ActionWidget*> mActionWidgetList;
+    QString mCurrentFilename;
 
-	std::shared_ptr<Group> mGroup;
+    std::shared_ptr<Group> mGroup;
 };

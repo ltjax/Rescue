@@ -1,15 +1,16 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include "Action.hpp"
+#include <memory>
+#include <vector>
 
 class Group
 {
 public:
-	Group();
+    Group();
 
-	PtrList<Action> const& getActionList() const;
-	void addAction(std::shared_ptr<Action> action);
+    PtrList<Action> const& getActionList() const;
+    void addAction(std::shared_ptr<Action> action);
+
 private:
-	PtrList<Action> mActionList;
+    PtrList<Action> mActionList;
 };

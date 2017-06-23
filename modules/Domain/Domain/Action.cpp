@@ -6,20 +6,20 @@ Action::Action()
 
 void Action::setName(std::string rhs)
 {
-	mName = std::move(rhs);
+    mName = std::move(rhs);
 }
 
-std::string const & Action::getName() const
+std::string const& Action::getName() const
 {
-	return mName;
+    return mName;
 }
 
-PtrList<Axis> const & Action::getAxisList() const
+PtrList<Axis> const& Action::getAxisList() const
 {
-	return mAxisList;
+    return mAxisList;
 }
 
 void Action::addAxis(std::shared_ptr<Axis> axis)
 {
-	mAxisList.push_back(std::move(axis));
+    mAxisList.push_back(std::move(axis));
 }

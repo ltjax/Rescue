@@ -4,12 +4,12 @@ Group::Group()
 {
 }
 
-PtrList<Action> const & Group::getActionList() const
+PtrList<Action> const& Group::getActionList() const
 {
-	return mActionList;
+    return mActionList;
 }
 
 void Group::addAction(std::shared_ptr<Action> action)
 {
-	mActionList.push_back(action);
+    mActionList.push_back(action);
 }

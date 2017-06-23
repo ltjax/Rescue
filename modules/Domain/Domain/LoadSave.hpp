@@ -1,7 +1,7 @@
 #pragma once
-#include <pugixml.hpp>
-#include <memory>
 #include "Group.hpp"
+#include <memory>
+#include <pugixml.hpp>
 
 namespace LoadSave
 {
@@ -11,5 +11,4 @@ std::shared_ptr<pugi::xml_document> save(std::shared_ptr<Group const> group);
 
 void saveTo(std::string const& filename, std::shared_ptr<Group const> group);
 std::shared_ptr<Group> loadFrom(std::string const& filename);
-
 }
