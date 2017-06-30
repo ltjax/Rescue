@@ -1,0 +1,56 @@
+# Specify version format
+version: "{build}"
+
+# Operating system (build VM template)
+os: Visual Studio 2017
+
+# build platform, i.e. Win32 (instead of x86), x64, Any CPU. This setting is optional.
+platform: 
+  - x64
+
+# specify custom environment variables
+environment:
+  MSVC_DEFAULT_OPTIONS: ON
+  QTDIR: C:\Qt\5.9\msvc2017_64
+
+# build configuration, i.e. Debug, Release, etc.
+configuration:
+  - Debug
+  - Release
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  - cmd: cmake --version
+  - cmd: msbuild /version
+
+# clone directory
+clone_folder: C:\projects\Rescue
+
+# branches to build
+branches:
+  # whitelist
+  # only: 
+  #   - master
+  # blacklist
+  except:
+    - gh-pages
+
+# scripts that run after cloning repository
+install: off
+
+# scripts to run before build
+before_build:
+  - cmd: cd C:\projects\Rescue
+  - cmd: md build
+  - cmd: cd build
+  - cmd: set CMAKE_GENERATOR_NAME=Visual Studio 15 2017 Win64
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%configuration% ..
+
+build:
+  project: C:\projects\Rescue\build\Rescue.sln # path to Visual Studio solution or project
+  parallel: true                           # enable MSBuild parallel builds
+  verbosity: quiet                         # MSBuild verbosity level (quiet|minimal|normal|detailed)
+
+test: off
+#test_script:
+#  - cmd: ctest --build-config %configuration% --parallel 4 --output-on-failure
