@@ -36,7 +36,7 @@ branches:
     - gh-pages
 
 # scripts that run after cloning repository
-install: off
+# install: off
 
 # scripts to run before build
 before_build:
