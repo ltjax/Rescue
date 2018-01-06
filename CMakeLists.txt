@@ -13,6 +13,10 @@ find_package(Qt5Widgets)
 
 # External modules
 add_subdirectory(externals/pugixml)
+set(lager_BUILD_DEBUGGER OFF CACHE BOOL "No lager debugger" FORCE)
+set(lager_BUILD_EXAMPLES OFF CACHE BOOL "No lager examples" FORCE)
+set(lager_BUILD_TESTS OFF CACHE BOOL "No lager tests" FORCE)
+add_subdirectory(externals/lager)
 
 # Own modules
 add_subdirectory(modules/Frontend/Frontend)

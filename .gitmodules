@@ -1,0 +1,4 @@
+[submodule "externals/lager"]
+	path = externals/lager
+	url = https://github.com/ltjax/lager.git
+	branch = windows-build

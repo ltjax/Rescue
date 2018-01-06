@@ -25,6 +25,7 @@ target_include_directories(${TARGET_NAME}
   
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
+	PUBLIC lager
   PUBLIC Qt5::Widgets)
 
 install(TARGETS ${TARGET_NAME}
