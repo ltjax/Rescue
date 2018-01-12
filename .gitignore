@@ -1,0 +1,5 @@
+# Visual studio project files
+/.vs/
+
+# Lager temporary build files
+/lager/config.hpp
