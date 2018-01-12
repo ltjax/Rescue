@@ -22,6 +22,7 @@ add_subdirectory(externals/lager)
 # Own modules
 add_subdirectory(modules/Frontend/Frontend)
 add_subdirectory(modules/Domain/Domain)
+add_subdirectory(tests)
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "NSIS")  

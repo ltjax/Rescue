@@ -1,6 +1,7 @@
 #include "Main.hpp"
 #include "Domain/Action.hpp"
 #include "Model.hpp"
+#include "Reducer.hpp"
 #include "RescueMainWindow.hpp"
 #include "rtti_reducer.hpp"
 #include "view_binder.hpp"
@@ -13,6 +14,29 @@
 #include <unordered_map>
 
 #define RESCUE_VERSION "0.0.1"
+
+struct event_loop
+{
+    template <typename Fn> void async(Fn&& fn)
+    {
+        throw std::logic_error{ "manual_event_loop does not support async()" };
+    }
+
+    template <typename Fn> void post(Fn&& fn)
+    {
+        fn();
+    }
+
+    void finish()
+    {
+    }
+    void pause()
+    {
+    }
+    void resume()
+    {
+    }
+};
 
 int Run(int argc, char** argv)
 {
@@ -27,8 +51,9 @@ int Run(int argc, char** argv)
 
     parser.process(app);
 
+    auto Reducer = createReducer();
     auto Binder = std::make_shared<view::binder<Model>>();
-    auto Store = lager::make_store<Action>(Model{}, Reducer{}, std::ref(*Binder), lager::with_manual_event_loop{});
+    auto Store = lager::make_store<Action>(Model{}, std::ref(*Reducer), std::ref(*Binder), event_loop{});
 
     RescueMainWindow mainWindow(
         view::component<Action, Model>([&Store](Action action) { Store.dispatch(action); }, Binder));

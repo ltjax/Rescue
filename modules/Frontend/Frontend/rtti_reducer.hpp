@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <memory>
 #include <typeindex>
 #include <unordered_map>
 
@@ -8,11 +9,19 @@ template <class Model> class rtti_reducer
 public:
     struct wrapped_base
     {
-        virtual ~wrapped_base() = default;
+    public:
+        virtual ~wrapped_base(){};
+
+    protected:
+        wrapped_base() = default;
     };
 
     template <typename Contained> struct wrapped : public wrapped_base
     {
+        wrapped(Contained c)
+        : contained(std::move(c))
+        {
+        }
         Contained contained;
     };
 
@@ -20,12 +29,13 @@ public:
     {
     public:
         template <class T>
-        action(T const& original)
-        : m_pointee(&original)
+        action(T original)
+        : m_pointee(std::make_shared<wrapped<T>>(original))
         {
         }
 
         action(action const&) = default;
+        action(action&&) = default;
 
         wrapped_base& get() const
         {
@@ -33,23 +43,27 @@ public:
         }
 
     private:
-        wrapped_base* m_pointee;
+        std::shared_ptr<wrapped_base> m_pointee;
     };
 
     Model operator()(Model model, action which) const
     {
-        auto found = m_handler.find(std::type_index(typeid(which.get())));
-        if (found != m_handler.end())
+        auto key = std::type_index(typeid(which.get()));
+        auto found = m_handler.find(key);
+        if (found == m_handler.end())
             return model;
         return found->second(model, which.get());
     }
 
-    template <class Action, class Handler> rtti_reducer subscribe(Handler handler)
+    template <class Action, class Handler> void subscribe(Handler handler)
     {
-        m_handler[std::type_index(typeid(Action))] = [handler](Model model, action which) {
-            return handler(model, static_cast<wrapped<Action> const&>(which.get()).contained);
+        using result_type = typename std::result_of<Handler(Model, Action)>::type;
+        static_assert(std::is_same<result_type, Model>::value, "Reducers needs to return the model");
+
+        m_handler[std::type_index(typeid(wrapped<Action>))] = [handler](Model model, wrapped_base const& inner) {
+            Action const& action = static_cast<wrapped<Action> const&>(inner).contained;
+            return handler(model, action);
         };
-        return this;
     }
 
 private:

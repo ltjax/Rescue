@@ -18,6 +18,10 @@ add_executable(${TARGET_NAME}
   GraphWidget.cpp
   FlowLayout.hpp
   FlowLayout.cpp
+  Reducer.hpp
+  Reducer.cpp
+  Actions.hpp
+  Actions.cpp
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}

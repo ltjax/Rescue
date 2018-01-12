@@ -16,7 +16,7 @@ class ActionWidget;
 class RescueMainWindow : public QMainWindow, public view::component<Action, Model>
 {
 public:
-    explicit RescueMainWindow(view::component<Action, Model> Component);
+    explicit RescueMainWindow(view::component<Action, Model> connection);
     ~RescueMainWindow();
 
     void onAddAction();
@@ -33,12 +33,10 @@ private:
     void saveTo(QString filename);
     void setCurrentFilename(QString filename);
     QString getFilePath() const;
-    void syncWidgets();
+    void syncWidgets(Rescue::PtrList<Rescue::Action> const& actionList);
     void catchAll(std::function<void()> rhs);
     std::unique_ptr<Ui::MainWindow> mUi;
     QBoxLayout* mAreaLayout = nullptr;
     std::vector<ActionWidget*> mActionWidgetList;
     QString mCurrentFilename;
-
-    std::shared_ptr<Rescue::Group> mGroup;
 };

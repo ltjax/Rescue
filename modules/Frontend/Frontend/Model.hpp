@@ -6,6 +6,7 @@
 struct Model
 {
     std::shared_ptr<Rescue::Group const> Group;
+    std::string Filename;
 };
 
 using Reducer = rtti_reducer<Model>;
