@@ -5,7 +5,7 @@
 
 struct Model
 {
-    std::shared_ptr<Rescue::Group const> Group;
+    std::shared_ptr<Rescue::Group const> Group = std::make_shared<Rescue::Group>();
     std::string Filename;
 };
 

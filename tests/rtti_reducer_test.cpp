@@ -14,10 +14,9 @@ struct dummy_action
 
 TEST_CASE("wrapped type index works")
 {
-    std::unique_ptr<rtti_reducer<empty>::wrapped_base> p =
-        std::make_unique<rtti_reducer<empty>::wrapped<dummy_action>>(dummy_action{});
+    std::unique_ptr<wrapped_base> p = std::make_unique<wrapped<dummy_action>>(dummy_action{});
     auto from_erased = std::type_index(typeid(*p.get()));
-    auto original = std::type_index(typeid(rtti_reducer<empty>::wrapped<dummy_action>));
+    auto original = std::type_index(typeid(wrapped<dummy_action>));
     REQUIRE(from_erased == original);
 }
 
