@@ -13,8 +13,9 @@ namespace
 auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 }
 
-RescueMainWindow::RescueMainWindow()
-: mUi(std::make_unique<Ui::MainWindow>())
+RescueMainWindow::RescueMainWindow(view::component<Action, Model> Component)
+: view::component<Action, Model>(Component)
+, mUi(std::make_unique<Ui::MainWindow>())
 {
     mUi->setupUi(this);
 

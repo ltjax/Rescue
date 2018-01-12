@@ -1,4 +1,5 @@
 #pragma once
+#include <optional.hpp>
 
 namespace view
 {
@@ -17,37 +18,50 @@ template <typename Function, typename Tuple> auto call(Function f, Tuple t)
 template <class Model> class binder
 {
 public:
+    enum class update
+    {
+        initial,
+        changed
+    };
+
+    using error_handler = std::function<void(std::exception const&, update)>;
+
+    explicit binder(error_handler handler_ = {})
+    : m_error_handler(std::move(handler_))
+    {
+    }
+
     void operator()(Model const& model)
     {
-        if (!mPrevious)
+        if (!m_previous)
         {
-            for (auto const& Handler : mForcedHandlers)
+            for (auto const& handler : mForcedHandlers)
             {
                 try
                 {
-                    Handler(State);
+                    handler(model);
                 }
                 catch (std::exception const& e)
                 {
-                    // DefaultLogger()->info("Error while setting up bound component: {0}", e.what());
+                    on_error(e, update::initial);
                 }
             }
         }
         else
         {
-            for (auto const& Handler : mDiffingHandlerList)
+            for (auto const& handler : mDiffingHandlerList)
             {
                 try
                 {
-                    Handler(State, *mPrevious);
+                    handler(model, *m_previous);
                 }
                 catch (std::exception const& e)
                 {
-                    // DefaultLogger()->error("Error while updating bound component: {0}", e.what());
+                    on_error(e, update::changed);
                 }
             }
         }
-        mPrevious = State;
+        m_previous = model;
     }
 
     /** Fully configurable version.
@@ -76,6 +90,14 @@ public:
     }
 
 private:
+    void on_error(std::exception const& e, update update_)
+    {
+        if (m_error_handler)
+        {
+            m_error_handler(e, update_);
+        }
+    }
+
     template <class T> class UnwrappingAdaptor
     {
     public:
@@ -98,9 +120,10 @@ private:
         T mHandler;
     };
 
-    std::vector<std::function<void(Model const& Current, Model const& Old)>> mDiffingHandlerList;
+    error_handler m_error_handler;
+    std::vector<std::function<void(Model const& current, Model const& previous)>> mDiffingHandlerList;
     std::vector<std::function<void(Model const& Current)>> mForcedHandlers;
-    boost::optional<Model> mPrevious;
+    nonstd::optional<Model> m_previous;
 };
 
 template <typename Action, typename Model> class component
@@ -108,21 +131,21 @@ template <typename Action, typename Model> class component
 public:
     using dispatch_t = std::function<void(Action)>;
 
-    provider(dispatch_t dispatch_, std::shared_ptr<binder<Model>> binder_)
+    component(dispatch_t dispatch_, std::shared_ptr<binder<Model>> binder_)
     : m_dispatch(std::move(dispatch_))
     , m_binder(std::move(binder_))
     {
     }
 
-    component(component const& Provider) = default;
+    component(component const& parent) = default;
 
     template <class Projection, class WeakEqual, class Handler>
-    inline void connect(Projection projection, WeakEqual predicate, Handler handler)
+    inline void connect_view(Projection projection, WeakEqual predicate, Handler handler)
     {
         m_binder->connect(projection, predicate, handler);
     }
 
-    template <class Projection, class Handler> inline void connect(Projection projection, Handler handler)
+    template <class Projection, class Handler> inline void connect_view(Projection projection, Handler handler)
     {
         m_binder->connect(projection, handler);
     }

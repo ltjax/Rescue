@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(Rescue)
 
-set(VERSION "0.1")
+set(VERSION "0.2")
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -12,6 +12,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 
 # External modules
+add_subdirectory(externals/variant)
 add_subdirectory(externals/pugixml)
 set(lager_BUILD_DEBUGGER OFF CACHE BOOL "No lager debugger" FORCE)
 set(lager_BUILD_EXAMPLES OFF CACHE BOOL "No lager examples" FORCE)

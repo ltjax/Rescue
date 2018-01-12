@@ -1,5 +1,7 @@
 #pragma once
 #include "Domain/Group.hpp"
+#include "Model.hpp"
+#include "view_binder.hpp"
 #include <QBoxLayout>
 #include <QMainWindow>
 #include <functional>
@@ -11,10 +13,10 @@ class MainWindow;
 }
 
 class ActionWidget;
-class RescueMainWindow : public QMainWindow
+class RescueMainWindow : public QMainWindow, public view::component<Action, Model>
 {
 public:
-    RescueMainWindow();
+    explicit RescueMainWindow(view::component<Action, Model> Component);
     ~RescueMainWindow();
 
     void onAddAction();

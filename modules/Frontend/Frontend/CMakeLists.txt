@@ -26,7 +26,8 @@ target_include_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
 	PUBLIC lager
-  PUBLIC Qt5::Widgets)
+  PUBLIC Qt5::Widgets
+	PUBLIC mpark_variant)
 
 install(TARGETS ${TARGET_NAME}
   RUNTIME DESTINATION ./)
