@@ -85,7 +85,7 @@ public:
     template <class ProjectionType, class HandlerType>
     inline void connect(ProjectionType Projection, HandlerType Handler)
     {
-        using ProjectedType = decltype(Projection(*mPrevious));
+        using ProjectedType = decltype(Projection(*m_previous));
         connect(Projection, std::equal_to<ProjectedType>(), UnwrappingAdaptor<HandlerType>(Handler));
     }
 
@@ -102,7 +102,7 @@ private:
     {
     public:
         UnwrappingAdaptor(T Handler)
-        : mHandler(Handler)
+        : m_handler(Handler)
         {
         }
 
@@ -113,11 +113,11 @@ private:
 
         template <class... P> auto operator()(std::tuple<P...> Tuple) const
         {
-            return call(mHandler, Tuple);
+            return call(m_handler, Tuple);
         }
 
     private:
-        T mHandler;
+        T m_handler;
     };
 
     error_handler m_error_handler;

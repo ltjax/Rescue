@@ -31,6 +31,9 @@ RescueMainWindow::RescueMainWindow(view::component<Action, Model> connection)
     connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
     // mUi->actionArea->setStyleSheet("background-color:white;");
+
+    connect_view([](Model const& model) { return model.Group; },
+                 [this](auto group) { syncWidgets(group->getActionList()); });
 }
 
 RescueMainWindow::~RescueMainWindow() = default;
@@ -137,8 +140,7 @@ void RescueMainWindow::syncWidgets(Rescue::PtrList<Rescue::Action> const& action
 
 void RescueMainWindow::onFileNew()
 {
-    // mGroup = std::make_shared<Rescue::Group>();
-    // syncWidgets();
+    dispatch(newDocument());
 }
 
 void RescueMainWindow::catchAll(std::function<void()> rhs)
