@@ -1,8 +1,8 @@
 #include "Main.hpp"
 #include "Domain/Action.hpp"
 #include "RescueMainWindow.hpp"
-#include <QApplication>
-#include <QCommandLineParser>
+#include <QtWidgets/QApplication>
+#include <QtCore/QCommandLineParser>
 #include <stdexcept>
 
 #define RESCUE_VERSION "0.0.1"

@@ -51,9 +51,9 @@
 #ifndef FLOWLAYOUT_H
 #define FLOWLAYOUT_H
 
-#include <QLayout>
-#include <QRect>
-#include <QStyle>
+#include <QtWidgets/QLayout>
+#include <QtCore/QRect>
+#include <QtWidgets/QStyle>
 //! [0]
 class FlowLayout : public QLayout
 {

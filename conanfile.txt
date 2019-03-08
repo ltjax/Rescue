@@ -1,0 +1,11 @@
+[requires]
+qt/5.12.1@bincrafters/stable
+
+[generators]
+cmake
+
+[options]
+qt:with_mysql=False
+qt:with_sqlite3=False
+qt:with_odbc=False
+qt:with_pq=False

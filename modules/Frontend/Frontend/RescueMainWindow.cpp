@@ -2,10 +2,10 @@
 #include "ActionWidget.hpp"
 #include "Domain/LoadSave.hpp"
 #include "ui_Rescue.h"
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QSettings>
-#include <QStandardPaths>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 
 namespace
 {

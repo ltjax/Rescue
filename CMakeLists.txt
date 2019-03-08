@@ -3,13 +3,28 @@ project(Rescue)
 
 set(VERSION "0.1")
 
+# Canonize platform selection
+set(Rescue_PLATFORM Undefined)
+if(WIN32)
+    set(Rescue_PLATFORM PLATFORM_WIN32)
+elseif(APPLE)
+    set(Rescue_PLATFORM PLATFORM_MACOS)
+elseif(UNIX AND NOT APPLE)
+    set(Rescue_PLATFORM PLATFORM_LINUX)
+endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
+find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
-
-# Find the QtWidgets library
-find_package(Qt5Widgets)
+#set(CMAKE_AUTIUIC ON)
 
 # External modules
 add_subdirectory(externals/pugixml)

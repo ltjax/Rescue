@@ -25,7 +25,14 @@ target_include_directories(${TARGET_NAME}
   
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
-  PUBLIC Qt5::Widgets)
+  PUBLIC CONAN_PKG::qt)
+
+if (Rescue_PLATFORM STREQUAL PLATFORM_LINUX)
+  target_compile_options(${TARGET_NAME}
+    PUBLIC -fPIC)
+  target_link_libraries(${TARGET_NAME}
+    PUBLIC -fPIC)
+endif()
 
 install(TARGETS ${TARGET_NAME}
   RUNTIME DESTINATION ./)

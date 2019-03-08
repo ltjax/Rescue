@@ -1,7 +1,7 @@
 #pragma once
 #include "Domain/Action.hpp"
-#include <QBoxLayout>
-#include <QWidget>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QWidget>
 #include <memory>
 
 namespace Ui
