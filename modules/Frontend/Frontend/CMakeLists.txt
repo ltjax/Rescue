@@ -25,7 +25,7 @@ target_include_directories(${TARGET_NAME}
   
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
-  PUBLIC CONAN_PKG::qt)
+  PUBLIC Qt5::Widgets)
 
 if (Rescue_PLATFORM STREQUAL PLATFORM_LINUX)
   target_compile_options(${TARGET_NAME}

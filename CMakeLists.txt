@@ -22,9 +22,6 @@ find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTIUIC ON)
 
 # External modules
 add_subdirectory(externals/pugixml)
