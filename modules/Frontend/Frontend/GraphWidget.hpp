@@ -1,6 +1,6 @@
 #pragma once
 #include "Domain/Axis.hpp"
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <memory>
 #include <optional.hpp>
 

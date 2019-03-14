@@ -3,6 +3,7 @@ project(Rescue)
 
 set(VERSION "0.1")
 
+set(CMAKE_CXX_STANDARD 17)
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.

@@ -1,7 +1,7 @@
 #pragma once
 #include "Domain/Group.hpp"
-#include <QBoxLayout>
-#include <QMainWindow>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QMainWindow>
 #include <functional>
 #include <memory>
 

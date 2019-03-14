@@ -1,6 +1,6 @@
 #include "GraphWidget.hpp"
-#include <QPaintEvent>
-#include <QPainter>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QPainter>
 
 using namespace Rescue;
 

@@ -1,6 +1,8 @@
 #include "AxisWidget.hpp"
 #include "ui_Axis.h"
 #include <unordered_map>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QComboBox>
 
 using namespace Rescue;
 

@@ -1,5 +1,6 @@
 #include "Curve.hpp"
 #include <algorithm>
+#include <cmath>
 
 using namespace Rescue;
 
