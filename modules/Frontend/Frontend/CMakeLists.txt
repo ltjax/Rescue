@@ -1,4 +1,4 @@
-set(TARGET_NAME Frontend)
+set(TARGET_NAME Rescue)
 
 qt5_wrap_ui(UI_HEADERS
   Rescue.ui
@@ -18,6 +18,8 @@ add_executable(${TARGET_NAME}
   GraphWidget.cpp
   FlowLayout.hpp
   FlowLayout.cpp
+  State.hpp
+  State.cpp
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}
@@ -25,7 +27,8 @@ target_include_directories(${TARGET_NAME}
   
 target_link_libraries(${TARGET_NAME}
   PUBLIC Domain
-  PUBLIC Qt5::Widgets)
+  PUBLIC Qt5::Widgets
+  PUBLIC ushiro)
 
 install(TARGETS ${TARGET_NAME}
   RUNTIME DESTINATION ./)

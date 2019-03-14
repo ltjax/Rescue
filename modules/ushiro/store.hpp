@@ -6,6 +6,7 @@ namespace ushiro
 template<typename T>
 struct store
 {
+  using state_type = T;
   T state;
 
   std::function<void(T const&, T const&)> change_handler;

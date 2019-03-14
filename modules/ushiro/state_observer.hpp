@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-namespace view
+namespace ushiro
 {
 
 template<typename Function, typename Tuple, std::size_t... I>
