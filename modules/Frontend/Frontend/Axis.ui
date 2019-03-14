@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
+    <width>501</width>
     <height>220</height>
    </rect>
   </property>
@@ -26,6 +26,21 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QFrame" name="frame">
      <property name="frameShape">
@@ -88,6 +103,9 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="m">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
           <property name="minimum">
            <double>-10000.000000000000000</double>
           </property>
@@ -114,6 +132,9 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="k">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
           <property name="prefix">
            <string/>
           </property>
@@ -146,6 +167,9 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="c">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
           <property name="minimum">
            <double>-10.000000000000000</double>
           </property>
@@ -169,6 +193,9 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="b">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
           <property name="minimum">
            <double>-10.000000000000000</double>
           </property>
@@ -195,7 +222,20 @@
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="min"/>
+         <widget class="QDoubleSpinBox" name="min">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="decimals">
+           <number>1</number>
+          </property>
+          <property name="minimum">
+           <double>-1000000.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>1000000.000000000000000</double>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="label_8">
@@ -206,8 +246,20 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="max">
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="decimals">
+           <number>1</number>
+          </property>
+          <property name="minimum">
+           <double>-1000000.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>1000000.000000000000000</double>
+          </property>
           <property name="singleStep">
-           <double>0.100000000000000</double>
+           <double>1.000000000000000</double>
           </property>
           <property name="value">
            <double>1.000000000000000</double>
