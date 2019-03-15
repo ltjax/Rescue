@@ -27,13 +27,13 @@ public:
   ~ActionWidget() final;
 
   void onAddAxis();
-  AxisWidget* addAxisWidget(std::shared_ptr<Rescue::Axis> const& axis);
 
 private:
   void updateFrom(Ptr<Rescue::Action const> const& action);
 
   std::unique_ptr<Ui::Action> mUi;
   Ptr<ushiro::event_bus> mBus;
+  ushiro::state_observer<State> mObserver;
   Id mActionId;
   FlowLayout* mAreaLayout = nullptr;
   ushiro::diffable_list<Id, AxisWidget*> mAxisWidgets;

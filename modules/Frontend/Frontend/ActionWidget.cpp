@@ -9,6 +9,7 @@ ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<St
 : QWidget(parent)
 , mUi(std::make_unique<Ui::Action>())
 , mBus(std::move(bus))
+, mObserver(observer)
 , mActionId(id)
 {
   mUi->setupUi(this);
@@ -35,20 +36,14 @@ void ActionWidget::onAddAxis()
   addAxisWidget(axis);*/
 }
 
-AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Rescue::Axis> const& axis)
-{
-  auto widget = new AxisWidget(axis, mUi->axisArea);
-  mAreaLayout->addWidget(widget);
-  return widget;
-}
-
 void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
 {
   mUi->name->setText(action->name.c_str());
 
   auto extractId = [](auto const& axis) {return axis->id;};
   auto insert = [this](auto const& axis, auto index) {
-    auto widget = new AxisWidget(std::make_shared<Axis>(createId(), "", RangedCurve{}), mUi->axisArea);
+    auto widget = new AxisWidget(mBus, mObserver, mActionId, createId(), mUi->axisArea);
+    // TODO: Proper insert at index here
     mAreaLayout->addWidget(widget);
     return widget;
   };

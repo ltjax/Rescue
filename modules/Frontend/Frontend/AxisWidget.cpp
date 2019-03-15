@@ -1,8 +1,8 @@
 #include "AxisWidget.hpp"
 #include "ui_Axis.h"
-#include <unordered_map>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
+#include <unordered_map>
 
 using namespace Rescue;
 
@@ -10,65 +10,99 @@ namespace
 {
 
 std::vector<std::pair<Curve::FunctionType, QString>> const typeToString = {
-    { Curve::FunctionType::Linear, "Linear" },
-    { Curve::FunctionType::Polynomial, "Polynomial" },
-    { Curve::FunctionType::Logistic, "Logistic" }
+  { Curve::FunctionType::Linear, "Linear" },
+  { Curve::FunctionType::Polynomial, "Polynomial" },
+  { Curve::FunctionType::Logistic, "Logistic" }
 };
 }
 
-AxisWidget::AxisWidget(std::shared_ptr<Axis> axis, QWidget* parent)
+AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus,
+                       ushiro::state_observer<State> observer,
+                       Id actionId,
+                       Id axisId,
+                       QWidget* parent)
 : mUi(std::make_unique<Ui::Axis>())
-, mAxis(std::move(axis))
+, mBus(std::move(bus))
+, mActionId(actionId)
+, mAxisId(axisId)
 {
-    mUi->setupUi(this);
-    mUi->graphWidget->setRangedCurve(mAxis->curve);
-    mUi->input->setText(mAxis->input.c_str());
+  mUi->setupUi(this);
+  for (std::size_t i = 0; i < typeToString.size(); ++i)
+    mUi->type->addItem(typeToString[i].second, QVariant(static_cast<int>(typeToString[i].first)));
 
-    using namespace std::placeholders;
+  using namespace std::placeholders;
 
-    auto valueChanged = static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged);
-    connect(mUi->m, valueChanged, directTo(&Curve::withM));
-    mUi->m->setValue(mAxis->curve.getCurve().m());
-    connect(mUi->k, valueChanged, directTo(&Curve::withK));
-    mUi->k->setValue(mAxis->curve.getCurve().k());
-    connect(mUi->c, valueChanged, directTo(&Curve::withC));
-    mUi->c->setValue(mAxis->curve.getCurve().c());
-    connect(mUi->b, valueChanged, directTo(&Curve::withB));
-    mUi->b->setValue(mAxis->curve.getCurve().b());
+  auto valueChanged = static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged);
+  connect(mUi->m, valueChanged, directTo(&Curve::withM));
+  connect(mUi->k, valueChanged, directTo(&Curve::withK));
+  connect(mUi->c, valueChanged, directTo(&Curve::withC));
+  connect(mUi->b, valueChanged, directTo(&Curve::withB));
 
-    for (std::size_t i = 0; i < typeToString.size(); ++i)
-        mUi->type->addItem(typeToString[i].second, QVariant(static_cast<int>(typeToString[i].first)));
 
-    auto currentIndexChanged = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
-    connect(mUi->type, currentIndexChanged, [this](int current) {
-        if (current < static_cast<int>(typeToString.size()))
-        {
-            auto type = typeToString[current].first;
-            modifyCurve(std::bind(&Curve::withType, _1, type));
-        }
-    });
+  auto currentIndexChanged = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
+  connect(mUi->type, currentIndexChanged, [this](int current) {
+    if (current < static_cast<int>(typeToString.size()))
+    {
+      auto type = typeToString[current].first;
+      modifyCurve(std::bind(&Curve::withType, _1, type));
+    }
+  });
 
-    connect(mUi->input, &QLineEdit::textEdited, [this](QString text) { mAxis->input = text.toStdString(); });
+  connect(mUi->input, &QLineEdit::textEdited, [this](QString text) {
+    mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString());
+  });
 
-    connect(mUi->min, valueChanged, [this](double rhs) {
-        mAxis->curve.setMin(rhs);
-        mUi->graphWidget->setRangedCurve(mAxis->curve);
-    });
-    mUi->min->setValue(mAxis->curve.getMin());
+  connect(mUi->min, valueChanged, [this](double rhs) {
+    auto curve = currentCurve();
+    curve.setMin(rhs);
 
-    connect(mUi->max, valueChanged, [this](double rhs) {
-        mAxis->curve.setMax(rhs);
-        mUi->graphWidget->setRangedCurve(mAxis->curve);
-    });
-    mUi->max->setValue(mAxis->curve.getMax());
+    emitChange(curve);
+    // mUi->graphWidget->setRangedCurve(mAxis->curve);
+  });
+
+  connect(mUi->max, valueChanged, [this](double rhs) {
+    auto curve = currentCurve();
+    curve.setMax(rhs);
+    emitChange(curve);
+    // mUi->graphWidget->setRangedCurve(mAxis->curve);
+  });
+
+  observer.observe([this](State const& state) {
+    auto const& action = locate(state.group, mActionId);
+    return locate(action->axisList, mAxisId);
+  }, [this](Ptr<Axis const> const& axis)
+  {
+    updateFrom(axis);
+  });
 }
 
 AxisWidget::~AxisWidget() = default;
 
+void AxisWidget::emitChange(RangedCurve const& change)
+{
+  mBus->dispatch<Events::ModifyAxisCurve>(mActionId, mAxisId, change);
+}
+
 void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
 {
-    auto ranged = mAxis->curve;
-    auto newCurve = modifier(ranged.getCurve());
-    mAxis->curve = RangedCurve{ newCurve, ranged.getMin(), ranged.getMax() };
-    mUi->graphWidget->setRangedCurve(ranged);
+  auto ranged = currentCurve();
+  auto newCurve = modifier(ranged.getCurve());
+  emitChange(newCurve);
+}
+
+void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const &axis)
+{
+  mUi->m->setValue(axis->curve.getCurve().m());
+  mUi->k->setValue(axis->curve.getCurve().k());
+  mUi->c->setValue(axis->curve.getCurve().c());
+  mUi->b->setValue(axis->curve.getCurve().b());
+  mUi->min->setValue(axis->curve.getMin());
+  mUi->max->setValue(axis->curve.getMax());
+  mUi->graphWidget->setRangedCurve(axis->curve);
+  mUi->input->setText(axis->input.c_str());
+}
+
+Rescue::RangedCurve const& AxisWidget::currentCurve() const
+{
+  return mUi->graphWidget->getRangedCurve();
 }

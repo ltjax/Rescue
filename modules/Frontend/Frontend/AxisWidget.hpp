@@ -1,8 +1,11 @@
 #pragma once
 #include "Axis.hpp"
+#include "State.hpp"
+#include "event_bus.hpp"
 #include <QtWidgets/QWidget>
 #include <functional>
 #include <memory>
+#include <state_observer.hpp>
 
 namespace Ui
 {
@@ -15,20 +18,27 @@ namespace Rescue
 class AxisWidget : public QWidget
 {
 public:
-    AxisWidget(std::shared_ptr<Rescue::Axis> axis, QWidget* parent);
-    ~AxisWidget();
+  AxisWidget(
+    Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id actionId, Id axisId, QWidget* parent);
+  ~AxisWidget() final;
 
 private:
-    void modifyCurve(std::function<Rescue::Curve(Rescue::Curve)> modifier);
-    template <typename T> std::function<void(T)> directTo(Rescue::Curve (Rescue::Curve::*f)(T) const);
+  void updateFrom(Ptr<Rescue::Axis const> const& axis);
+  void modifyCurve(std::function<Rescue::Curve(Rescue::Curve)> modifier);
+  void emitChange(RangedCurve const& change);
+  template <typename T> std::function<void(T)> directTo(Rescue::Curve (Rescue::Curve::*f)(T) const);
 
-    std::unique_ptr<Ui::Axis> mUi;
-    std::shared_ptr<Rescue::Axis> mAxis;
+  Rescue::RangedCurve const& currentCurve() const;
+
+  std::unique_ptr<Ui::Axis> mUi;
+  Ptr<ushiro::event_bus> mBus;
+  Id mActionId;
+  Id mAxisId;
 };
 
 template <typename T> inline std::function<void(T)> AxisWidget::directTo(Rescue::Curve (Rescue::Curve::*f)(T) const)
 {
-    return [this, f](T value) { modifyCurve(std::bind(f, std::placeholders::_1, value)); };
+  return [this, f](T value) { modifyCurve(std::bind(f, std::placeholders::_1, value)); };
 }
 
-}
+} // namespace Rescue
