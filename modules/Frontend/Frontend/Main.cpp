@@ -1,5 +1,5 @@
 #include "Main.hpp"
-#include "Domain/Action.hpp"
+#include "Action.hpp"
 #include "RescueMainWindow.hpp"
 #include "State.hpp"
 #include "event_bus.hpp"

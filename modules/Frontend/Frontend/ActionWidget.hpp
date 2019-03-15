@@ -1,5 +1,5 @@
 #pragma once
-#include "Domain/Action.hpp"
+#include "Action.hpp"
 #include "State.hpp"
 #include "Vocabulary.hpp"
 #include "event_bus.hpp"

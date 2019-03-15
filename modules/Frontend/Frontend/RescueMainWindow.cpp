@@ -1,6 +1,6 @@
 #include "RescueMainWindow.hpp"
 #include "ActionWidget.hpp"
-#include "Domain/LoadSave.hpp"
+#include "LoadSave.hpp"
 #include "ui_Rescue.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

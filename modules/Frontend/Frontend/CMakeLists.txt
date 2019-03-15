@@ -6,6 +6,18 @@ qt5_wrap_ui(UI_HEADERS
   Axis.ui)
 
 add_executable(${TARGET_NAME}
+  Action.hpp
+  Action.cpp
+  Group.hpp
+  Group.cpp
+  Curve.hpp
+  Curve.cpp
+  RangedCurve.hpp
+  RangedCurve.cpp
+  LoadSave.hpp
+  LoadSave.cpp
+  Axis.hpp
+  Axis.cpp
   Main.hpp
   Main.cpp
   RescueMainWindow.hpp
@@ -29,7 +41,7 @@ target_include_directories(${TARGET_NAME}
   PUBLIC ../../../externals/optional)
   
 target_link_libraries(${TARGET_NAME}
-  PUBLIC Domain
+  PUBLIC pugixml
   PUBLIC Qt5::Widgets
   PUBLIC ushiro
   PUBLIC Boost::boost)

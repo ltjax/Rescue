@@ -1,5 +1,5 @@
 #pragma once
-#include "Domain/Group.hpp"
+#include "Group.hpp"
 #include "State.hpp"
 #include "Vocabulary.hpp"
 #include "diffable_list.hpp"

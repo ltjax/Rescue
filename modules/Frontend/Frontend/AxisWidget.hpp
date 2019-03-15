@@ -1,5 +1,5 @@
 #pragma once
-#include "Domain/Axis.hpp"
+#include "Axis.hpp"
 #include <QtWidgets/QWidget>
 #include <functional>
 #include <memory>

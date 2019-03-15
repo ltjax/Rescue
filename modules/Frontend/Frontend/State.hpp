@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Domain/Group.hpp"
+#include "Group.hpp"
 #include "Events.hpp"
 #include "Vocabulary.hpp"
 #include <tuple>
