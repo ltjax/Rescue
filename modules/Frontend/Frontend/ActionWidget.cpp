@@ -44,5 +44,5 @@ AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Rescue::Axis> const& axi
 
 void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
 {
-  mUi->name->setText(action->getName().c_str());
+  mUi->name->setText(action->name.c_str());
 }

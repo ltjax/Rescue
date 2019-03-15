@@ -72,12 +72,12 @@ std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> docume
     for (auto const& actionNode : groupNode.children("Action"))
     {
         auto action = std::make_shared<Action>();
-        action->setName(actionNode.attribute("name").as_string());
+        action->name = actionNode.attribute("name").as_string();
 
         for (auto const& axisNode : actionNode.children("Axis"))
         {
             auto axis = std::make_shared<Axis>(axisNode.attribute("input").as_string(), loadRangedCurveFrom(axisNode));
-            action->addAxis(axis);
+            action->axisList.emplace_back(createId(), axis);
         }
         group->addAction(action);
     }
@@ -92,12 +92,12 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> 
     for (auto const& action : group->getActionList())
     {
         auto actionNode = groupNode.append_child("Action");
-        actionNode.append_attribute("name").set_value(action->getName().c_str());
-        for (auto const& axis : action->getAxisList())
+        actionNode.append_attribute("name").set_value(action->name.c_str());
+        for (auto const& axis : action->axisList)
         {
             auto axisNode = actionNode.append_child("Axis");
-            axisNode.append_attribute("input").set_value(axis->getInput().c_str());
-            addRangedCurveTo(axis->getCurve(), axisNode);
+            axisNode.append_attribute("input").set_value(axis.value->getInput().c_str());
+            addRangedCurveTo(axis.value->getCurve(), axisNode);
         }
     }
 

@@ -17,7 +17,8 @@ template <> struct hash<boost::uuids::uuid>
 
 namespace Rescue
 {
-template <class T> using Ptr = std::shared_ptr<T>;
+template <typename T> using Ptr = std::shared_ptr<T>;
+template <typename T> using PtrList = std::vector<std::shared_ptr<T>>;
 using Id = boost::uuids::uuid;
 
 template <class T> struct Identifiable
