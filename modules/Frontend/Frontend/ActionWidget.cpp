@@ -45,4 +45,15 @@ AxisWidget* ActionWidget::addAxisWidget(std::shared_ptr<Rescue::Axis> const& axi
 void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
 {
   mUi->name->setText(action->name.c_str());
+
+  auto extractId = [](auto const& axis) {return axis->id;};
+  auto insert = [this](auto const& axis, auto index) {
+    auto widget = new AxisWidget(std::make_shared<Axis>(createId(), "", RangedCurve{}), mUi->axisArea);
+    mAreaLayout->addWidget(widget);
+    return widget;
+  };
+  auto remove = [this](QWidget* widget) {
+    delete widget;
+  };
+  mAxisWidgets.update(action->axisList, extractId, insert, remove);
 }

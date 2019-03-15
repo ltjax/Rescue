@@ -41,6 +41,9 @@ public:
   {
     auto copy = *this;
     auto oldAction = locate(group, event.actionId);
+    auto newAction = std::make_shared<Action>(*oldAction);
+    newAction->axisList.push_back(std::make_shared<Axis>(event.newId, "", RangedCurve{}));
+    locate(copy.group, event.actionId) = newAction;
     return copy;
   }
 

@@ -7,6 +7,7 @@
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QWidget>
 #include <memory>
+#include <diffable_list.hpp>
 
 namespace Ui
 {
@@ -35,6 +36,7 @@ private:
   Ptr<ushiro::event_bus> mBus;
   Id mActionId;
   FlowLayout* mAreaLayout = nullptr;
+  ushiro::diffable_list<Id, AxisWidget*> mAxisWidgets;
 };
 
 } // namespace Rescue
