@@ -16,6 +16,7 @@ ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<St
   mUi->addAxis->setDefaultAction(mUi->actionAdd_Axis);
   connect(mUi->actionAdd_Axis, &QAction::triggered, [this]() { onAddAxis(); });
   mAreaLayout = new FlowLayout();
+  mAreaLayout->setMargin(0);
   mUi->axisArea->setLayout(mAreaLayout);
 
   observer.observe([=](State const& state) { return locate(state.group, id); },
