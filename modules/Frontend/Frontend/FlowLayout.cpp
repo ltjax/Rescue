@@ -236,4 +236,17 @@ int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const
         return static_cast<QLayout*>(parent)->spacing();
     }
 }
+
+void FlowLayout::insertItem(int index, QLayoutItem* item)
+{
+    itemList.insert(index, item);
+}
+
+void FlowLayout::insertWidget(int index, QWidget* widget)
+{
+    addChildWidget(widget);
+    auto item = new QWidgetItemV2(widget);
+    insertItem(index, item);
+
+}
 //! [12]

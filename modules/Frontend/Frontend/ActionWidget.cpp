@@ -43,8 +43,7 @@ void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
   auto extractId = [](auto const& axis) {return axis->id;};
   auto insert = [this](auto const& axis, auto index) {
     auto widget = new AxisWidget(mBus, mObserver, mActionId, axis->id, mUi->axisArea);
-    // TODO: Proper insert at index here
-    mAreaLayout->addWidget(widget);
+    mAreaLayout->insertWidget(index, widget);
     return widget;
   };
   auto remove = [this](QWidget* widget) {
