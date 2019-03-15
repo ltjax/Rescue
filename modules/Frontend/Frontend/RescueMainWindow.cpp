@@ -19,6 +19,7 @@ auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 
 RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer)
 : mUi(std::make_unique<Ui::MainWindow>())
+, mBus(std::move(bus))
 {
     mUi->setupUi(this);
 
@@ -45,9 +46,7 @@ RescueMainWindow::~RescueMainWindow() = default;
 
 void RescueMainWindow::onAddAction()
 {
-    auto action = std::make_shared<Rescue::Action>();
-    mGroup->addAction(action);
-    addActionWidget(action);
+    mBus->dispatch<Events::AddAction>(mUuidGenerator());
 }
 
 ActionWidget* RescueMainWindow::addActionWidget(std::shared_ptr<Rescue::Action> const& action)

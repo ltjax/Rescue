@@ -44,8 +44,6 @@ int run(int argc, char** argv)
   // Send out initial notification
   observerManager->message_all(store.state);
 
-  bus->dispatch<State::TestEvent>();
-
   mainWindow.show();
   return app.exec();
 }

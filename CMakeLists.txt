@@ -11,6 +11,7 @@ set(CMAKE_AUTOMOC ON)
 
 # Find the QtWidgets library
 find_package(Qt5Widgets)
+find_package(Boost REQUIRED)
 
 # External modules
 add_subdirectory(externals/pugixml)
