@@ -1,5 +1,7 @@
 set(TARGET_NAME Rescue)
 
+set(CMAKE_AUTORCC ON)
+
 qt5_wrap_ui(UI_HEADERS
   Rescue.ui
   Action.ui
@@ -33,6 +35,7 @@ add_executable(${TARGET_NAME}
   SignalBlocker.cpp
   SignalBlocker.hpp
   Events.hpp
+  ../../icons.qrc
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
+    <width>687</width>
     <height>220</height>
    </rect>
   </property>
@@ -83,6 +83,17 @@
         </item>
         <item>
          <widget class="QComboBox" name="type"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="remove">
+          <property name="text">
+           <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../icons.qrc">
+            <normaloff>:/icon/remove</normaloff>:/icon/remove</iconset>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -217,7 +228,7 @@
         <item>
          <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>bookends</string>
+           <string>Bookends</string>
           </property>
          </widget>
         </item>
@@ -294,6 +305,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -2,12 +2,12 @@
 #include "ActionWidget.hpp"
 #include "LoadSave.hpp"
 #include "ui_Rescue.h"
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
-#include <memory>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <memory>
 
 using namespace Rescue;
 
@@ -22,130 +22,127 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
 , mBus(std::move(bus))
 , mObserver(std::move(observer))
 {
-    mUi->setupUi(this);
+  mUi->setupUi(this);
 
-    connect(mUi->actionAdd_Action, &QAction::triggered, [this]() { onAddAction(); });
+  connect(mUi->actionAdd_Action, &QAction::triggered, [this]() { onAddAction(); });
 
-    mAreaLayout = new QVBoxLayout();
-    mAreaLayout->addStretch();
-    mUi->actionArea->setLayout(mAreaLayout);
+  mAreaLayout = new QVBoxLayout();
+  mAreaLayout->addStretch();
+  mUi->actionArea->setLayout(mAreaLayout);
 
-    connect(mUi->actionOpen, &QAction::triggered, [this] { onFileOpen(); });
-    connect(mUi->actionNew, &QAction::triggered, [this] { onFileNew(); });
-    connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
-    connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
+  connect(mUi->actionOpen, &QAction::triggered, [this] { onFileOpen(); });
+  connect(mUi->actionNew, &QAction::triggered, [this] { onFileNew(); });
+  connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
+  connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
 
-    mObserver.observe([](State const& state) {
-        // Get the actions;
-        return std::tie(state.group);
-        },
-      [this](Rescue::Group const& group) {syncWidgets(group);});
+  mObserver.observe(
+    [](State const& state) {
+      // Get the actions;
+      return std::tie(state.group);
+    },
+    [this](Rescue::Group const& group) { syncWidgets(group); });
 }
 
 RescueMainWindow::~RescueMainWindow() = default;
 
 void RescueMainWindow::onAddAction()
 {
-    mBus->dispatch<Events::AddAction>(createId());
+  mBus->dispatch<Events::AddAction>(createId());
 }
 
 void RescueMainWindow::onFileSave()
 {
-    if (mCurrentFilename.isEmpty())
-    {
-        onFileSaveAs();
-        return;
-    }
+  if (mCurrentFilename.isEmpty())
+  {
+    onFileSaveAs();
+    return;
+  }
 
-    saveTo(mCurrentFilename);
+  saveTo(mCurrentFilename);
 }
 
 void RescueMainWindow::onFileSaveAs()
 {
-    auto path = getFilePath();
-    auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
-    if (filename.isEmpty())
-        return;
+  auto path = getFilePath();
+  auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
+  if (filename.isEmpty())
+    return;
 
-    saveTo(filename);
-    setCurrentFilename(filename);
+  saveTo(filename);
+  setCurrentFilename(filename);
 }
 
 void RescueMainWindow::onFileOpen()
 {
-    auto path = getFilePath();
-    auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
-    if (filename.isEmpty())
-        return;
+  auto path = getFilePath();
+  auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
+  if (filename.isEmpty())
+    return;
 
-    catchAll([&] { mBus->dispatch<Events::LoadFrom>(filename.toStdString()); });
-    setCurrentFilename(filename);
+  catchAll([&] { mBus->dispatch<Events::LoadFrom>(filename.toStdString()); });
+  setCurrentFilename(filename);
 }
 
 void RescueMainWindow::saveTo(QString filename)
 {
-    catchAll([&] { mBus->dispatch<Events::SaveTo>(filename.toStdString()); });
+  catchAll([&] { mBus->dispatch<Events::SaveTo>(filename.toStdString()); });
 }
 
 void RescueMainWindow::setCurrentFilename(QString filename)
 {
-    QSettings settings;
-    settings.setValue("lastFile", filename);
-    mCurrentFilename = filename;
-    this->setWindowTitle(QString("Rescue (%1)").arg(filename));
+  QSettings settings;
+  settings.setValue("lastFile", filename);
+  mCurrentFilename = filename;
+  this->setWindowTitle(QString("Rescue (%1)").arg(filename));
 }
 
 QString RescueMainWindow::getFilePath() const
 {
-    QSettings settings;
-    auto result = settings.value("lastFile").toString();
-    if (!result.isEmpty())
-    {
-        result = QFileInfo(result).path();
-    }
-    else
-    {
-        result = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    }
+  QSettings settings;
+  auto result = settings.value("lastFile").toString();
+  if (!result.isEmpty())
+  {
+    result = QFileInfo(result).path();
+  }
+  else
+  {
+    result = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  }
 
-    return result;
+  return result;
 }
 
 void RescueMainWindow::syncWidgets(Rescue::Group const& group)
 {
-    auto extractId = [](auto const& item) {return item->id;};
-    auto insert = [this](auto const& item, auto index)
-    {
-        auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
-        mAreaLayout->insertWidget(0, widget);
-        return widget;
-    };
+  auto extractId = [](auto const& item) { return item->id; };
+  auto insert = [this](auto const& item, auto index) {
+    auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
+    mAreaLayout->insertWidget(0, widget);
+    return widget;
+  };
 
-    auto remove = [this](QWidget* widget)
-    {
-        delete widget;
-    };
+  auto remove = [this](QWidget* widget) { delete widget; };
 
-    mActionWidgetList.update(group, extractId, insert, remove);
+  mActionWidgetList.update(group, extractId, insert, remove);
 }
 
 void RescueMainWindow::onFileNew()
 {
-    mBus->dispatch<Events::NewFile>();
+  mBus->dispatch<Events::NewFile>();
 }
 
 void RescueMainWindow::catchAll(std::function<void()> rhs)
 {
-    try
-    {
-        rhs();
-    }
-    catch (std::exception const& e)
-    {
-        QMessageBox::critical(this, "Error", e.what());
-    }
-    catch (...)
-    {
-        QMessageBox::critical(this, "Error", "Unknown error");
-    }
+  try
+  {
+    rhs();
+  }
+  catch (std::exception const& e)
+  {
+    QMessageBox::critical(this, "Error", e.what());
+  }
+  catch (...)
+  {
+    QMessageBox::critical(this, "Error", "Unknown error");
+  }
 }

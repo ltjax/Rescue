@@ -32,8 +32,8 @@
     </property>
     <item>
      <widget class="QScrollArea" name="scrollArea">
-      <property name="autoFillBackground">
-       <bool>false</bool>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="widgetResizable">
        <bool>true</bool>
@@ -44,7 +44,7 @@
          <x>0</x>
          <y>0</y>
          <width>798</width>
-         <height>534</height>
+         <height>515</height>
         </rect>
        </property>
       </widget>
@@ -58,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -86,6 +86,10 @@
    <addaction name="actionAdd_Action"/>
   </widget>
   <action name="actionAdd_Action">
+   <property name="icon">
+    <iconset resource="../../icons.qrc">
+     <normaloff>:/icon/add</normaloff>:/icon/add</iconset>
+   </property>
    <property name="text">
     <string>Add Action</string>
    </property>
@@ -114,6 +118,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
