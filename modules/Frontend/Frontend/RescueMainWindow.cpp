@@ -34,12 +34,8 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
     connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
 
-#ifdef TODO
     observer.observe([](State const& state) {return state.group;},
-      [this](Rescue::Group const& group) {syncWidgets(group);});
-#endif
-
-    mGroup = std::make_shared<Rescue::Group>();
+      [this](Rescue::State::Group const& group) {syncWidgets(group);});
 }
 
 RescueMainWindow::~RescueMainWindow() = default;
@@ -47,23 +43,6 @@ RescueMainWindow::~RescueMainWindow() = default;
 void RescueMainWindow::onAddAction()
 {
     mBus->dispatch<Events::AddAction>(mUuidGenerator());
-}
-
-ActionWidget* RescueMainWindow::addActionWidget(std::shared_ptr<Rescue::Action> const& action)
-{
-    ActionWidget* widget = new ActionWidget(action, mUi->actionArea);
-    mAreaLayout->insertWidget(0, widget);
-    mActionWidgetList.push_back(widget);
-    return widget;
-}
-
-void RescueMainWindow::clearActionWidgets()
-{
-    for (auto widget : mActionWidgetList)
-    {
-        delete widget;
-    }
-    mActionWidgetList.clear();
 }
 
 void RescueMainWindow::onFileSave()
@@ -133,23 +112,27 @@ QString RescueMainWindow::getFilePath() const
     return result;
 }
 
-void RescueMainWindow::syncWidgets(Rescue::Group const& group)
+void RescueMainWindow::syncWidgets(Rescue::State::Group const& group)
 {
-    clearActionWidgets();
-
-    for (auto action : mGroup->getActionList())
+    auto extractId = [](auto const& item) {return item.id;};
+    auto insert = [this](auto const& item, auto index)
     {
-        auto actionWidget = addActionWidget(action);
-        for (auto axis : action->getAxisList())
-        {
-            actionWidget->addAxisWidget(axis);
-        }
-    }
+        ActionWidget* widget = new ActionWidget(std::make_shared<Action>(), mUi->actionArea);
+        mAreaLayout->insertWidget(0, widget);
+        return widget;
+    };
+
+    auto remove = [this](QWidget* widget)
+    {
+        delete widget;
+    };
+
+    mActionWidgetList.update(group, extractId, insert, remove);
 }
 
 void RescueMainWindow::onFileNew()
 {
-    mGroup = std::make_shared<Rescue::Group>();
+    mBus->dispatch<Events::NewFile>();
 
 #ifdef TODO
     syncWidgets();

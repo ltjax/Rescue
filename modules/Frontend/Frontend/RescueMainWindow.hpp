@@ -3,6 +3,7 @@
 #include "State.hpp"
 #include "Vocabulary.hpp"
 #include "state_observer.hpp"
+#include "diffable_list.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QMainWindow>
 #include <event_bus.hpp>
@@ -27,9 +28,6 @@ public:
 
     void onAddAction();
 
-    ActionWidget* addActionWidget(std::shared_ptr<Rescue::Action> const& action);
-    void clearActionWidgets();
-
     void onFileSave();
     void onFileSaveAs();
     void onFileOpen();
@@ -39,15 +37,14 @@ private:
     void saveTo(QString filename);
     void setCurrentFilename(QString filename);
     QString getFilePath() const;
-    void syncWidgets(Rescue::Group const& group);
+    void syncWidgets(Rescue::State::Group const& group);
     void catchAll(std::function<void()> rhs);
     std::unique_ptr<Ui::MainWindow> mUi;
     Ptr<ushiro::event_bus> mBus;
     QBoxLayout* mAreaLayout = nullptr;
-    std::vector<ActionWidget*> mActionWidgetList;
+    ushiro::diffable_list<Id, ActionWidget*> mActionWidgetList;
     QString mCurrentFilename;
 
-    std::shared_ptr<Rescue::Group> mGroup;
     boost::uuids::random_generator mUuidGenerator;
 };
 } // namespace Rescue
