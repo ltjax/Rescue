@@ -46,14 +46,14 @@ public:
   {
     auto copy = *this;
     copy.group.clear();
-    return *this;
+    return copy;
   }
 
   State apply(Events::AddAction const& event) const
   {
     auto copy = *this;
     copy.group.emplace_back(event.id, std::make_shared<Action>());
-    return *this;
+    return copy;
   }
 };
 
