@@ -39,7 +39,7 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
         // Get the actions;
         return std::tie(state.group);
         },
-      [this](Rescue::State::Group const& group) {syncWidgets(group);});
+      [this](Rescue::Group const& group) {syncWidgets(group);});
 }
 
 RescueMainWindow::~RescueMainWindow() = default;
@@ -111,7 +111,7 @@ QString RescueMainWindow::getFilePath() const
     return result;
 }
 
-void RescueMainWindow::syncWidgets(Rescue::State::Group const& group)
+void RescueMainWindow::syncWidgets(Rescue::Group const& group)
 {
     auto extractId = [](auto const& item) {return item->id;};
     auto insert = [this](auto const& item, auto index)

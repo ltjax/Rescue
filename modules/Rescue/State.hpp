@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Events.hpp"
-#include "Group.hpp"
+#include "Action.hpp"
 #include "Vocabulary.hpp"
 #include <tuple>
 #include <unordered_map>
@@ -12,7 +12,6 @@ namespace Rescue
 class State
 {
 public:
-  using Group = std::vector<Ptr<Action const>>;
 
   State() = default;
   State(State&&) = default;

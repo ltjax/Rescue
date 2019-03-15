@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vocabulary.hpp"
-#include "Group.hpp"
+#include "Action.hpp"
 
 namespace Rescue
 {

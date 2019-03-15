@@ -1,5 +1,4 @@
 #pragma once
-#include "Group.hpp"
 #include "State.hpp"
 #include "Vocabulary.hpp"
 #include "diffable_list.hpp"
@@ -37,7 +36,7 @@ private:
   void saveTo(QString filename);
   void setCurrentFilename(QString filename);
   QString getFilePath() const;
-  void syncWidgets(Rescue::State::Group const& group);
+  void syncWidgets(Rescue::Group const& group);
   void catchAll(std::function<void()> rhs);
   std::unique_ptr<Ui::MainWindow> mUi;
   Ptr<ushiro::event_bus> mBus;

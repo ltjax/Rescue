@@ -1,5 +1,5 @@
 #pragma once
-#include "Group.hpp"
+#include "Action.hpp"
 #include <memory>
 #include <pugixml.hpp>
 

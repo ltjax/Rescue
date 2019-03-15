@@ -8,18 +8,12 @@ qt5_wrap_ui(UI_HEADERS
 add_executable(${TARGET_NAME}
   Action.hpp
   Action.cpp
-  Group.hpp
-  Group.cpp
   Curve.hpp
   Curve.cpp
-  RangedCurve.hpp
-  RangedCurve.cpp
   LoadSave.hpp
   LoadSave.cpp
   LoadSaveService.hpp
   LoadSaveService.cpp
-  Axis.hpp
-  Axis.cpp
   Main.hpp
   Main.cpp
   RescueMainWindow.hpp
