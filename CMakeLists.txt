@@ -11,13 +11,14 @@ set(CMAKE_AUTOMOC ON)
 
 # Find the QtWidgets library
 find_package(Qt5Widgets)
+find_package(Boost REQUIRED)
 
 # External modules
 add_subdirectory(externals/pugixml)
 
 # Own modules
-add_subdirectory(modules/Frontend/Frontend)
-add_subdirectory(modules/Domain/Domain)
+add_subdirectory(modules/Rescue)
+add_subdirectory(modules/ushiro)
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "NSIS")  

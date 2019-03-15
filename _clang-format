@@ -1,5 +1,5 @@
 # BasedOnStyle:  LLVM
-AccessModifierOffset: -4
+AccessModifierOffset: -2
 ConstructorInitializerIndentWidth: 0
 AlignEscapedNewlinesLeft: false
 AlignTrailingComments: true
@@ -32,8 +32,8 @@ PointerBindsToType: true
 SpacesBeforeTrailingComments: 1
 Cpp11BracedListStyle: false
 Standard:        Cpp11
-IndentWidth:     4
-TabWidth:        4
+IndentWidth:     2
+TabWidth:        2
 UseTab:          Never
 BreakBeforeBraces: Allman
 IndentFunctionDeclarationAfterType: false
@@ -43,5 +43,5 @@ SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 SpaceAfterControlStatementKeyword: true
 SpaceBeforeAssignmentOperators: true
-ContinuationIndentWidth: 4
+ContinuationIndentWidth: 2
 
