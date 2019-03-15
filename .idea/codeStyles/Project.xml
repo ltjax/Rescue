@@ -1,6 +1,13 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <Objective-C>
+      <option name="INDENT_NAMESPACE_MEMBERS" value="0" />
+      <option name="INDENT_C_STRUCT_MEMBERS" value="2" />
+      <option name="INDENT_CLASS_MEMBERS" value="2" />
+      <option name="INDENT_INSIDE_CODE_BLOCK" value="2" />
+      <option name="NAMESPACE_BRACE_PLACEMENT" value="2" />
+      <option name="FUNCTION_BRACE_PLACEMENT" value="2" />
+      <option name="BLOCK_BRACE_PLACEMENT" value="2" />
       <option name="FIELDS_PREFIX" value="m" />
       <option name="TYPE_QUALIFIERS_PLACEMENT" value="AFTER" />
     </Objective-C>
@@ -19,6 +26,8 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
+      <option name="BRACE_STYLE" value="2" />
+      <option name="CLASS_BRACE_STYLE" value="2" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />

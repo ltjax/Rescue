@@ -12,35 +12,16 @@ namespace Rescue
 class State
 {
 public:
-  using Id = boost::uuids::uuid;
-
-  template <class T> struct Identifiable
-  {
-    Identifiable(Id id, Ptr<T const> value)
-    : id(id)
-    , value(std::move(value))
-    {
-    }
-
-    bool operator==(Identifiable const& rhs) const
-    {
-      return id == rhs.id && value == rhs.value;
-    }
-
-    bool operator!=(Identifiable const& rhs) const
-    {
-      return !(rhs == *this);
-    };
-
-    Id id;
-    Ptr<T const> value;
-  };
-
   using Group = std::vector<Identifiable<Action>>;
 
-  Group group;
+  State() = default;
+  State(State&&) = default;
+  State(State const&) = default;
 
-  using event_list = std::tuple<Events::AddAction, Events::NewFile>;
+  State& operator=(State&&) = default;
+  State& operator=(State const&) = default;
+
+  using event_list = std::tuple<Events::AddAction, Events::NewFile, Events::AddAxisTo>;
 
   State apply(Events::NewFile const& event) const
   {
@@ -52,9 +33,17 @@ public:
   State apply(Events::AddAction const& event) const
   {
     auto copy = *this;
-    copy.group.emplace_back(event.id, std::make_shared<Action>());
+    copy.group.emplace_back(event.newId, std::make_shared<Action>());
     return copy;
   }
+
+  State apply(Events::AddAxisTo const& event) const
+  {
+    auto copy = *this;
+    return copy;
+  }
+
+  Group group;
 };
 
 } // namespace Rescue

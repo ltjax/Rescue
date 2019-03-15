@@ -20,6 +20,7 @@ auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer)
 : mUi(std::make_unique<Ui::MainWindow>())
 , mBus(std::move(bus))
+, mObserver(std::move(observer))
 {
     mUi->setupUi(this);
 
@@ -34,7 +35,7 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
     connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
 
-    observer.observe([](State const& state) {return state.group;},
+    mObserver.observe([](State const& state) {return state.group;},
       [this](Rescue::State::Group const& group) {syncWidgets(group);});
 }
 
@@ -42,7 +43,7 @@ RescueMainWindow::~RescueMainWindow() = default;
 
 void RescueMainWindow::onAddAction()
 {
-    mBus->dispatch<Events::AddAction>(mUuidGenerator());
+    mBus->dispatch<Events::AddAction>(createId());
 }
 
 void RescueMainWindow::onFileSave()
@@ -117,7 +118,7 @@ void RescueMainWindow::syncWidgets(Rescue::State::Group const& group)
     auto extractId = [](auto const& item) {return item.id;};
     auto insert = [this](auto const& item, auto index)
     {
-        ActionWidget* widget = new ActionWidget(std::make_shared<Action>(), mUi->actionArea);
+        auto widget = new ActionWidget(mBus, mObserver, item.id, mUi->actionArea);
         mAreaLayout->insertWidget(0, widget);
         return widget;
     };

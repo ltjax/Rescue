@@ -1,5 +1,9 @@
 #pragma once
 #include "Domain/Action.hpp"
+#include "State.hpp"
+#include "Vocabulary.hpp"
+#include "event_bus.hpp"
+#include "state_observer.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QWidget>
 #include <memory>
@@ -18,15 +22,18 @@ class FlowLayout;
 class ActionWidget : public QWidget
 {
 public:
-  ActionWidget(std::shared_ptr<Rescue::Action> action, QWidget* parent);
-  ~ActionWidget();
+  ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent);
+  ~ActionWidget() final;
 
   void onAddAxis();
   AxisWidget* addAxisWidget(std::shared_ptr<Rescue::Axis> const& axis);
 
 private:
+  void updateFrom(Ptr<Rescue::Action const> const& action);
+
   std::unique_ptr<Ui::Action> mUi;
-  std::shared_ptr<Rescue::Action> mAction;
+  Ptr<ushiro::event_bus> mBus;
+  Id mActionId;
   FlowLayout* mAreaLayout = nullptr;
 };
 

@@ -20,6 +20,7 @@ add_executable(${TARGET_NAME}
   FlowLayout.cpp
   State.hpp
   State.cpp
+  Vocabulary.cpp
   Vocabulary.hpp
   Events.hpp
   ${UI_HEADERS})
