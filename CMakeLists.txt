@@ -17,7 +17,7 @@ find_package(Boost REQUIRED)
 add_subdirectory(externals/pugixml)
 
 # Own modules
-add_subdirectory(modules/Frontend/Frontend)
+add_subdirectory(modules/Rescue)
 add_subdirectory(modules/ushiro)
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
