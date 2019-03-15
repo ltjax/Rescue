@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Group.hpp"
 #include "Events.hpp"
+#include "Group.hpp"
 #include "Vocabulary.hpp"
 #include <tuple>
 #include <unordered_map>
@@ -21,7 +21,13 @@ public:
   State& operator=(State&&) = default;
   State& operator=(State const&) = default;
 
-  using event_list = std::tuple<Events::AddAction, Events::NewFile, Events::AddAxisTo, Events::ModifyAxisCurve>;
+  using event_list = std::tuple<Events::AddAction,
+                                Events::NewFile,
+                                Events::AddAxisTo,
+                                Events::ModifyAxisCurve,
+                                Events::ModifyAxisInput,
+                                Events::ModifyActionName,
+                                Events::Loaded>;
 
   State apply(Events::NewFile const& event) const
   {
@@ -37,6 +43,16 @@ public:
     return copy;
   }
 
+  State apply(Events::ModifyActionName const& event) const
+  {
+    auto copy = *this;
+    auto& action = locate(copy.group, event.actionId);
+    auto changed = std::make_shared<Action>(*action);
+    changed->name = event.name;
+    action=changed;
+    return copy;
+  }
+
   State apply(Events::AddAxisTo const& event) const
   {
     auto copy = *this;
@@ -49,15 +65,28 @@ public:
 
   State apply(Events::ModifyAxisCurve const& event) const
   {
-    return modifyAxis(event.actionId, event.axisId, [&](Axis axis)
-    {
+    return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
       axis.curve = event.curve;
       return axis;
     });
   }
 
-  template <typename T>
-  State modifyAxis(Id actionId, Id axisId, T f) const
+  State apply(Events::ModifyAxisInput const& event) const
+  {
+    return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
+      axis.input = event.input;
+      return axis;
+    });
+  }
+
+  State apply(Events::Loaded const& event) const
+  {
+    auto copy = *this;
+    copy.group = event.loaded;
+    return copy;
+  }
+
+  template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {
     auto copy = *this;
     auto& oldAction = locate(copy.group, actionId);
@@ -67,7 +96,6 @@ public:
 
     oldAction = newAction;
     return copy;
-
   }
 
   Group group;

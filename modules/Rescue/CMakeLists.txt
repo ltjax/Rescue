@@ -16,6 +16,8 @@ add_executable(${TARGET_NAME}
   RangedCurve.cpp
   LoadSave.hpp
   LoadSave.cpp
+  LoadSaveService.hpp
+  LoadSaveService.cpp
   Axis.hpp
   Axis.cpp
   Main.hpp

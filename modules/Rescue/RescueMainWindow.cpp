@@ -75,18 +75,13 @@ void RescueMainWindow::onFileOpen()
     if (filename.isEmpty())
         return;
 
-#ifdef TODO
-    catchAll([&] { mGroup = Rescue::LoadSave::loadFrom(filename.toStdString()); });
+    catchAll([&] { mBus->dispatch<Events::LoadFrom>(filename.toStdString()); });
     setCurrentFilename(filename);
-    syncWidgets();
-#endif
 }
 
 void RescueMainWindow::saveTo(QString filename)
 {
-#ifdef TODO
-    catchAll([&] { Rescue::LoadSave::saveTo(filename.toStdString(), mGroup); });
-#endif
+    catchAll([&] { mBus->dispatch<Events::SaveTo>(filename.toStdString()); });
 }
 
 void RescueMainWindow::setCurrentFilename(QString filename)
@@ -134,10 +129,6 @@ void RescueMainWindow::syncWidgets(Rescue::State::Group const& group)
 void RescueMainWindow::onFileNew()
 {
     mBus->dispatch<Events::NewFile>();
-
-#ifdef TODO
-    syncWidgets();
-#endif
 }
 
 void RescueMainWindow::catchAll(std::function<void()> rhs)

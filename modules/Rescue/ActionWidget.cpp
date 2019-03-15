@@ -14,16 +14,15 @@ ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<St
 {
   mUi->setupUi(this);
   mUi->addAxis->setDefaultAction(mUi->actionAdd_Axis);
-  // mUi->name->setText(mAction->getName().c_str());
   connect(mUi->actionAdd_Axis, &QAction::triggered, [this]() { onAddAxis(); });
   mAreaLayout = new FlowLayout();
-  // mAreaLayout->addStretch();
   mUi->axisArea->setLayout(mAreaLayout);
 
   observer.observe([=](State const& state) { return locate(state.group, id); },
                    [this](Ptr<Action const> const& action) { updateFrom(action); });
 
-  // connect(mUi->name, &QLineEdit::textEdited, [this](QString text) { mAction->setName(text.toStdString()); });
+  connect(mUi->name, &QLineEdit::textEdited,
+          [this](QString text) { mBus->dispatch<Events::ModifyActionName>(mActionId, text.toStdString()); });
 }
 
 ActionWidget::~ActionWidget() = default;
@@ -31,23 +30,18 @@ ActionWidget::~ActionWidget() = default;
 void ActionWidget::onAddAxis()
 {
   mBus->dispatch<Events::AddAxisTo>(createId(), mActionId);
-  /*auto axis = std::make_shared<Rescue::Axis>("", Rescue::RangedCurve());
-  mAction->addAxis(axis);
-  addAxisWidget(axis);*/
 }
 
 void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
 {
   mUi->name->setText(action->name.c_str());
 
-  auto extractId = [](auto const& axis) {return axis->id;};
+  auto extractId = [](auto const& axis) { return axis->id; };
   auto insert = [this](auto const& axis, auto index) {
     auto widget = new AxisWidget(mBus, mObserver, mActionId, axis->id, mUi->axisArea);
     mAreaLayout->insertWidget(index, widget);
     return widget;
   };
-  auto remove = [this](QWidget* widget) {
-    delete widget;
-  };
+  auto remove = [this](QWidget* widget) { delete widget; };
   mAxisWidgets.update(action->axisList, extractId, insert, remove);
 }

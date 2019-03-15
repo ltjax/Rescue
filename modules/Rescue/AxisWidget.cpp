@@ -50,16 +50,13 @@ AxisWidget::AxisWidget(
   connect(mUi->min, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
     curve.setMin(rhs);
-
     emitChange(curve);
-    // mUi->graphWidget->setRangedCurve(mAxis->curve);
   });
 
   connect(mUi->max, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
     curve.setMax(rhs);
     emitChange(curve);
-    // mUi->graphWidget->setRangedCurve(mAxis->curve);
   });
 
   observer.observe(

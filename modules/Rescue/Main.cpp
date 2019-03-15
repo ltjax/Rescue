@@ -1,39 +1,23 @@
 #include "Main.hpp"
 #include "Action.hpp"
+#include "LoadSave.hpp"
 #include "RescueMainWindow.hpp"
 #include "State.hpp"
 #include "event_bus.hpp"
 #include "state_observer.hpp"
 #include "store.hpp"
 #include "subscribe_event_list.hpp"
+#include "LoadSaveService.hpp"
 #include <QtCore/QCommandLineParser>
 #include <QtWidgets/QApplication>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <iostream>
 
 #define RESCUE_VERSION "0.0.1"
 
 int run(int argc, char** argv)
 {
-  using namespace Rescue;
-
-  // Create basic application objects
-  auto bus = std::make_shared<ushiro::event_bus>();
-  auto observerManager = std::make_shared<ushiro::state_observation_manager<State>>();
-  ushiro::store<State> store;
-
-  // Notify about updates whenever store changes
-  store.change_handler = [&](auto const& from, auto const& to) { observerManager->message_changed(from, to); };
-
-  store.error_handler = [](std::exception const& e)
-  {
-    std::cerr << "Store error: " << e.what() << std::endl;
-  };
-
-  // Bind all events acting on the store
-  auto event_list_subscription = ushiro::subscribe_event_list(*bus, store);
-
   QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("ltjax");
   QCoreApplication::setApplicationName("Rescue");
@@ -44,6 +28,22 @@ int run(int argc, char** argv)
   parser.addVersionOption();
 
   parser.process(app);
+
+  using namespace Rescue;
+
+  // Create basic application objects
+  auto bus = std::make_shared<ushiro::event_bus>();
+  auto observerManager = std::make_shared<ushiro::state_observation_manager<State>>();
+  ushiro::store<State> store;
+
+  // Notify about updates whenever store changes
+  store.change_handler = [&](auto const& from, auto const& to) { observerManager->message_changed(from, to); };
+
+  store.error_handler = [](std::exception const& e) { std::cerr << "Store error: " << e.what() << std::endl; };
+
+  // Bind all events acting on the store
+  auto eventListSubscription = ushiro::subscribe_event_list(*bus, store);
+  LoadSaveService loadSaveService(bus, store);
 
   RescueMainWindow mainWindow(bus, ushiro::state_observer<State>(observerManager));
 

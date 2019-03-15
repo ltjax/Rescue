@@ -145,6 +145,7 @@ public:
   {
   }
 
+  state_observer(state_observer&&) noexcept = default;
   state_observer(state_observer const& parent) = default;
 
   template<class Projection, class WeakEqual, class Handler>

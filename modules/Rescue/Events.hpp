@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vocabulary.hpp"
+#include "Group.hpp"
 
 namespace Rescue
 {
@@ -15,6 +16,12 @@ struct AddAxisTo
 {
   Id newId;
   Id actionId;
+};
+
+struct ModifyActionName
+{
+  Id actionId;
+  std::string name;
 };
 
 struct ModifyAxisCurve
@@ -34,5 +41,21 @@ struct ModifyAxisInput
 struct NewFile
 {
 };
+
+struct Loaded
+{
+  Group loaded;
+};
+
+struct LoadFrom
+{
+  std::string filename;
+};
+
+struct SaveTo
+{
+  std::string filename;
+};
+
 } // namespace Events
 } // namespace Rescue
