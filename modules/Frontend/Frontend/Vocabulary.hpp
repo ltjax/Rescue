@@ -52,6 +52,16 @@ template <class T> inline Ptr<T const> const& locate(std::vector<Identifiable<T>
   return found->value;
 }
 
+template <class T> inline Ptr<T const>& locate(std::vector<Identifiable<T>>& container, Id id)
+{
+  auto found = std::find_if(container.begin(), container.end(), [&](auto const& x) { return x.id == id; });
+  if (found == container.end())
+  {
+    throw std::out_of_range("Did not find object with given identity");
+  }
+  return found->value;
+}
+
 Id createId();
 
 } // namespace Rescue

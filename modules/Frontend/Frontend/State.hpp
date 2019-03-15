@@ -40,6 +40,7 @@ public:
   State apply(Events::AddAxisTo const& event) const
   {
     auto copy = *this;
+    auto oldAction = locate(group, event.actionId);
     return copy;
   }
 
