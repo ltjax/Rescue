@@ -115,10 +115,10 @@ QString RescueMainWindow::getFilePath() const
 
 void RescueMainWindow::syncWidgets(Rescue::State::Group const& group)
 {
-    auto extractId = [](auto const& item) {return item.id;};
+    auto extractId = [](auto const& item) {return item->id;};
     auto insert = [this](auto const& item, auto index)
     {
-        auto widget = new ActionWidget(mBus, mObserver, item.id, mUi->actionArea);
+        auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
         mAreaLayout->insertWidget(0, widget);
         return widget;
     };

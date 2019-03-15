@@ -12,7 +12,7 @@ namespace Rescue
 class State
 {
 public:
-  using Group = std::vector<Identifiable<Action>>;
+  using Group = std::vector<Ptr<Action const>>;
 
   State() = default;
   State(State&&) = default;
@@ -33,7 +33,7 @@ public:
   State apply(Events::AddAction const& event) const
   {
     auto copy = *this;
-    copy.group.emplace_back(event.newId, std::make_shared<Action>());
+    copy.group.push_back(std::make_shared<Action>(event.newId));
     return copy;
   }
 

@@ -10,9 +10,10 @@ namespace Rescue
 class Action
 {
 public:
-    Action();
+    explicit Action(Id id) : id(id) {}
 
+    Id id;
     std::string name;
-    std::vector<Identifiable<Axis>> axisList;
+    std::vector<Ptr<Axis const>> axisList;
 };
 }

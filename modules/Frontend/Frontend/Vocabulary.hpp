@@ -43,24 +43,24 @@ template <class T> struct Identifiable
   Ptr<T const> value;
 };
 
-template <class T> inline Ptr<T const> const& locate(std::vector<Identifiable<T>> const& container, Id id)
+template <class T> inline Ptr<T const> const& locate(std::vector<Ptr<T const>> const& container, Id id)
 {
-  auto found = std::find_if(container.begin(), container.end(), [&](auto const& x) { return x.id == id; });
+  auto found = std::find_if(container.begin(), container.end(), [&](auto const& x) { return x->id == id; });
   if (found == container.end())
   {
     throw std::out_of_range("Did not find object with given identity");
   }
-  return found->value;
+  return *found;
 }
 
-template <class T> inline Ptr<T const>& locate(std::vector<Identifiable<T>>& container, Id id)
+template <class T> inline Ptr<T const>& locate(std::vector<Ptr<T const>>& container, Id id)
 {
-  auto found = std::find_if(container.begin(), container.end(), [&](auto const& x) { return x.id == id; });
+  auto found = std::find_if(container.begin(), container.end(), [&](auto const& x) { return x->id == id; });
   if (found == container.end())
   {
     throw std::out_of_range("Did not find object with given identity");
   }
-  return found->value;
+  return *found;
 }
 
 Id createId();
