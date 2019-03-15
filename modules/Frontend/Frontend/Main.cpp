@@ -10,6 +10,7 @@
 #include <QtWidgets/QApplication>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
 
 #define RESCUE_VERSION "0.0.1"
 
@@ -24,6 +25,11 @@ int run(int argc, char** argv)
 
   // Notify about updates whenever store changes
   store.change_handler = [&](auto const& from, auto const& to) { observerManager->message_changed(from, to); };
+
+  store.error_handler = [](std::exception const& e)
+  {
+    std::cerr << "Store error: " << e.what() << std::endl;
+  };
 
   // Bind all events acting on the store
   auto event_list_subscription = ushiro::subscribe_event_list(*bus, store);

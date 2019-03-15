@@ -16,11 +16,8 @@ std::vector<std::pair<Curve::FunctionType, QString>> const typeToString = {
 };
 }
 
-AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus,
-                       ushiro::state_observer<State> observer,
-                       Id actionId,
-                       Id axisId,
-                       QWidget* parent)
+AxisWidget::AxisWidget(
+  Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id actionId, Id axisId, QWidget* parent)
 : mUi(std::make_unique<Ui::Axis>())
 , mBus(std::move(bus))
 , mActionId(actionId)
@@ -38,7 +35,6 @@ AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus,
   connect(mUi->c, valueChanged, directTo(&Curve::withC));
   connect(mUi->b, valueChanged, directTo(&Curve::withB));
 
-
   auto currentIndexChanged = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
   connect(mUi->type, currentIndexChanged, [this](int current) {
     if (current < static_cast<int>(typeToString.size()))
@@ -48,9 +44,8 @@ AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus,
     }
   });
 
-  connect(mUi->input, &QLineEdit::textEdited, [this](QString text) {
-    mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString());
-  });
+  connect(mUi->input, &QLineEdit::textEdited,
+          [this](QString text) { mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString()); });
 
   connect(mUi->min, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
@@ -67,13 +62,12 @@ AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus,
     // mUi->graphWidget->setRangedCurve(mAxis->curve);
   });
 
-  observer.observe([this](State const& state) {
-    auto const& action = locate(state.group, mActionId);
-    return locate(action->axisList, mAxisId);
-  }, [this](Ptr<Axis const> const& axis)
-  {
-    updateFrom(axis);
-  });
+  observer.observe(
+    [this](State const& state) {
+      auto const& action = locate(state.group, mActionId);
+      return locate(action->axisList, mAxisId);
+    },
+    [this](Ptr<Axis const> const& axis) { updateFrom(axis); });
 }
 
 AxisWidget::~AxisWidget() = default;
@@ -90,7 +84,7 @@ void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
   emitChange(newCurve);
 }
 
-void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const &axis)
+void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
 {
   mUi->m->setValue(axis->curve.getCurve().m());
   mUi->k->setValue(axis->curve.getCurve().k());

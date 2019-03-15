@@ -4,7 +4,8 @@
 using namespace Rescue;
 
 Axis::Axis(Id id, std::string input, RangedCurve curve)
-: input(std::move(input))
+: id(id)
+, input(std::move(input))
 , curve(curve)
 {
 }

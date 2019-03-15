@@ -10,16 +10,26 @@ struct store
   T state;
 
   std::function<void(T const&, T const&)> change_handler;
+  std::function<void(std::exception const&)> error_handler;
 
   template<typename event_type>
   void apply(event_type const& event)
   {
     // Order is important here to guarantee object lifetimes
     auto last = std::move(state);
-    state = last.apply(event);
-    if (change_handler)
+    try
     {
-      change_handler(last, state);
+      state = last.apply(event);
+      if (change_handler)
+      {
+        change_handler(last, state);
+      }
+    }
+    catch(std::exception const& e)
+    {
+      if (!error_handler)
+        throw;
+      error_handler(e);
     }
   }
 };
