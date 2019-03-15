@@ -33,8 +33,8 @@ int run(int argc, char** argv)
 
   // Create basic application objects
   auto bus = std::make_shared<ushiro::event_bus>();
-  auto observerManager = std::make_shared<ushiro::state_observation_manager<State>>();
   ushiro::store<State> store;
+  auto observerManager = std::make_shared<ushiro::state_observation_manager<State>>([&store]() -> State const& {return store.state;});
 
   // Notify about updates whenever store changes
   store.change_handler = [&](auto const& from, auto const& to) { observerManager->message_changed(from, to); };
@@ -46,9 +46,6 @@ int run(int argc, char** argv)
   LoadSaveService loadSaveService(bus, store);
 
   RescueMainWindow mainWindow(bus, ushiro::state_observer<State>(observerManager));
-
-  // Send out initial notification
-  observerManager->message_all(store.state);
 
   mainWindow.show();
   return app.exec();

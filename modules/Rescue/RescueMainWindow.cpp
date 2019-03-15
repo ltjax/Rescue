@@ -35,7 +35,10 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
     connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
 
-    mObserver.observe([](State const& state) {return state.group;},
+    mObserver.observe([](State const& state) {
+        // Get the actions;
+        return std::tie(state.group);
+        },
       [this](Rescue::State::Group const& group) {syncWidgets(group);});
 }
 

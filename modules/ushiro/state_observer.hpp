@@ -32,40 +32,36 @@ public:
     changed
   };
 
+  using ChangeHandler = std::function<void(Model const& current, Model const& previous)>;
+
   using error_handler = std::function<void(std::exception const&, update)>;
+  using get_state = std::function<Model const&()>;
 
-  explicit state_observation_manager(error_handler handler_ = {})
-    : m_error_handler(std::move(handler_))
+  explicit state_observation_manager(get_state get_state_, error_handler handler_ = {})
+    : m_get_state(get_state_), m_error_handler(std::move(handler_))
   {
-  }
-
-  void message_all(Model const& current)
-  {
-    for (auto const& handler : m_handler_list)
-    {
-      try
-      {
-        handler(current);
-      }
-      catch (std::exception const& e)
-      {
-        on_error(e, update::initial);
-      }
-    }
   }
 
   void message_changed(Model const& from, Model const& to)
   {
-    for (auto const& handler : m_change_handler_list)
+    for (auto& each : m_just_added)
+      m_list.push_back(std::move(each));
+
+    for (auto const& handler : m_list)
     {
-      try
-      {
-        handler(to, from);
-      }
-      catch (std::exception const& e)
-      {
-        on_error(e, update::changed);
-      }
+      invoke(handler, to, from);
+    }
+  }
+
+  void invoke(ChangeHandler const& handler, Model const& to, Model const& from)
+  {
+    try
+    {
+      handler(to, from);
+    }
+    catch (std::exception const& e)
+    {
+      on_error(e, update::changed);
     }
   }
 
@@ -74,7 +70,7 @@ public:
   template<class ProjectionType, class WeakEqual, class HandlerType>
   inline void observe(ProjectionType Projection, WeakEqual Predicate, HandlerType Handler)
   {
-    m_change_handler_list.push_back([Projection, Predicate, Handler](Model const& Current, Model const& Previous)
+    m_just_added.push_back([Projection, Predicate, Handler](Model const& Current, Model const& Previous)
                                   {
                                     auto const& NewValue = Projection(Current);
                                     if (!Predicate(NewValue, Projection(Previous)))
@@ -83,8 +79,18 @@ public:
                                     }
                                   });
 
-    m_handler_list.push_back([Projection, Handler](Model const& Current)
-                              { Handler(Projection(Current)); });
+    // Do an initial execution of the handler at once
+    if (m_get_state)
+    {
+      try
+      {
+        Handler(Projection(m_get_state()));
+      }
+      catch (std::exception const& e)
+      {
+        on_error(e, update::initial);
+      }
+    }
   };
 
   /** Facade version.
@@ -129,9 +135,10 @@ private:
     T m_handler;
   };
 
+  get_state m_get_state;
   error_handler m_error_handler;
-  std::vector<std::function<void(Model const& current, Model const& previous)>> m_change_handler_list;
-  std::vector<std::function<void(Model const& current)>> m_handler_list;
+  std::vector<ChangeHandler> m_list;
+  std::vector<ChangeHandler> m_just_added;
 };
 
 template<typename Model>

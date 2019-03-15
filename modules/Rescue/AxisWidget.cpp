@@ -1,4 +1,5 @@
 #include "AxisWidget.hpp"
+#include "SignalBlocker.hpp"
 #include "ui_Axis.h"
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -83,6 +84,8 @@ void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
 
 void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
 {
+  SignalBlocker blocker({ mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input });
+
   mUi->m->setValue(axis->curve.getCurve().m());
   mUi->k->setValue(axis->curve.getCurve().k());
   mUi->c->setValue(axis->curve.getCurve().c());

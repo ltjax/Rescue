@@ -26,10 +26,10 @@ public:
   ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent);
   ~ActionWidget() final;
 
+  void updateFrom(Ptr<Rescue::Action const> const& action);
   void onAddAxis();
 
 private:
-  void updateFrom(Ptr<Rescue::Action const> const& action);
 
   std::unique_ptr<Ui::Action> mUi;
   Ptr<ushiro::event_bus> mBus;

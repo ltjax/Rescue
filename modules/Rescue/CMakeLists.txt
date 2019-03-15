@@ -36,6 +36,8 @@ add_executable(${TARGET_NAME}
   State.cpp
   Vocabulary.cpp
   Vocabulary.hpp
+  SignalBlocker.cpp
+  SignalBlocker.hpp
   Events.hpp
   ${UI_HEADERS})
   
