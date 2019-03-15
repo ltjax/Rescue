@@ -47,14 +47,14 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-#ifndef FLOWLAYOUT_H
-#define FLOWLAYOUT_H
+#pragma once
 
 #include <QtWidgets/QLayout>
 #include <QtCore/QRect>
 #include <QtWidgets/QStyle>
-//! [0]
+
+namespace Rescue
+{
 class FlowLayout : public QLayout
 {
 public:
@@ -83,6 +83,5 @@ private:
     int m_hSpace;
     int m_vSpace;
 };
-//! [0]
 
-#endif // FLOWLAYOUT_H
+}

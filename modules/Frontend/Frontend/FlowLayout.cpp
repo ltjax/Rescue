@@ -51,6 +51,8 @@
 #include <QtWidgets/QWidget>
 
 #include "FlowLayout.hpp"
+using namespace Rescue;
+
 //! [1]
 FlowLayout::FlowLayout(QWidget* parent, int margin, int hSpacing, int vSpacing)
 : QLayout(parent)

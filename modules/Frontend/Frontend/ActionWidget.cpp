@@ -3,6 +3,8 @@
 #include "FlowLayout.hpp"
 #include "ui_Action.h"
 
+using namespace Rescue;
+
 ActionWidget::ActionWidget(std::shared_ptr<Rescue::Action> action, QWidget* parent)
 : QWidget(parent)
 , mUi(std::make_unique<Ui::Action>())

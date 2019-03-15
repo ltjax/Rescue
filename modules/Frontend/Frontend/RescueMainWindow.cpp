@@ -9,13 +9,15 @@
 #include <memory>
 #include <QtWidgets/QAction>
 
+using namespace Rescue;
+
 namespace
 {
 
 auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 }
 
-RescueMainWindow::RescueMainWindow()
+RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer)
 : mUi(std::make_unique<Ui::MainWindow>())
 {
     mUi->setupUi(this);
@@ -30,7 +32,11 @@ RescueMainWindow::RescueMainWindow()
     connect(mUi->actionNew, &QAction::triggered, [this] { onFileNew(); });
     connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
     connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
-    // mUi->actionArea->setStyleSheet("background-color:white;");
+
+#ifdef TODO
+    observer.observe([](State const& state) {return state.group;},
+      [this](Rescue::Group const& group) {syncWidgets(group);});
+#endif
 
     mGroup = std::make_shared<Rescue::Group>();
 }
@@ -90,14 +96,18 @@ void RescueMainWindow::onFileOpen()
     if (filename.isEmpty())
         return;
 
+#ifdef TODO
     catchAll([&] { mGroup = Rescue::LoadSave::loadFrom(filename.toStdString()); });
     setCurrentFilename(filename);
     syncWidgets();
+#endif
 }
 
 void RescueMainWindow::saveTo(QString filename)
 {
+#ifdef TODO
     catchAll([&] { Rescue::LoadSave::saveTo(filename.toStdString(), mGroup); });
+#endif
 }
 
 void RescueMainWindow::setCurrentFilename(QString filename)
@@ -124,7 +134,7 @@ QString RescueMainWindow::getFilePath() const
     return result;
 }
 
-void RescueMainWindow::syncWidgets()
+void RescueMainWindow::syncWidgets(Rescue::Group const& group)
 {
     clearActionWidgets();
 
@@ -141,7 +151,10 @@ void RescueMainWindow::syncWidgets()
 void RescueMainWindow::onFileNew()
 {
     mGroup = std::make_shared<Rescue::Group>();
+
+#ifdef TODO
     syncWidgets();
+#endif
 }
 
 void RescueMainWindow::catchAll(std::function<void()> rhs)

@@ -9,6 +9,9 @@ namespace Ui
 class Axis;
 }
 
+namespace Rescue
+{
+
 class AxisWidget : public QWidget
 {
 public:
@@ -26,4 +29,6 @@ private:
 template <typename T> inline std::function<void(T)> AxisWidget::directTo(Rescue::Curve (Rescue::Curve::*f)(T) const)
 {
     return [this, f](T value) { modifyCurve(std::bind(f, std::placeholders::_1, value)); };
+}
+
 }

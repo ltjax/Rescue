@@ -20,6 +20,8 @@ add_executable(${TARGET_NAME}
   FlowLayout.cpp
   State.hpp
   State.cpp
+  Vocabulary.hpp
+  Events.hpp
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}
