@@ -23,6 +23,12 @@ ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<St
 
   connect(mUi->name, &QLineEdit::textEdited,
           [this](QString text) { mBus->dispatch<Events::ModifyActionName>(mActionId, text.toStdString()); });
+
+  connect(mUi->remove, &QToolButton::clicked, [this](bool)
+  {
+    mBus->dispatch<Events::RemoveAction>(mActionId);
+
+  });
 }
 
 ActionWidget::~ActionWidget() = default;

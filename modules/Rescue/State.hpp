@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Events.hpp"
 #include "Action.hpp"
+#include "Events.hpp"
 #include "Vocabulary.hpp"
 #include <tuple>
 #include <unordered_map>
@@ -12,7 +12,6 @@ namespace Rescue
 class State
 {
 public:
-
   State() = default;
   State(State&&) = default;
   State(State const&) = default;
@@ -26,64 +25,19 @@ public:
                                 Events::ModifyAxisCurve,
                                 Events::ModifyAxisInput,
                                 Events::ModifyActionName,
+                                Events::RemoveAxis,
+                                Events::RemoveAction,
                                 Events::Loaded>;
 
-  State apply(Events::NewFile const& event) const
-  {
-    auto copy = *this;
-    copy.group.clear();
-    return copy;
-  }
-
-  State apply(Events::AddAction const& event) const
-  {
-    auto copy = *this;
-    copy.group.push_back(std::make_shared<Action>(event.newId));
-    return copy;
-  }
-
-  State apply(Events::ModifyActionName const& event) const
-  {
-    auto copy = *this;
-    auto& action = locate(copy.group, event.actionId);
-    auto changed = std::make_shared<Action>(*action);
-    changed->name = event.name;
-    action=changed;
-    return copy;
-  }
-
-  State apply(Events::AddAxisTo const& event) const
-  {
-    auto copy = *this;
-    auto const& oldAction = locate(group, event.actionId);
-    auto newAction = std::make_shared<Action>(*oldAction);
-    newAction->axisList.push_back(std::make_shared<Axis>(event.newId, "", RangedCurve{}));
-    locate(copy.group, event.actionId) = newAction;
-    return copy;
-  }
-
-  State apply(Events::ModifyAxisCurve const& event) const
-  {
-    return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
-      axis.curve = event.curve;
-      return axis;
-    });
-  }
-
-  State apply(Events::ModifyAxisInput const& event) const
-  {
-    return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
-      axis.input = event.input;
-      return axis;
-    });
-  }
-
-  State apply(Events::Loaded const& event) const
-  {
-    auto copy = *this;
-    copy.group = event.loaded;
-    return copy;
-  }
+  State apply(Events::NewFile const& event) const;
+  State apply(Events::AddAction const& event) const;
+  State apply(Events::ModifyActionName const& event) const;
+  State apply(Events::AddAxisTo const& event) const;
+  State apply(Events::ModifyAxisCurve const& event) const;
+  State apply(Events::ModifyAxisInput const& event) const;
+  State apply(Events::Loaded const& event) const;
+  State apply(Events::RemoveAxis const& event) const;
+  State apply(Events::RemoveAction const& event) const;
 
   template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {

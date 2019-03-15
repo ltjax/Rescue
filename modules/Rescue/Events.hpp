@@ -38,6 +38,17 @@ struct ModifyAxisInput
   std::string input;
 };
 
+struct RemoveAxis
+{
+  Id actionId;
+  Id axisId;
+};
+
+struct RemoveAction
+{
+  Id actionId;
+};
+
 struct NewFile
 {
 };

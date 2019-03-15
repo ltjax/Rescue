@@ -60,6 +60,11 @@ AxisWidget::AxisWidget(
     emitChange(curve);
   });
 
+  connect(mUi->remove, &QToolButton::clicked, [this](bool)
+  {
+    mBus->dispatch<Events::RemoveAxis>(mActionId, mAxisId);
+  });
+
   observer.observe(
     [this](State const& state) {
       auto const& action = locate(state.group, mActionId);
