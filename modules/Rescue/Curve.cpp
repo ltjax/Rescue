@@ -26,11 +26,18 @@ float Curve::evaluateFor(float x) const
     switch (mType)
     {
     case FunctionType::Linear:
+    {
         return Saturate(mM * (x - mC) + mB);
+    }
     case FunctionType::Polynomial:
-        return Saturate(mM * std::pow(x - mC, mK) + mB);
+    {
+        x -= mC;
+        return Saturate(((x >= 0.f) ? mM * std::pow(x, mK) : -mM * std::pow(-x, mK)) + mB);
+    }
     case FunctionType::Logistic:
+    {
         return Saturate(mK / (1.f + std::exp(-10.f * (x + mC))) + mB);
+    }
     };
     return 0.0f;
 }
@@ -48,7 +55,7 @@ RangedCurve::~RangedCurve()
 
 float RangedCurve::evaluateFor(float Rhs) const
 {
-    if (mMin >= mMax)
+    if (mMin == mMax)
         return mCurve.evaluateFor(1.f);
 
     return mCurve.evaluateFor((Rhs - mMin) / (mMax - mMin));
