@@ -51,12 +51,14 @@ void addRangedCurveTo(RangedCurve const& rangedCurve, pugi::xml_node& node)
 
 Curve loadCurveFrom(pugi::xml_node const& node)
 {
-    return Curve()
+    auto curve =
+     Curve()
         .withType(typeFromString(node.attribute("type").as_string()))
         .withM(node.attribute("m").as_float())
         .withK(node.attribute("k").as_float())
         .withC(node.attribute("c").as_float())
         .withB(node.attribute("b").as_float());
+    return curve;
 }
 
 RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
@@ -67,6 +69,8 @@ RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
 
 Group LoadSave::load(std::shared_ptr<pugi::xml_document> const& document)
 {
+    auto currentLocale = std::setlocale(LC_ALL, nullptr);
+    std::setlocale(LC_ALL, "C");
     Group group;
     auto groupNode = document->child("Group");
 
@@ -82,6 +86,7 @@ Group LoadSave::load(std::shared_ptr<pugi::xml_document> const& document)
         }
         group.push_back(action);
     }
+    std::setlocale(LC_ALL, currentLocale);
     return group;
 }
 
