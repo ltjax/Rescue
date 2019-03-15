@@ -8,10 +8,10 @@ namespace Rescue
 namespace LoadSave
 {
 
-std::shared_ptr<Group> load(std::shared_ptr<pugi::xml_document> document);
-std::shared_ptr<pugi::xml_document> save(std::shared_ptr<Group const> group);
+Group load(Ptr<pugi::xml_document> const& document);
+std::shared_ptr<pugi::xml_document> save(Group const& group);
 
-void saveTo(std::string const& filename, std::shared_ptr<Group const> group);
-std::shared_ptr<Group> loadFrom(std::string const& filename);
+void saveTo(std::string const& filename, Group const& group);
+Group loadFrom(std::string const& filename);
 }
 }

@@ -64,9 +64,10 @@ RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
     return { loadCurveFrom(node), node.attribute("min").as_float(0.f), node.attribute("max").as_float(1.f) };
 }
 }
-std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> document)
+
+Group LoadSave::load(std::shared_ptr<pugi::xml_document> const& document)
 {
-    auto group = std::make_shared<Group>();
+    Group group;
     auto groupNode = document->child("Group");
 
     for (auto const& actionNode : groupNode.children("Action"))
@@ -79,17 +80,17 @@ std::shared_ptr<Group> LoadSave::load(std::shared_ptr<pugi::xml_document> docume
             auto axis = std::make_shared<Axis>(createId(), axisNode.attribute("input").as_string(), loadRangedCurveFrom(axisNode));
             action->axisList.push_back(axis);
         }
-        group->addAction(action);
+        group.push_back(action);
     }
     return group;
 }
 
-std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> group)
+std::shared_ptr<pugi::xml_document> LoadSave::save(Group const& group)
 {
     auto document = std::make_shared<pugi::xml_document>();
     auto groupNode = document->append_child("Group");
 
-    for (auto const& action : group->getActionList())
+    for (auto const& action : group)
     {
         auto actionNode = groupNode.append_child("Action");
         actionNode.append_attribute("name").set_value(action->name.c_str());
@@ -104,13 +105,13 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(std::shared_ptr<Group const> 
     return document;
 }
 
-void LoadSave::saveTo(std::string const& filename, std::shared_ptr<Group const> group)
+void LoadSave::saveTo(std::string const& filename, Group const& group)
 {
     auto xml = save(group);
     xml->save_file(filename.c_str());
 }
 
-std::shared_ptr<Group> LoadSave::loadFrom(std::string const& filename)
+Group LoadSave::loadFrom(std::string const& filename)
 {
     auto document = std::make_shared<pugi::xml_document>();
     auto result = document->load_file(filename.c_str());
