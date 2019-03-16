@@ -37,9 +37,10 @@ add_executable(${TARGET_NAME}
   SignalBlocker.hpp
   InputPanel.cpp
   InputPanel.hpp
-  InputPanelWidget.cpp
-  InputPanelWidget.hpp
+  InputPanelListWidget.cpp
+  InputPanelListWidget.hpp
   Events.hpp
+  CuteDiffableList.hpp
   ../../icons.qrc
   ${UI_HEADERS})
   

@@ -2,6 +2,7 @@
 #include "ActionWidget.hpp"
 #include "LoadSave.hpp"
 #include "ui_Rescue.h"
+#include "InputPanelListWidget.hpp"
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QAction>
@@ -34,6 +35,10 @@ MainWindow::MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State>
   connect(mUi->actionNew, &QAction::triggered, [this] { onFileNew(); });
   connect(mUi->actionSave, &QAction::triggered, [this] { onFileSave(); });
   connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
+  connect(mUi->actionAdd_Input, &QAction::triggered, [this] { onAddInput(); });
+
+
+  mUi->inputScrollArea->setWidget(new InputPanelListWidget(bus, mObserver, this));
 
   mObserver.observe(
     [](State const& state) {
@@ -117,7 +122,7 @@ void MainWindow::syncWidgets(Rescue::Group const& group)
   auto extractId = [](auto const& item) { return item->id; };
   auto insert = [this](auto const& item, auto index) {
     auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
-    mAreaLayout->insertWidget(0, widget);
+    mAreaLayout->insertWidget(index, widget);
     return widget;
   };
 
@@ -145,4 +150,9 @@ void MainWindow::catchAll(std::function<void()> rhs)
   {
     QMessageBox::critical(this, "Error", "Unknown error");
   }
+}
+
+void MainWindow::onAddInput()
+{
+  mBus->dispatch<Events::CreateActionInput>(createId());
 }

@@ -47,7 +47,6 @@ void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
   auto insert = [this](auto const& axis, auto index) {
     auto widget = new AxisWidget(mBus, mObserver, mActionId, axis->id, mUi->axisArea);
     mAreaLayout->insertWidget(index, widget);
-    widget->updateFrom(axis);
     return widget;
   };
   auto remove = [this](QWidget* widget) { delete widget; };

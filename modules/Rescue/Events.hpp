@@ -68,5 +68,10 @@ struct SaveTo
   std::string filename;
 };
 
+struct CreateActionInput
+{
+  Id newId;
+};
+
 } // namespace Events
 } // namespace Rescue

@@ -86,3 +86,10 @@ State State::apply(Events::RemoveAction const& event) const
   copy.group.erase(removed, copy.group.end());
   return copy;
 }
+
+State State::apply(Events::CreateActionInput const& event) const
+{
+  auto copy = *this;
+  copy.inputs.push_back(std::make_shared<ActionInput>(event.newId));
+  return copy;
+}

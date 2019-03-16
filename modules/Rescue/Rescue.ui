@@ -46,7 +46,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>735</width>
+         <width>572</width>
          <height>563</height>
         </rect>
        </property>
@@ -89,6 +89,12 @@
    <addaction name="actionAdd_Action"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>430</width>
+     <height>123</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Inputs</string>
    </property>
@@ -152,7 +158,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>263</width>
+            <width>426</width>
             <height>510</height>
            </rect>
           </property>
@@ -196,9 +202,35 @@
     <string>Save as</string>
    </property>
   </action>
+  <action name="actionAdd_Input">
+   <property name="icon">
+    <iconset resource="../../icons.qrc">
+     <normaloff>:/icon/add</normaloff>:/icon/add</iconset>
+   </property>
+   <property name="text">
+    <string>Add Input</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../../icons.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>addInput</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAdd_Input</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>795</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

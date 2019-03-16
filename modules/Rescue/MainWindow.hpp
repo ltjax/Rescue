@@ -26,6 +26,7 @@ public:
   ~MainWindow() final;
 
   void onAddAction();
+  void onAddInput();
 
   void onFileSave();
   void onFileSaveAs();

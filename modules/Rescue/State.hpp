@@ -11,6 +11,8 @@ namespace Rescue
 
 struct ActionInput
 {
+  ActionInput(Id id) : id(id) {}
+
   Id id;
   std::string name;
   float min;
@@ -38,7 +40,8 @@ public:
                                 Events::ModifyActionName,
                                 Events::RemoveAxis,
                                 Events::RemoveAction,
-                                Events::Loaded>;
+                                Events::Loaded,
+    Events::CreateActionInput>;
 
   State apply(Events::NewFile const& event) const;
   State apply(Events::AddAction const& event) const;
@@ -49,6 +52,7 @@ public:
   State apply(Events::Loaded const& event) const;
   State apply(Events::RemoveAxis const& event) const;
   State apply(Events::RemoveAction const& event) const;
+  State apply(Events::CreateActionInput const& event) const;
 
   template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {
