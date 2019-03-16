@@ -5,7 +5,8 @@ set(CMAKE_AUTORCC ON)
 qt5_wrap_ui(UI_HEADERS
   Rescue.ui
   Action.ui
-  Axis.ui)
+  Axis.ui
+  InputPanel.ui)
 
 add_executable(${TARGET_NAME}
   Action.hpp
@@ -34,6 +35,10 @@ add_executable(${TARGET_NAME}
   Vocabulary.hpp
   SignalBlocker.cpp
   SignalBlocker.hpp
+  InputPanel.cpp
+  InputPanel.hpp
+  InputPanelWidget.cpp
+  InputPanelWidget.hpp
   Events.hpp
   ../../icons.qrc
   ${UI_HEADERS})

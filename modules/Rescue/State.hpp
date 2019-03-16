@@ -9,6 +9,17 @@
 namespace Rescue
 {
 
+struct ActionInput
+{
+  Id id;
+  std::string name;
+  float min;
+  float max;
+  float value;
+};
+
+using Inputs = std::vector<Ptr<ActionInput const>>;
+
 class State
 {
 public:
@@ -52,6 +63,7 @@ public:
   }
 
   Group group;
+  Inputs inputs;
 };
 
 } // namespace Rescue
