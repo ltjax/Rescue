@@ -19,11 +19,11 @@ namespace Rescue
 {
 
 class ActionWidget;
-class RescueMainWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
 public:
-  RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer);
-  ~RescueMainWindow() final;
+  MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer);
+  ~MainWindow() final;
 
   void onAddAction();
 

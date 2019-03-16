@@ -1,4 +1,4 @@
-#include "RescueMainWindow.hpp"
+#include "MainWindow.hpp"
 #include "ActionWidget.hpp"
 #include "LoadSave.hpp"
 #include "ui_Rescue.h"
@@ -17,7 +17,7 @@ namespace
 auto const UTILITY_DEFINITION_FILE_FILTER = "Utility Definition XML (*.xml)";
 }
 
-RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer)
+MainWindow::MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer)
 : mUi(std::make_unique<Ui::MainWindow>())
 , mBus(std::move(bus))
 , mObserver(std::move(observer))
@@ -43,14 +43,14 @@ RescueMainWindow::RescueMainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_obs
     [this](Rescue::Group const& group) { syncWidgets(group); });
 }
 
-RescueMainWindow::~RescueMainWindow() = default;
+MainWindow::~MainWindow() = default;
 
-void RescueMainWindow::onAddAction()
+void MainWindow::onAddAction()
 {
   mBus->dispatch<Events::AddAction>(createId());
 }
 
-void RescueMainWindow::onFileSave()
+void MainWindow::onFileSave()
 {
   if (mCurrentFilename.isEmpty())
   {
@@ -61,7 +61,7 @@ void RescueMainWindow::onFileSave()
   saveTo(mCurrentFilename);
 }
 
-void RescueMainWindow::onFileSaveAs()
+void MainWindow::onFileSaveAs()
 {
   auto path = getFilePath();
   auto filename = QFileDialog::getSaveFileName(this, "Save", path, UTILITY_DEFINITION_FILE_FILTER);
@@ -72,7 +72,7 @@ void RescueMainWindow::onFileSaveAs()
   setCurrentFilename(filename);
 }
 
-void RescueMainWindow::onFileOpen()
+void MainWindow::onFileOpen()
 {
   auto path = getFilePath();
   auto filename = QFileDialog::getOpenFileName(this, "Open", path, UTILITY_DEFINITION_FILE_FILTER);
@@ -83,12 +83,12 @@ void RescueMainWindow::onFileOpen()
   setCurrentFilename(filename);
 }
 
-void RescueMainWindow::saveTo(QString filename)
+void MainWindow::saveTo(QString filename)
 {
   catchAll([&] { mBus->dispatch<Events::SaveTo>(filename.toStdString()); });
 }
 
-void RescueMainWindow::setCurrentFilename(QString filename)
+void MainWindow::setCurrentFilename(QString filename)
 {
   QSettings settings;
   settings.setValue("lastFile", filename);
@@ -96,7 +96,7 @@ void RescueMainWindow::setCurrentFilename(QString filename)
   this->setWindowTitle(QString("Rescue (%1)").arg(filename));
 }
 
-QString RescueMainWindow::getFilePath() const
+QString MainWindow::getFilePath() const
 {
   QSettings settings;
   auto result = settings.value("lastFile").toString();
@@ -112,7 +112,7 @@ QString RescueMainWindow::getFilePath() const
   return result;
 }
 
-void RescueMainWindow::syncWidgets(Rescue::Group const& group)
+void MainWindow::syncWidgets(Rescue::Group const& group)
 {
   auto extractId = [](auto const& item) { return item->id; };
   auto insert = [this](auto const& item, auto index) {
@@ -126,12 +126,12 @@ void RescueMainWindow::syncWidgets(Rescue::Group const& group)
   mActionWidgetList.update(group, extractId, insert, remove);
 }
 
-void RescueMainWindow::onFileNew()
+void MainWindow::onFileNew()
 {
   mBus->dispatch<Events::NewFile>();
 }
 
-void RescueMainWindow::catchAll(std::function<void()> rhs)
+void MainWindow::catchAll(std::function<void()> rhs)
 {
   try
   {

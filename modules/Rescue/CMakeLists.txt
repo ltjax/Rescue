@@ -18,8 +18,8 @@ add_executable(${TARGET_NAME}
   LoadSaveService.cpp
   Main.hpp
   Main.cpp
-  RescueMainWindow.hpp
-  RescueMainWindow.cpp
+  MainWindow.hpp
+  MainWindow.cpp
   ActionWidget.hpp
   ActionWidget.cpp
   AxisWidget.hpp

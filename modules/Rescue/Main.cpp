@@ -1,7 +1,7 @@
 #include "Main.hpp"
 #include "Action.hpp"
 #include "LoadSave.hpp"
-#include "RescueMainWindow.hpp"
+#include "MainWindow.hpp"
 #include "State.hpp"
 #include "event_bus.hpp"
 #include "state_observer.hpp"
@@ -45,7 +45,7 @@ int run(int argc, char** argv)
   auto eventListSubscription = ushiro::subscribe_event_list(*bus, store);
   LoadSaveService loadSaveService(bus, store);
 
-  RescueMainWindow mainWindow(bus, ushiro::state_observer<State>(observerManager));
+  MainWindow mainWindow(bus, ushiro::state_observer<State>(observerManager));
 
   mainWindow.show();
   return app.exec();
