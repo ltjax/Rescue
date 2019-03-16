@@ -2,6 +2,8 @@
 
 #include <QtWidgets/QWidget>
 
+namespace Rescue
+{
 class SignalBlocker
 {
 public:
@@ -12,6 +14,8 @@ private:
   std::vector<QSignalBlocker> mBlockers;
 
 };
+
+}
 
 
 

@@ -1,5 +1,7 @@
 #include "SignalBlocker.hpp"
 
+using namespace Rescue;
+
 SignalBlocker::SignalBlocker(std::initializer_list<QObject*> widgets)
 {
   mBlockers.reserve(widgets.size());

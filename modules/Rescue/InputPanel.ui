@@ -138,7 +138,7 @@ font: 12pt &quot;Sans&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit"/>
+         <widget class="QLineEdit" name="name"/>
         </item>
        </layout>
       </item>
@@ -152,7 +152,7 @@ font: 12pt &quot;Sans&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider">
+         <widget class="QSlider" name="slider">
           <property name="minimumSize">
            <size>
             <width>200</width>
@@ -172,7 +172,7 @@ font: 12pt &quot;Sans&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="doubleSpinBox">
+         <widget class="QDoubleSpinBox" name="spinBox">
           <property name="minimum">
            <double>-10000.000000000000000</double>
           </property>

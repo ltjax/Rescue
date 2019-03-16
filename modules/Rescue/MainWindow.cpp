@@ -37,8 +37,7 @@ MainWindow::MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State>
   connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
   connect(mUi->actionAdd_Input, &QAction::triggered, [this] { onAddInput(); });
 
-
-  mUi->inputScrollArea->setWidget(new InputPanelListWidget(bus, mObserver, this));
+  mUi->inputScrollArea->setWidget(new InputPanelListWidget(mBus, mObserver, this));
 
   mObserver.observe(
     [](State const& state) {

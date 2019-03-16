@@ -65,4 +65,9 @@ template <class T> inline Ptr<T const>& locate(std::vector<Ptr<T const>>& contai
 
 Id createId();
 
+template <typename T> Ptr<T> clone(Ptr<T const> const& p)
+{
+  return std::make_shared<T>(*p);
+}
+
 } // namespace Rescue

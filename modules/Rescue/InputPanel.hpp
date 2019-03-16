@@ -20,7 +20,10 @@ public:
   ~InputPanel() final;
 
 private:
+  void updateFrom(Ptr<ActionInput const> const& input);
+
   std::unique_ptr<Ui::InputPanel> mUi;
+  Ptr<ushiro::event_bus> mBus;
 };
 
 }

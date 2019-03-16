@@ -11,7 +11,10 @@ namespace Rescue
 
 struct ActionInput
 {
-  ActionInput(Id id) : id(id) {}
+  ActionInput(Id id)
+  : id(id)
+  {
+  }
 
   Id id;
   std::string name;
@@ -41,7 +44,9 @@ public:
                                 Events::RemoveAxis,
                                 Events::RemoveAction,
                                 Events::Loaded,
-    Events::CreateActionInput>;
+                                Events::CreateActionInput,
+                                Events::ModifyActionInputValue,
+                                Events::ModifyActionInputName>;
 
   State apply(Events::NewFile const& event) const;
   State apply(Events::AddAction const& event) const;
@@ -53,6 +58,8 @@ public:
   State apply(Events::RemoveAxis const& event) const;
   State apply(Events::RemoveAction const& event) const;
   State apply(Events::CreateActionInput const& event) const;
+  State apply(Events::ModifyActionInputValue const& event) const;
+  State apply(Events::ModifyActionInputName const& event) const;
 
   template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {
@@ -63,6 +70,17 @@ public:
     axis = std::make_shared<Axis>(f(*axis));
 
     oldAction = newAction;
+    return copy;
+  }
+
+  template <typename ListType, typename T>
+  State modifyObject(ListType State::* list, Id id, T functor) const
+  {
+    auto copy = *this;
+    auto& slot = locate(copy.*list, id);
+    auto modifiable = clone(slot);
+    functor(*modifiable);
+    slot = modifiable;
     return copy;
   }
 

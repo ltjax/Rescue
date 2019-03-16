@@ -30,13 +30,13 @@ AxisWidget::AxisWidget(
 
   using namespace std::placeholders;
 
-  auto valueChanged = static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged);
+  auto valueChanged = qOverload<double>(&QDoubleSpinBox::valueChanged);
   connect(mUi->m, valueChanged, directTo(&Curve::withM));
   connect(mUi->k, valueChanged, directTo(&Curve::withK));
   connect(mUi->c, valueChanged, directTo(&Curve::withC));
   connect(mUi->b, valueChanged, directTo(&Curve::withB));
 
-  auto currentIndexChanged = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
+  auto currentIndexChanged = qOverload<int>(&QComboBox::currentIndexChanged);
   connect(mUi->type, currentIndexChanged, [this](int current) {
     if (current < static_cast<int>(typeToString.size()))
     {

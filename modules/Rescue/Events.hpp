@@ -73,5 +73,17 @@ struct CreateActionInput
   Id newId;
 };
 
+struct ModifyActionInputName
+{
+  Id id;
+  std::string name;
+};
+
+struct ModifyActionInputValue
+{
+  Id id;
+  float value;
+};
+
 } // namespace Events
 } // namespace Rescue

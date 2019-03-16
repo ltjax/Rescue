@@ -4,10 +4,6 @@ using namespace Rescue;
 
 namespace
 {
-template <typename T> Ptr<T> clone(Ptr<T const> const& p)
-{
-  return std::make_shared<T>(*p);
-}
 
 } // namespace
 State State::apply(Rescue::Events::NewFile const& event) const
@@ -90,6 +86,28 @@ State State::apply(Events::RemoveAction const& event) const
 State State::apply(Events::CreateActionInput const& event) const
 {
   auto copy = *this;
-  copy.inputs.push_back(std::make_shared<ActionInput>(event.newId));
+  auto newInput = std::make_shared<ActionInput>(event.newId);
+  newInput->name = "New input";
+  newInput->min = -15000.f;
+  newInput->max = 15000.f;
+  newInput->value = 5000.f;
+
+  copy.inputs.push_back(newInput);
   return copy;
+}
+
+State State::apply(Events::ModifyActionInputValue const& event) const
+{
+  return modifyObject(&State::inputs, event.id, [&](ActionInput& input)
+  {
+    input.value = event.value;
+  });
+}
+
+State State::apply(Events::ModifyActionInputName const& event) const
+{
+  return modifyObject(&State::inputs, event.id, [&](ActionInput& input)
+  {
+    input.name = event.name;
+  });
 }
