@@ -1,4 +1,5 @@
 #include "LoadSave.hpp"
+#include <clocale>
 
 using namespace Rescue;
 
