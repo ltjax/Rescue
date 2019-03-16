@@ -46,7 +46,8 @@ public:
                                 Events::Loaded,
                                 Events::CreateActionInput,
                                 Events::ModifyActionInputValue,
-                                Events::ModifyActionInputName>;
+                                Events::ModifyActionInputName,
+                                Events::RemoveActionInput>;
 
   State apply(Events::NewFile const& event) const;
   State apply(Events::AddAction const& event) const;
@@ -60,6 +61,7 @@ public:
   State apply(Events::CreateActionInput const& event) const;
   State apply(Events::ModifyActionInputValue const& event) const;
   State apply(Events::ModifyActionInputName const& event) const;
+  State apply(Events::RemoveActionInput const& event) const;
 
   template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {
@@ -81,6 +83,16 @@ public:
     auto modifiable = clone(slot);
     functor(*modifiable);
     slot = modifiable;
+    return copy;
+  }
+
+  template <typename ListType>
+  State removeObject(ListType State::* list, Id id) const
+  {
+    auto copy = *this;
+    auto& objects = copy.*list;
+    auto removed = std::remove_if(objects.begin(), objects.end(), [&](auto const& item) {return item->id == id;});
+    objects.erase(removed, objects.end());
     return copy;
   }
 

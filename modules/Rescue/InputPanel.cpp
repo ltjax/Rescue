@@ -22,6 +22,10 @@ InputPanel::InputPanel(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State>
 
   connect(mUi->name, &QLineEdit::textEdited,
           [this, id](QString text) { mBus->dispatch<Events::ModifyActionInputName>(id, text.toStdString()); });
+
+  connect(mUi->remove, &QToolButton::clicked, [this, id](bool) {
+    mBus->dispatch<Events::RemoveActionInput>(id);
+  });
 }
 
 InputPanel::~InputPanel() = default;

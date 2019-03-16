@@ -85,5 +85,10 @@ struct ModifyActionInputValue
   float value;
 };
 
+struct RemoveActionInput
+{
+  Id id;
+};
+
 } // namespace Events
 } // namespace Rescue

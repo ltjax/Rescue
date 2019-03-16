@@ -77,10 +77,7 @@ State State::apply(Rescue::Events::RemoveAxis const& event) const
 
 State State::apply(Events::RemoveAction const& event) const
 {
-  auto copy = *this;
-  auto removed = std::remove_if(copy.group.begin(), copy.group.end(), [&](auto const& action) {return action->id == event.actionId;});
-  copy.group.erase(removed, copy.group.end());
-  return copy;
+  return removeObject(&State::group, event.actionId);
 }
 
 State State::apply(Events::CreateActionInput const& event) const
@@ -110,4 +107,9 @@ State State::apply(Events::ModifyActionInputName const& event) const
   {
     input.name = event.name;
   });
+}
+
+State State::apply(Events::RemoveActionInput const& event) const
+{
+  return removeObject(&State::inputs, event.id);
 }
