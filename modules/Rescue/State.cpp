@@ -1,4 +1,5 @@
 #include "State.hpp"
+#include <boost/uuid/nil_generator.hpp>
 
 using namespace Rescue;
 
@@ -35,7 +36,7 @@ State State::apply(Rescue::Events::AddAxisTo const& event) const
   auto copy = *this;
   auto const& oldAction = locate(group, event.actionId);
   auto newAction = std::make_shared<Action>(*oldAction);
-  newAction->axisList.push_back(std::make_shared<Axis>(event.newId, "", RangedCurve{}));
+  newAction->axisList.push_back(std::make_shared<Axis>(event.newId, boost::uuids::nil_generator{}(), RangedCurve{}));
   locate(copy.group, event.actionId) = newAction;
   return copy;
 }
@@ -51,7 +52,7 @@ State State::apply(Rescue::Events::ModifyAxisCurve const& event) const
 State State::apply(Rescue::Events::ModifyAxisInput const& event) const
 {
   return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
-    axis.input = event.input;
+//    axis.input = event.input;
     return axis;
   });
 }
@@ -59,7 +60,8 @@ State State::apply(Rescue::Events::ModifyAxisInput const& event) const
 State State::apply(Rescue::Events::Loaded const& event) const
 {
   auto copy = *this;
-  copy.group = event.loaded;
+  copy.inputs = event.loaded.inputs;
+  copy.group = event.loaded.group;
   return copy;
 }
 

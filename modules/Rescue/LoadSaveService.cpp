@@ -10,8 +10,8 @@ LoadSaveService::LoadSaveService(Ptr<ushiro::event_bus> bus, ushiro::store<State
 , mStore(store)
 {
   mSubscriptions += mBus->subscribe([this](Events::LoadFrom const& event) {
-    auto loaded = LoadSave::loadFrom(event.filename);
-    mBus->dispatch<Events::Loaded>(loaded);
+    auto document = LoadSave::loadFrom(event.filename);
+    mBus->dispatch<Events::Loaded>(document);
   });
 
   mSubscriptions += mBus->subscribe([this](Events::SaveTo const& event) {

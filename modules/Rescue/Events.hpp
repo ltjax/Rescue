@@ -2,6 +2,7 @@
 
 #include "Vocabulary.hpp"
 #include "Action.hpp"
+#include "LoadSave.hpp"
 
 namespace Rescue
 {
@@ -55,7 +56,7 @@ struct NewFile
 
 struct Loaded
 {
-  Group loaded;
+  LoadSave::Document loaded;
 };
 
 struct LoadFrom

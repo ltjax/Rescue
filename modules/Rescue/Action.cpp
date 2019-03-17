@@ -2,10 +2,10 @@
 
 using namespace Rescue;
 
-Axis::Axis(Id id, std::string input, RangedCurve curve)
-  : id(id)
-  , input(std::move(input))
-  , curve(curve)
+Axis::Axis(Id id, Id inputId, RangedCurve curve)
+: id(id)
+, inputId(std::move(inputId))
+, curve(curve)
 {
 }
 

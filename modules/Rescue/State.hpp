@@ -9,22 +9,6 @@
 namespace Rescue
 {
 
-struct ActionInput
-{
-  ActionInput(Id id)
-  : id(id)
-  {
-  }
-
-  Id id;
-  std::string name;
-  float min;
-  float max;
-  float value;
-};
-
-using Inputs = std::vector<Ptr<ActionInput const>>;
-
 class State
 {
 public:

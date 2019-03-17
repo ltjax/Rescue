@@ -1,4 +1,8 @@
 #include "LoadSave.hpp"
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 using namespace Rescue;
 
@@ -10,6 +14,31 @@ std::vector<std::pair<Curve::FunctionType, char const*>> const typeString = {
     { Curve::FunctionType::Polynomial, "Polynomial" },
     { Curve::FunctionType::Logistic, "Logistic" }
 };
+
+std::tuple<int, int, int> getVersion(pugi::xml_node const& group)
+{
+    auto found = std::find_if(group.attributes_begin(), group.attributes_end(), [](pugi::xml_attribute const& x)
+    {
+        return std::strcmp(x.name(), "version") == 0;
+    });
+
+    if (found == group.attributes_end())
+    {
+        return std::make_tuple(0, 1, 0);
+    }
+
+    auto value = std::string(found->value());
+
+    std::vector<std::string> parts;
+    boost::algorithm::split(parts, value, boost::algorithm::is_any_of("."), boost::algorithm::token_compress_on );
+    if (parts.size() < 2 || parts.size() > 3)
+        throw std::runtime_error("Invalid version string: " + value);
+
+    auto major = boost::lexical_cast<unsigned int>(parts[0]);
+    auto minor = boost::lexical_cast<unsigned int>(parts[1]);
+    auto patch = parts.size() != 2 ? boost::lexical_cast<unsigned int>(parts[2]) : 0;
+    return std::make_tuple(major, minor, patch);
+}
 
 char const* typeToString(Curve::FunctionType type)
 {
@@ -65,35 +94,73 @@ RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
 {
     return { loadCurveFrom(node), node.attribute("min").as_float(0.f), node.attribute("max").as_float(1.f) };
 }
-}
 
-Group LoadSave::load(std::shared_ptr<pugi::xml_document> const& document)
+
+LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const& document)
 {
-    auto currentLocale = std::setlocale(LC_ALL, nullptr);
-    std::setlocale(LC_ALL, "C");
+    Inputs inputs;
     Group group;
     auto groupNode = document->child("Group");
 
-    for (auto const& actionNode : groupNode.children("Action"))
+    if (getVersion(groupNode) <= std::make_tuple(0, 1, 0))
     {
-        auto action = std::make_shared<Action>(createId());
-        action->name = actionNode.attribute("name").as_string();
+        std::unordered_map<std::string, Ptr<ActionInput const>> nameToInput;
 
-        for (auto const& axisNode : actionNode.children("Axis"))
+        for (auto const& actionNode : groupNode.children("Action"))
         {
-            auto axis = std::make_shared<Axis>(createId(), axisNode.attribute("input").as_string(), loadRangedCurveFrom(axisNode));
-            action->axisList.push_back(axis);
+            auto action = std::make_shared<Action>(createId());
+            action->name = actionNode.attribute("name").as_string();
+
+            for (auto const& axisNode : actionNode.children("Axis"))
+            {
+                auto inputName = axisNode.attribute("input").as_string();
+                auto& input = nameToInput[inputName];
+                if (input == nullptr)
+                {
+                    auto newInput = std::make_shared<ActionInput>(createId());
+                    newInput->name = inputName;
+                    input = newInput;
+                    inputs.push_back(input);
+                }
+                auto axis = std::make_shared<Axis>(createId(), input->id, loadRangedCurveFrom(axisNode));
+                action->axisList.push_back(axis);
+            }
+            group.push_back(action);
         }
-        group.push_back(action);
     }
-    std::setlocale(LC_ALL, currentLocale);
-    return group;
+    else
+    {
+        throw std::runtime_error("Not implemented yet");
+    }
+
+    return {std::move(inputs), std::move(group)};
+}
+
+}
+
+LoadSave::Document LoadSave::load(std::shared_ptr<pugi::xml_document> const& document)
+{
+    auto currentLocale = std::setlocale(LC_ALL, nullptr);
+    std::setlocale(LC_ALL, "C");
+
+    try
+    {
+        auto result = loadWithLocaleFixed(document);
+        std::setlocale(LC_ALL, currentLocale);
+        return result;
+    }
+    catch (...)
+    {
+        std::setlocale(LC_ALL, currentLocale);
+        throw;
+    }
 }
 
 std::shared_ptr<pugi::xml_document> LoadSave::save(Group const& group)
 {
     auto document = std::make_shared<pugi::xml_document>();
     auto groupNode = document->append_child("Group");
+    groupNode.append_attribute("version").set_value("0.2");
 
     for (auto const& action : group)
     {
@@ -102,7 +169,7 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(Group const& group)
         for (auto const& axis : action->axisList)
         {
             auto axisNode = actionNode.append_child("Axis");
-            axisNode.append_attribute("input").set_value(axis->input.c_str());
+            axisNode.append_attribute("input").set_value(boost::lexical_cast<std::string>(axis->inputId).c_str());
             addRangedCurveTo(axis->curve, axisNode);
         }
     }
@@ -116,7 +183,7 @@ void LoadSave::saveTo(std::string const& filename, Group const& group)
     xml->save_file(filename.c_str());
 }
 
-Group LoadSave::loadFrom(std::string const& filename)
+LoadSave::Document LoadSave::loadFrom(std::string const& filename)
 {
     auto document = std::make_shared<pugi::xml_document>();
     auto result = document->load_file(filename.c_str());

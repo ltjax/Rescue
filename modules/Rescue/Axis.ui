@@ -144,7 +144,14 @@ font: 12pt &quot;Sans&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="input"/>
+         <widget class="QComboBox" name="input">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

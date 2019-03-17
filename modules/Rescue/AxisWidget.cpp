@@ -45,8 +45,8 @@ AxisWidget::AxisWidget(
     }
   });
 
-  connect(mUi->input, &QLineEdit::textEdited,
-          [this](QString text) { mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString()); });
+  /*connect(mUi->input, &QLineEdit::textEdited,
+          [this](QString text) { mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString()); });*/
 
   connect(mUi->min, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
@@ -98,7 +98,7 @@ void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
   mUi->min->setValue(axis->curve.getMin());
   mUi->max->setValue(axis->curve.getMax());
   mUi->graphWidget->setRangedCurve(axis->curve);
-  mUi->input->setText(axis->input.c_str());
+  //mUi->input->setText(axis->input.c_str());
 }
 
 Rescue::RangedCurve const& AxisWidget::currentCurve() const

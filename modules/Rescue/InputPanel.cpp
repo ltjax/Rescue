@@ -32,8 +32,8 @@ InputPanel::~InputPanel() = default;
 
 void InputPanel::updateFrom(Ptr<ActionInput const> const& input)
 {
-  SignalBlocker blocker({ mUi->spinBox, mUi->slider });
-
+  SignalBlocker blocker({ mUi->spinBox, mUi->slider, mUi->name });
+  mUi->name->setText(input->name.c_str());
   mUi->spinBox->setRange(input->min, input->max);
   mUi->slider->setRange(std::floor(input->min), std::ceil(input->max));
   mUi->spinBox->setValue(input->value);
