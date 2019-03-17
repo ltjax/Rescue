@@ -11,6 +11,7 @@ State State::apply(Rescue::Events::NewFile const& event) const
 {
   auto copy = *this;
   copy.group.clear();
+  copy.inputs.clear();
   return copy;
 }
 
@@ -52,7 +53,7 @@ State State::apply(Rescue::Events::ModifyAxisCurve const& event) const
 State State::apply(Rescue::Events::ModifyAxisInput const& event) const
 {
   return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
-//    axis.input = event.input;
+    axis.inputId = event.inputId;
     return axis;
   });
 }

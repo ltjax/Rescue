@@ -6,6 +6,7 @@
 #include <functional>
 #include <memory>
 #include <state_observer.hpp>
+#include <diffable_list.hpp>
 
 namespace Ui
 {
@@ -35,6 +36,8 @@ private:
   Ptr<ushiro::event_bus> mBus;
   Id mActionId;
   Id mAxisId;
+
+  ushiro::diffable_list<std::string, int> mInputOptions;
 };
 
 template <typename T> inline std::function<void(T)> AxisWidget::directTo(Rescue::Curve (Rescue::Curve::*f)(T) const)

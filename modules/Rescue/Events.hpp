@@ -36,7 +36,7 @@ struct ModifyAxisInput
 {
   Id actionId;
   Id axisId;
-  std::string input;
+  Id inputId;
 };
 
 struct RemoveAxis

@@ -3,7 +3,10 @@
 #include "ui_Axis.h"
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <unordered_map>
+#include <boost/uuid/nil_generator.hpp>
 
 using namespace Rescue;
 
@@ -30,6 +33,8 @@ AxisWidget::AxisWidget(
 
   using namespace std::placeholders;
 
+  mUi->input->insertItem(0, "-", boost::lexical_cast<std::string>(boost::uuids::nil_generator()()).c_str());
+
   auto valueChanged = qOverload<double>(&QDoubleSpinBox::valueChanged);
   connect(mUi->m, valueChanged, directTo(&Curve::withM));
   connect(mUi->k, valueChanged, directTo(&Curve::withK));
@@ -45,8 +50,11 @@ AxisWidget::AxisWidget(
     }
   });
 
-  /*connect(mUi->input, &QLineEdit::textEdited,
-          [this](QString text) { mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, text.toStdString()); });*/
+  connect(mUi->input, currentIndexChanged,
+          [this](int current) {
+    auto inputId = boost::lexical_cast<Id>(mUi->input->itemData(current).toString().toStdString());
+    mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, inputId);
+  });
 
   connect(mUi->min, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
@@ -60,10 +68,7 @@ AxisWidget::AxisWidget(
     emitChange(curve);
   });
 
-  connect(mUi->remove, &QToolButton::clicked, [this](bool)
-  {
-    mBus->dispatch<Events::RemoveAxis>(mActionId, mAxisId);
-  });
+  connect(mUi->remove, &QToolButton::clicked, [this](bool) { mBus->dispatch<Events::RemoveAxis>(mActionId, mAxisId); });
 
   observer.observe(
     [this](State const& state) {
@@ -71,6 +76,14 @@ AxisWidget::AxisWidget(
       return locate(action->axisList, mAxisId);
     },
     [this](Ptr<Axis const> const& axis) { updateFrom(axis); });
+
+  observer.observe(
+    [this](State const& state) {
+      auto const& action = locate(state.group, mActionId);
+      auto const& axis = locate(action->axisList, mAxisId);
+      return std::tie(state.inputs, axis->inputId);
+    },
+    [this](Inputs const& inputs, Id inputId) { updateInputSelect(inputs, inputId); });
 }
 
 AxisWidget::~AxisWidget() = default;
@@ -98,7 +111,7 @@ void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
   mUi->min->setValue(axis->curve.getMin());
   mUi->max->setValue(axis->curve.getMax());
   mUi->graphWidget->setRangedCurve(axis->curve);
-  //mUi->input->setText(axis->input.c_str());
+  // mUi->input->setText(axis->input.c_str());
 }
 
 Rescue::RangedCurve const& AxisWidget::currentCurve() const
@@ -108,5 +121,26 @@ Rescue::RangedCurve const& AxisWidget::currentCurve() const
 
 void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
 {
+  int constexpr OFFSET = 1;
+  auto extractId = [](auto const& input) { return boost::lexical_cast<std::string>(input->id) + input->name; };
 
+  auto insert = [&](Ptr<ActionInput const> const& input, int index) {
+    mUi->input->insertItem(index+OFFSET, input->name.c_str(), boost::lexical_cast<std::string>(input->id).c_str());
+    return index;
+  };
+
+  auto remove = [&](int, int index) { mUi->input->removeItem(index+OFFSET); };
+
+  SignalBlocker blocker({ mUi->input });
+  mInputOptions.update(inputs, extractId, insert, remove);
+
+  auto found = std::find_if(inputs.begin(), inputs.end(), [&](auto const& input) { return input->id == current; });
+
+  if (found != inputs.end())
+  {
+    mUi->input->setCurrentIndex(static_cast<int>(found - inputs.begin())+ OFFSET);
+  } else
+  {
+    mUi->input->setCurrentIndex(0);
+  }
 }

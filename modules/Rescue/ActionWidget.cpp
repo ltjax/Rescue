@@ -48,6 +48,6 @@ void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
     mAreaLayout->insertWidget(index, widget);
     return widget;
   };
-  
+
   mAxisWidgets.update(action->axisList, insert);
 }
