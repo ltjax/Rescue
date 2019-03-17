@@ -37,23 +37,24 @@ public:
       }
       else
       {
-        remove_item(std::move(each.second));
+        auto removal_index = static_cast<int>(target - children_.begin());
+        remove_item(std::move(each.second), removal_index);
       }
     }
     children_.erase(target, children_.end());
 
     // Add new widgets
-    int targetIndex = 0;
+    int target_index = 0;
     for (auto const& each : container)
     {
-      if (targetIndex < children_.size() && extract_id(each) == children_[targetIndex].first)
+      if (target_index < children_.size() && extract_id(each) == children_[target_index].first)
       {
-        targetIndex++;
+        target_index++;
         continue;
       }
-      ItemType widget = insert_item(each, targetIndex);
-      children_.insert(children_.begin() + targetIndex, std::make_pair(extract_id(each), std::move(widget)));
-      targetIndex++;
+      ItemType widget = insert_item(each, target_index);
+      children_.insert(children_.begin() + target_index, std::make_pair(extract_id(each), std::move(widget)));
+      target_index++;
     }
   }
 

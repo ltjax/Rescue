@@ -4,6 +4,7 @@
 #include "Vocabulary.hpp"
 #include "event_bus.hpp"
 #include "state_observer.hpp"
+#include "CuteDiffableList.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QWidget>
 #include <memory>
@@ -36,7 +37,7 @@ private:
   ushiro::state_observer<State> mObserver;
   Id mActionId;
   FlowLayout* mAreaLayout = nullptr;
-  ushiro::diffable_list<Id, AxisWidget*> mAxisWidgets;
+  CuteDiffableList<AxisWidget> mAxisWidgets;
 };
 
 } // namespace Rescue

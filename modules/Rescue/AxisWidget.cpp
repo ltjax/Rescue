@@ -105,3 +105,8 @@ Rescue::RangedCurve const& AxisWidget::currentCurve() const
 {
   return mUi->graphWidget->getRangedCurve();
 }
+
+void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
+{
+
+}

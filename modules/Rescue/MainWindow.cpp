@@ -118,16 +118,13 @@ QString MainWindow::getFilePath() const
 
 void MainWindow::syncWidgets(Rescue::Group const& group)
 {
-  auto extractId = [](auto const& item) { return item->id; };
   auto insert = [this](auto const& item, auto index) {
     auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
     mAreaLayout->insertWidget(index, widget);
     return widget;
   };
 
-  auto remove = [this](QWidget* widget) { delete widget; };
-
-  mActionWidgetList.update(group, extractId, insert, remove);
+  mActionWidgetList.update(group, insert);
 }
 
 void MainWindow::onFileNew()

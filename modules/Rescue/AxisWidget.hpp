@@ -22,8 +22,9 @@ public:
     Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id actionId, Id axisId, QWidget* parent);
   ~AxisWidget() final;
 
-  void updateFrom(Ptr<Rescue::Axis const> const& axis);
 private:
+  void updateFrom(Ptr<Rescue::Axis const> const& axis);
+  void updateInputSelect(Inputs const& inputs, Id current);
   void modifyCurve(std::function<Rescue::Curve(Rescue::Curve)> modifier);
   void emitChange(RangedCurve const& change);
   template <typename T> std::function<void(T)> directTo(Rescue::Curve (Rescue::Curve::*f)(T) const);

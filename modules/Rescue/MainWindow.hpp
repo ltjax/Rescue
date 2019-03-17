@@ -3,6 +3,7 @@
 #include "Vocabulary.hpp"
 #include "diffable_list.hpp"
 #include "state_observer.hpp"
+#include "CuteDiffableList.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QMainWindow>
 #include <boost/uuid/random_generator.hpp>
@@ -43,7 +44,7 @@ private:
   Ptr<ushiro::event_bus> mBus;
   ushiro::state_observer<State> mObserver;
   QBoxLayout* mAreaLayout = nullptr;
-  ushiro::diffable_list<Id, ActionWidget*> mActionWidgetList;
+  CuteDiffableList<ActionWidget> mActionWidgetList;
   QString mCurrentFilename;
 };
 } // namespace Rescue
