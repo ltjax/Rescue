@@ -61,7 +61,7 @@ State State::apply(Rescue::Events::ModifyAxisInput const& event) const
 State State::apply(Rescue::Events::Loaded const& event) const
 {
   auto copy = *this;
-  copy.inputs = event.loaded.inputs;
+  copy.inputs = adaptInputRanges(event.loaded.inputs, event.loaded.group);
   copy.group = event.loaded.group;
   return copy;
 }

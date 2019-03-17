@@ -47,4 +47,7 @@ struct Action
 };
 
 using Group = std::vector<Ptr<Action const>>;
+
+Inputs adaptInputRanges(Inputs input, Group const& group);
+
 } // namespace Rescue
