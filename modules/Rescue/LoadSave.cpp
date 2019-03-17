@@ -3,6 +3,7 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <clocale>
 
 using namespace Rescue;
 
