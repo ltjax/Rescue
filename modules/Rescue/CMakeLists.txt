@@ -41,6 +41,8 @@ add_executable(${TARGET_NAME}
   InputPanelListWidget.hpp
   Events.hpp
   CuteDiffableList.hpp
+  OutputListWidget.cpp
+  OutputListWidget.hpp
   ../../icons.qrc
   ${UI_HEADERS})
   

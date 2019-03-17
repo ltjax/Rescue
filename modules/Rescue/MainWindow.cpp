@@ -3,6 +3,7 @@
 #include "LoadSave.hpp"
 #include "ui_Rescue.h"
 #include "InputPanelListWidget.hpp"
+#include "OutputListWidget.hpp"
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QAction>
@@ -38,6 +39,7 @@ MainWindow::MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State>
   connect(mUi->actionAdd_Input, &QAction::triggered, [this] { onAddInput(); });
 
   mUi->inputScrollArea->setWidget(new InputPanelListWidget(mBus, mObserver, this));
+  mUi->outputScrollArea->setWidget(new OutputListWidget(mObserver, this));
 
   mObserver.observe(
     [](State const& state) {

@@ -9,6 +9,17 @@
 namespace Rescue
 {
 
+struct Output
+{
+  Output(Id id) : id(id) {}
+  Id id; // same as action
+  float value = 0.f;
+};
+
+using Outputs = std::vector<Ptr<Output const>>;
+
+Outputs computeOutputs(Inputs const& inputs, Group const& group);
+
 class State
 {
 public:
@@ -56,6 +67,7 @@ public:
     axis = std::make_shared<Axis>(f(*axis));
 
     oldAction = newAction;
+    copy.outputs = computeOutputs(copy.inputs, copy.group);
     return copy;
   }
 
@@ -67,6 +79,7 @@ public:
     auto modifiable = clone(slot);
     functor(*modifiable);
     slot = modifiable;
+    copy.outputs = computeOutputs(copy.inputs, copy.group);
     return copy;
   }
 
@@ -77,11 +90,13 @@ public:
     auto& objects = copy.*list;
     auto removed = std::remove_if(objects.begin(), objects.end(), [&](auto const& item) {return item->id == id;});
     objects.erase(removed, objects.end());
+    copy.outputs = computeOutputs(copy.inputs, copy.group);
     return copy;
   }
 
   Group group;
   Inputs inputs;
+  Outputs outputs;
 };
 
 } // namespace Rescue

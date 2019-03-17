@@ -63,6 +63,7 @@ State State::apply(Rescue::Events::Loaded const& event) const
   auto copy = *this;
   copy.inputs = adaptInputRanges(event.loaded.inputs, event.loaded.group);
   copy.group = event.loaded.group;
+  copy.outputs = computeOutputs(copy.inputs, copy.group);
   return copy;
 }
 
@@ -115,4 +116,26 @@ State State::apply(Events::ModifyActionInputName const& event) const
 State State::apply(Events::RemoveActionInput const& event) const
 {
   return removeObject(&State::inputs, event.id);
+}
+
+Outputs Rescue::computeOutputs(Inputs const& inputs, Group const& group)
+{
+  std::unordered_map<Id, float> valueForInput;
+  for (auto const& each : inputs)
+    valueForInput.insert(std::make_pair(each->id, each->value));
+
+  Outputs result;
+  for (auto const& each : group)
+  {
+    float total = 1.f;
+    for (auto const& axis : each->axisList)
+    {
+      float value = axis->evaluateFor(valueForInput.at(axis->inputId));
+      total *= value;
+    }
+    auto output = std::make_shared<Output>(each->id);
+    output->value = total;
+    result.push_back(std::move(output));
+  }
+  return result;
 }
