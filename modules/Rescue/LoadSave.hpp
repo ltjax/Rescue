@@ -15,9 +15,9 @@ struct Document
 };
 
 Document load(Ptr<pugi::xml_document> const& document);
-std::shared_ptr<pugi::xml_document> save(Group const& group);
+std::shared_ptr<pugi::xml_document> save(Document const& document);
 
-void saveTo(std::string const& filename, Group const& group);
+void saveTo(std::string const& filename, Document const& document);
 Document loadFrom(std::string const& filename);
 }
 }

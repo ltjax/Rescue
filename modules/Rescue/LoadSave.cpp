@@ -101,10 +101,10 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
 {
     Inputs inputs;
     Group group;
-    auto groupNode = document->child("Group");
 
-    if (getVersion(groupNode) <= std::make_tuple(0, 1, 0))
+    if (getVersion(*document) <= std::make_tuple(0, 1, 0))
     {
+        auto groupNode = document->child("Group");
         std::unordered_map<std::string, Ptr<ActionInput const>> nameToInput;
 
         for (auto const& actionNode : groupNode.children("Action"))
@@ -131,7 +131,30 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
     }
     else
     {
-        throw std::runtime_error("Not implemented yet");
+        auto inputsNode = document->child("Inputs");
+        for (auto const& inputNode : inputsNode.children("Input"))
+        {
+            auto id = boost::lexical_cast<Id>(inputNode.attribute("id"));
+            auto input = std::make_shared<ActionInput>(id);
+            input->name = inputNode.attribute("name").as_string("");
+            input->value = inputNode.attribute("value").as_float(0.f);
+        }
+
+        auto groupNode = document->child("Group");
+        for (auto const& actionNode : groupNode.children("Action"))
+        {
+            auto action = std::make_shared<Action>(createId());
+            action->name = actionNode.attribute("name").as_string();
+
+            for (auto const& axisNode : actionNode.children("Axis"))
+            {
+                auto inputId = boost::lexical_cast<Id>(axisNode.attribute("inputId").as_string());
+
+                auto axis = std::make_shared<Axis>(createId(), inputId, loadRangedCurveFrom(axisNode));
+                action->axisList.push_back(axis);
+            }
+            group.push_back(action);
+        }
     }
 
     return {std::move(inputs), std::move(group)};
@@ -157,20 +180,29 @@ LoadSave::Document LoadSave::load(std::shared_ptr<pugi::xml_document> const& doc
     }
 }
 
-std::shared_ptr<pugi::xml_document> LoadSave::save(Group const& group)
+std::shared_ptr<pugi::xml_document> LoadSave::save(Document const& source)
 {
     auto document = std::make_shared<pugi::xml_document>();
-    auto groupNode = document->append_child("Group");
-    groupNode.append_attribute("version").set_value("0.2");
+    document->append_attribute("version").set_value("0.2");
 
-    for (auto const& action : group)
+    auto inputsNode = document->append_child("Inputs");
+    for (auto const& input : source.inputs)
+    {
+        auto inputNode = inputsNode.append_child("Input");
+        inputNode.append_attribute("id").set_value(boost::lexical_cast<std::string>(input->id).c_str());
+        inputNode.append_attribute("name").set_value(input->name.c_str());
+        inputNode.append_attribute("value").set_value(input->value);
+    }
+
+    auto groupNode = document->append_child("Group");
+    for (auto const& action : source.group)
     {
         auto actionNode = groupNode.append_child("Action");
         actionNode.append_attribute("name").set_value(action->name.c_str());
         for (auto const& axis : action->axisList)
         {
             auto axisNode = actionNode.append_child("Axis");
-            axisNode.append_attribute("input").set_value(boost::lexical_cast<std::string>(axis->inputId).c_str());
+            axisNode.append_attribute("inputId").set_value(boost::lexical_cast<std::string>(axis->inputId).c_str());
             addRangedCurveTo(axis->curve, axisNode);
         }
     }
@@ -178,9 +210,9 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(Group const& group)
     return document;
 }
 
-void LoadSave::saveTo(std::string const& filename, Group const& group)
+void LoadSave::saveTo(std::string const& filename, Document const& source)
 {
-    auto xml = save(group);
+    auto xml = save(source);
     xml->save_file(filename.c_str());
 }
 

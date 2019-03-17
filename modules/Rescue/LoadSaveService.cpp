@@ -16,6 +16,6 @@ LoadSaveService::LoadSaveService(Ptr<ushiro::event_bus> bus, ushiro::store<State
 
   mSubscriptions += mBus->subscribe([this](Events::SaveTo const& event) {
     // Get current state from store
-    LoadSave::saveTo(event.filename, mStore.state.group);
+    LoadSave::saveTo(event.filename, {mStore.state.inputs, mStore.state.group});
   });
 }
