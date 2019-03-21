@@ -122,16 +122,18 @@ public:
 
   ~state_observer()
   {
-    if (!m_link)
-      return;
-
-    for (auto const& each : m_connections)
-      m_link->forget(each);
+    clear();
   }
 
   // Movable...
   state_observer(state_observer&&) noexcept = default;
-  state_observer& operator=(state_observer&&) noexcept = default;
+  state_observer& operator=(state_observer&& rhs) noexcept
+  {
+    clear();
+    m_link = std::move(rhs.m_link);
+    m_connections = std::move(rhs.m_connections);
+    return *this;
+  }
 
   // but not copyable!
   state_observer(state_observer const&) = delete;
@@ -151,6 +153,18 @@ public:
   link<Model> manager() const
   {
     return m_link;
+  }
+
+  void clear()
+  {
+    if (!m_link)
+      return;
+
+    for (auto const& each : m_connections)
+      m_link->forget(each);
+
+    m_connections.clear();
+    m_link.reset();
   }
 
 private:
