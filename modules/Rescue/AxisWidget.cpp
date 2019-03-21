@@ -28,8 +28,8 @@ AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id 
 , mAxisId(axisId)
 {
   mUi->setupUi(this);
-  for (std::size_t i = 0; i < typeToString.size(); ++i)
-    mUi->type->addItem(typeToString[i].second, QVariant(static_cast<int>(typeToString[i].first)));
+  for (const auto& each : typeToString)
+    mUi->type->addItem(each.second, QVariant(static_cast<int>(each.first)));
 
   using namespace std::placeholders;
 
