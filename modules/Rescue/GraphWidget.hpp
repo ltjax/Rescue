@@ -7,18 +7,21 @@
 class GraphWidget : public QWidget
 {
 public:
-    template <typename T> using Optional = nonstd::optional<T>;
-    GraphWidget(QWidget* parent);
+  template <typename T> using Optional = nonstd::optional<T>;
+  explicit GraphWidget(QWidget* parent);
 
-    void setRangedCurve(Rescue::RangedCurve curve);
-    Rescue::RangedCurve const& getRangedCurve() const;
+  void setRangedCurve(Rescue::RangedCurve curve);
+  Rescue::RangedCurve const& getRangedCurve() const;
 
-    void mouseMoveEvent(QMouseEvent* event) override;
-    void leaveEvent(QEvent* event) override;
+  void setSimulatedInput(Optional<float> input);
 
-    void paintEvent(QPaintEvent* e) override;
+  void mouseMoveEvent(QMouseEvent* event) override;
+  void leaveEvent(QEvent* event) override;
+
+  void paintEvent(QPaintEvent* e) override;
 
 private:
-    Rescue::RangedCurve mCurve;
-    Optional<float> mCurrentX;
+  Rescue::RangedCurve mCurve;
+  Optional<float> mMouseInput;
+  Optional<float> mSimulatedInput;
 };

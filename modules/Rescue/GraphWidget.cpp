@@ -22,13 +22,13 @@ RangedCurve const& GraphWidget::getRangedCurve() const
 
 void GraphWidget::mouseMoveEvent(QMouseEvent* e)
 {
-    mCurrentX = e->pos().x() / static_cast<float>(rect().width());
+    mMouseInput = e->pos().x() / static_cast<float>(rect().width());
     update();
 }
 
 void GraphWidget::leaveEvent(QEvent* e)
 {
-    mCurrentX.reset();
+    mMouseInput.reset();
     update();
 }
 
@@ -51,15 +51,35 @@ void GraphWidget::paintEvent(QPaintEvent* e)
         lastY = y;
     }
 
-    if (mCurrentX)
+    if (mMouseInput)
     {
-        int px = *mCurrentX * rect.width();
+        auto x = *mMouseInput;
+        int px = x * rect.width();
         int py = valueFor(px);
         painter.drawEllipse({ px, py }, 5, 5);
 
-        float rangedX = *mCurrentX * (mCurve.getMax() - mCurve.getMin()) + mCurve.getMin();
+        float rangedX = x * (mCurve.getMax() - mCurve.getMin()) + mCurve.getMin();
         auto text =
-            QString("%1 -> %2").arg(rangedX, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(*mCurrentX), 4, 'f', 2);
+          QString("%1 -> %2").arg(rangedX, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(x), 4, 'f', 2);
         painter.drawText(rect, Qt::AlignTop | Qt::AlignLeft, text);
     }
+
+    if (mSimulatedInput)
+    {
+        float x = *mSimulatedInput;
+        float normalized = (*mSimulatedInput - mCurve.getMin()) / (mCurve.getMax() - mCurve.getMin());
+        int px = normalized * rect.width();
+        int py = valueFor(px);
+        painter.drawEllipse({ px, py }, 5, 5);
+
+        auto text =
+          QString("%1 -> %2").arg(x, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(normalized), 4, 'f', 2);
+        painter.drawText(rect, Qt::AlignTop | Qt::AlignRight, text);
+    }
+}
+
+void GraphWidget::setSimulatedInput(GraphWidget::Optional<float> input)
+{
+    mSimulatedInput = std::move(input);
+    update();
 }

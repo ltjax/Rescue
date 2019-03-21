@@ -138,9 +138,12 @@ void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
   if (found != inputs.end())
   {
     mUi->input->setCurrentIndex(static_cast<int>(found - inputs.begin()) + OFFSET);
+    auto x = (*found)->value;
+    mUi->graphWidget->setSimulatedInput(x);
   }
   else
   {
     mUi->input->setCurrentIndex(0);
+    mUi->graphWidget->setSimulatedInput({});
   }
 }
