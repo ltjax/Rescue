@@ -12,14 +12,15 @@ QString signedInteger(float x)
 }
 } // namespace
 
-InputPanel::InputPanel(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent)
+InputPanel::InputPanel(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id id, QWidget* parent)
 : QWidget(parent)
 , mUi(std::make_unique<Ui::InputPanel>())
 , mBus(std::move(bus))
+, mObserver(std::move(link))
 {
   mUi->setupUi(this);
 
-  observer.observe([id](State const& state) { return locate(state.inputs, id); },
+  mObserver.observe([id](State const& state) { return locate(state.inputs, id); },
                    [this](auto const& input) { updateFrom(input); });
 
   connect(mUi->spinBox, qOverload<double>(&QDoubleSpinBox::valueChanged),
@@ -44,9 +45,9 @@ void InputPanel::updateFrom(Ptr<ActionInput const> const& input)
 
   mUi->name->setText(input->name.c_str());
   mUi->spinBox->setRange(min, max);
-  mUi->slider->setRange(min, max);
+  mUi->slider->setRange(static_cast<int>(min), static_cast<int>(max));
   mUi->min->setText(signedInteger(min));
   mUi->max->setText(signedInteger(max));
   mUi->spinBox->setValue(input->value);
-  mUi->slider->setValue(std::floor(input->value + 0.5f));
+  mUi->slider->setValue(static_cast<int>(std::floor(input->value + 0.5f)));
 }

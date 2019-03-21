@@ -24,7 +24,7 @@ class FlowLayout;
 class ActionWidget : public QWidget
 {
 public:
-  ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent);
+  ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id id, QWidget* parent);
   ~ActionWidget() final;
 
   void updateFrom(Ptr<Rescue::Action const> const& action);

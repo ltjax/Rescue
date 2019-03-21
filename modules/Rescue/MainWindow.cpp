@@ -38,8 +38,8 @@ MainWindow::MainWindow(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State>
   connect(mUi->actionSaveAs, &QAction::triggered, [this] { onFileSaveAs(); });
   connect(mUi->actionAdd_Input, &QAction::triggered, [this] { onAddInput(); });
 
-  mUi->inputScrollArea->setWidget(new InputPanelListWidget(mBus, mObserver, this));
-  mUi->outputScrollArea->setWidget(new OutputListWidget(mObserver, this));
+  mUi->inputScrollArea->setWidget(new InputPanelListWidget(mBus, mObserver.manager(), this));
+  mUi->outputScrollArea->setWidget(new OutputListWidget(mObserver.manager(), this));
 
   mObserver.observe(
     [](State const& state) {
@@ -121,7 +121,7 @@ QString MainWindow::getFilePath() const
 void MainWindow::syncWidgets(Rescue::Group const& group)
 {
   auto insert = [this](auto const& item, auto index) {
-    auto widget = new ActionWidget(mBus, mObserver, item->id, mUi->actionArea);
+    auto widget = new ActionWidget(mBus, mObserver.manager(), item->id, mUi->actionArea);
     mAreaLayout->insertWidget(index, widget);
     return widget;
   };

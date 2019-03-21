@@ -2,9 +2,9 @@
 
 using namespace Rescue;
 
-OutputListWidget::OutputListWidget(ushiro::state_observer<Rescue::State> observer, QWidget* parent)
+OutputListWidget::OutputListWidget(ushiro::link<Rescue::State> link, QWidget* parent)
 : QTableView(parent)
-, mObserver(std::move(observer))
+, mObserver(std::move(link))
 {
   mLayout = new QVBoxLayout(this);
   setLayout(mLayout);

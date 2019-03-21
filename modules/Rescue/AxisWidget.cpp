@@ -4,9 +4,9 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <boost/lexical_cast.hpp>
+#include <boost/uuid/nil_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <unordered_map>
-#include <boost/uuid/nil_generator.hpp>
 
 using namespace Rescue;
 
@@ -20,10 +20,10 @@ std::vector<std::pair<Curve::FunctionType, QString>> const typeToString = {
 };
 }
 
-AxisWidget::AxisWidget(
-  Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id actionId, Id axisId, QWidget* parent)
+AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id actionId, Id axisId, QWidget* parent)
 : mUi(std::make_unique<Ui::Axis>())
 , mBus(std::move(bus))
+, mObserver(std::move(link))
 , mActionId(actionId)
 , mAxisId(axisId)
 {
@@ -50,8 +50,7 @@ AxisWidget::AxisWidget(
     }
   });
 
-  connect(mUi->input, currentIndexChanged,
-          [this](int current) {
+  connect(mUi->input, currentIndexChanged, [this](int current) {
     auto inputId = boost::lexical_cast<Id>(mUi->input->itemData(current).toString().toStdString());
     mBus->dispatch<Events::ModifyAxisInput>(mActionId, mAxisId, inputId);
   });
@@ -70,14 +69,14 @@ AxisWidget::AxisWidget(
 
   connect(mUi->remove, &QToolButton::clicked, [this](bool) { mBus->dispatch<Events::RemoveAxis>(mActionId, mAxisId); });
 
-  observer.observe(
+  mObserver.observe(
     [this](State const& state) {
       auto const& action = locate(state.group, mActionId);
       return locate(action->axisList, mAxisId);
     },
     [this](Ptr<Axis const> const& axis) { updateFrom(axis); });
 
-  observer.observe(
+  mObserver.observe(
     [this](State const& state) {
       auto const& action = locate(state.group, mActionId);
       auto const& axis = locate(action->axisList, mAxisId);
@@ -125,11 +124,11 @@ void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
   auto extractId = [](auto const& input) { return boost::lexical_cast<std::string>(input->id) + input->name; };
 
   auto insert = [&](Ptr<ActionInput const> const& input, int index) {
-    mUi->input->insertItem(index+OFFSET, input->name.c_str(), boost::lexical_cast<std::string>(input->id).c_str());
+    mUi->input->insertItem(index + OFFSET, input->name.c_str(), boost::lexical_cast<std::string>(input->id).c_str());
     return index;
   };
 
-  auto remove = [&](int, int index) { mUi->input->removeItem(index+OFFSET); };
+  auto remove = [&](int, int index) { mUi->input->removeItem(index + OFFSET); };
 
   SignalBlocker blocker({ mUi->input });
   mInputOptions.update(inputs, extractId, insert, remove);
@@ -138,8 +137,9 @@ void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
 
   if (found != inputs.end())
   {
-    mUi->input->setCurrentIndex(static_cast<int>(found - inputs.begin())+ OFFSET);
-  } else
+    mUi->input->setCurrentIndex(static_cast<int>(found - inputs.begin()) + OFFSET);
+  }
+  else
   {
     mUi->input->setCurrentIndex(0);
   }

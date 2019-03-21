@@ -3,10 +3,10 @@
 #include "State.hpp"
 #include "event_bus.hpp"
 #include <QtWidgets/QWidget>
+#include <diffable_list.hpp>
 #include <functional>
 #include <memory>
 #include <state_observer.hpp>
-#include <diffable_list.hpp>
 
 namespace Ui
 {
@@ -19,8 +19,7 @@ namespace Rescue
 class AxisWidget : public QWidget
 {
 public:
-  AxisWidget(
-    Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id actionId, Id axisId, QWidget* parent);
+  AxisWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id actionId, Id axisId, QWidget* parent);
   ~AxisWidget() final;
 
 private:
@@ -34,6 +33,7 @@ private:
 
   std::unique_ptr<Ui::Axis> mUi;
   Ptr<ushiro::event_bus> mBus;
+  ushiro::state_observer<State> mObserver;
   Id mActionId;
   Id mAxisId;
 

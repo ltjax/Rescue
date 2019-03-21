@@ -20,23 +20,25 @@ template <typename Function, typename Tuple> auto call(Function f, Tuple t)
   return call(f, t, std::make_index_sequence<size>{});
 }
 
-template <class Model> class state_observation_manager
+template <class Model> class observation_manager
 {
 public:
   using ChangeHandler = std::function<void(Model const& current, Model const& previous)>;
+  using HandlerList = std::list<ChangeHandler>;
 
-  explicit state_observation_manager(Model const& state)
+  struct token
+  {
+    typename HandlerList::iterator detail;
+  };
+
+  explicit observation_manager(Model const& state)
   : m_state(state)
   {
   }
 
   void message_changed(Model const& from, Model const& to)
   {
-    for (auto& each : m_just_added)
-    {
-      m_list.push_back(std::move(each));
-    }
-    m_just_added.clear();
+    m_list.splice(m_list.end(), m_just_added);
 
     for (auto const& handler : m_list)
     {
@@ -47,7 +49,7 @@ public:
   /** Fully configurable version.
    */
   template <class ProjectionType, class WeakEqual, class HandlerType>
-  void observe(ProjectionType projection, WeakEqual predicate, HandlerType handler)
+  token observe(ProjectionType projection, WeakEqual predicate, HandlerType handler)
   {
     auto change_handler = [projection, predicate, handler](Model const& current_state, Model const& previous_state) {
       auto const& new_value = projection(current_state);
@@ -58,17 +60,24 @@ public:
     };
 
     // Queue change handler for later
-    m_just_added.push_back(change_handler);
+    auto where = m_just_added.insert(m_just_added.end(), change_handler);
 
     // Do an initial execution of the handler at once
     handler(projection(m_state));
+
+    return token{where};
   };
 
   /** Facade version.
    */
-  template <class ProjectionType, class HandlerType> void observe(ProjectionType projection, HandlerType handler)
+  template <class ProjectionType, class HandlerType> token observe(ProjectionType projection, HandlerType handler)
   {
-    observe(projection, std::equal_to<void>(), unwrapping_adaptor<HandlerType>(handler));
+    return observe(projection, std::equal_to<void>(), unwrapping_adaptor<HandlerType>(handler));
+  }
+
+  void forget(token what)
+  {
+    m_list.erase(what.detail);
   }
 
 private:
@@ -95,35 +104,58 @@ private:
   };
 
   Model const& m_state;
-  std::vector<ChangeHandler> m_list;
-  std::vector<ChangeHandler> m_just_added;
+  std::list<ChangeHandler> m_list;
+  std::list<ChangeHandler> m_just_added;
 };
+
+template <class Model>
+using link = std::shared_ptr<observation_manager<Model>>;
 
 template <typename Model> class state_observer
 {
 public:
-  using manager_ptr = std::shared_ptr<state_observation_manager<Model>>;
 
-  explicit state_observer(manager_ptr manager_)
-  : m_manager(std::move(manager_))
+  explicit state_observer(link<Model> link_)
+  : m_link(std::move(link_))
   {
   }
 
+  ~state_observer()
+  {
+    if (!m_link)
+      return;
+
+    for (auto const& each : m_connections)
+      m_link->forget(each);
+  }
+
+  // Movable...
   state_observer(state_observer&&) noexcept = default;
-  state_observer(state_observer const& parent) = default;
+  state_observer& operator=(state_observer&&) noexcept = default;
+
+  // but not copyable!
+  state_observer(state_observer const&) = delete;
+  state_observer& operator=(state_observer const&) = delete;
 
   template <class Projection, class WeakEqual, class Handler>
   inline void observe(Projection projection, WeakEqual predicate, Handler handler)
   {
-    m_manager->observe(projection, predicate, handler);
+    m_connections.push_back(m_link->observe(projection, predicate, handler));
   }
 
   template <class Projection, class Handler> inline void observe(Projection projection, Handler handler)
   {
-    m_manager->observe(projection, handler);
+    m_connections.push_back(m_link->observe(projection, handler));
+  }
+
+  link<Model> manager() const
+  {
+    return m_link;
   }
 
 private:
-  manager_ptr m_manager;
+  using token = typename observation_manager<Model>::token;
+  link<Model> m_link;
+  std::vector<token> m_connections;
 };
 } // namespace ushiro

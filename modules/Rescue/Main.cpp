@@ -34,7 +34,7 @@ int run(int argc, char** argv)
   // Create basic application objects
   auto bus = std::make_shared<ushiro::event_bus>();
   ushiro::store<State> store;
-  auto observerManager = std::make_shared<ushiro::state_observation_manager<State>>(store.state);
+  auto observerManager = std::make_shared<ushiro::observation_manager<State>>(store.state);
 
   // Notify about updates whenever store changes
   store.change_handler = [&](auto const& from, auto const& to) { observerManager->message_changed(from, to); };

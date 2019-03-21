@@ -31,7 +31,7 @@ private:
 class OutputListWidget : public QTableView
 {
 public:
-  OutputListWidget(ushiro::state_observer<Rescue::State> observer, QWidget* parent);
+  OutputListWidget(ushiro::link<Rescue::State> link, QWidget* parent);
   ~OutputListWidget();
 
 private:

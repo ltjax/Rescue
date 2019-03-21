@@ -5,11 +5,11 @@
 
 using namespace Rescue;
 
-ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent)
+ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id id, QWidget* parent)
 : QWidget(parent)
 , mUi(std::make_unique<Ui::Action>())
 , mBus(std::move(bus))
-, mObserver(observer)
+, mObserver(std::move(link))
 , mActionId(id)
 {
   mUi->setupUi(this);
@@ -19,7 +19,7 @@ ActionWidget::ActionWidget(Ptr<ushiro::event_bus> bus, ushiro::state_observer<St
   mAreaLayout->setMargin(0);
   mUi->axisArea->setLayout(mAreaLayout);
 
-  observer.observe([=](State const& state) { return locate(state.group, id); },
+  mObserver.observe([=](State const& state) { return locate(state.group, id); },
                    [this](Ptr<Action const> const& action) { updateFrom(action); });
 
   connect(mUi->name, &QLineEdit::textEdited,
@@ -44,7 +44,7 @@ void ActionWidget::updateFrom(Ptr<Rescue::Action const> const& action)
   mUi->name->setText(action->name.c_str());
 
   auto insert = [this](auto const& axis, auto index) {
-    auto widget = new AxisWidget(mBus, mObserver, mActionId, axis->id, mUi->axisArea);
+    auto widget = new AxisWidget(mBus, mObserver.manager(), mActionId, axis->id, mUi->axisArea);
     mAreaLayout->insertWidget(index, widget);
     return widget;
   };

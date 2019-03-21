@@ -16,7 +16,7 @@ namespace Rescue
 class InputPanel : public QWidget
 {
 public:
-  InputPanel(Ptr<ushiro::event_bus> bus, ushiro::state_observer<State> observer, Id id, QWidget* parent);
+  InputPanel(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id id, QWidget* parent);
   ~InputPanel() final;
 
 private:
@@ -24,6 +24,7 @@ private:
 
   std::unique_ptr<Ui::InputPanel> mUi;
   Ptr<ushiro::event_bus> mBus;
+  ushiro::state_observer<State> mObserver;
 };
 
 }
