@@ -10,6 +10,50 @@ using namespace Rescue;
 namespace
 {
 
+class IdCompressor
+{
+public:
+  explicit IdCompressor(std::size_t startIndex = 0)
+  : mIndex(0)
+  {
+
+  }
+
+  std::size_t operator[](Id id)
+  {
+    auto found = mLookup.find(id);
+    if (found == mLookup.end())
+    {
+      auto result = mIndex++;
+      mLookup.insert(std::make_pair(id, result));
+      return result;
+    }
+    return found->second;
+  }
+
+private:
+  std::size_t mIndex;
+  std::unordered_map<Id, std::size_t> mLookup;
+};
+
+class IdDecompressor
+{
+public:
+  Id operator[](std::size_t rhs)
+  {
+    auto found = mLookup.find(rhs);
+    if (found == mLookup.end())
+    {
+      auto result = createId();
+      mLookup.insert(std::make_pair(rhs, result));
+      return result;
+    }
+    return found->second;
+  }
+private:
+  std::unordered_map<std::size_t, Id> mLookup;
+};
+
 std::vector<std::pair<Curve::FunctionType, char const*>> const typeString = {
   { Curve::FunctionType::Linear, "Linear" },
   { Curve::FunctionType::Polynomial, "Polynomial" },
@@ -128,9 +172,11 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
   }
   else
   {
+    IdDecompressor inputIds;
+
     for (auto const& inputNode : groupNode.children("Input"))
     {
-      auto id = boost::lexical_cast<Id>(inputNode.attribute("id").as_string());
+      auto id = inputIds[inputNode.attribute("id").as_uint()];
       auto input = std::make_shared<ActionInput>(id);
       input->name = inputNode.attribute("name").as_string("");
       input->value = inputNode.attribute("value").as_float(0.f);
@@ -144,8 +190,7 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
 
       for (auto const& axisNode : actionNode.children("Axis"))
       {
-        auto inputId = boost::lexical_cast<Id>(axisNode.attribute("inputId").as_string());
-
+        auto inputId = inputIds[axisNode.attribute("inputId").as_uint()];
         auto axis = std::make_shared<Axis>(createId(), inputId, loadRangedCurveFrom(axisNode));
         action->axisList.push_back(axis);
       }
@@ -181,11 +226,12 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(Document const& source)
   auto document = std::make_shared<pugi::xml_document>();
   auto groupNode = document->append_child("Group");
   groupNode.append_attribute("version").set_value("0.2");
+  IdCompressor inputIds;
 
   for (auto const& input : source.inputs)
   {
     auto inputNode = groupNode.append_child("Input");
-    inputNode.append_attribute("id").set_value(boost::lexical_cast<std::string>(input->id).c_str());
+    inputNode.append_attribute("id").set_value(inputIds[input->id]);
     inputNode.append_attribute("name").set_value(input->name.c_str());
     inputNode.append_attribute("value").set_value(input->value);
   }
@@ -197,7 +243,7 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(Document const& source)
     for (auto const& axis : action->axisList)
     {
       auto axisNode = actionNode.append_child("Axis");
-      axisNode.append_attribute("inputId").set_value(boost::lexical_cast<std::string>(axis->inputId).c_str());
+      axisNode.append_attribute("inputId").set_value(inputIds[axis->inputId]);
       addRangedCurveTo(axis->curve, axisNode);
     }
   }
