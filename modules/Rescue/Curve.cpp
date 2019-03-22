@@ -50,8 +50,7 @@ RangedCurve::RangedCurve(Curve Curve, float min, float max)
 }
 
 RangedCurve::~RangedCurve()
-{
-}
+= default;
 
 float RangedCurve::evaluateFor(float Rhs) const
 {
@@ -61,7 +60,7 @@ float RangedCurve::evaluateFor(float Rhs) const
     return mCurve.evaluateFor((Rhs - mMin) / (mMax - mMin));
 }
 
-Curve Rescue::RangedCurve::getCurve() const
+Curve Rescue::RangedCurve::normalized() const
 {
     return mCurve;
 }
@@ -71,7 +70,7 @@ void RangedCurve::setMin(float x)
     mMin = x;
 }
 
-float RangedCurve::getMin() const
+float RangedCurve::min() const
 {
     return mMin;
 }
@@ -81,7 +80,7 @@ void RangedCurve::setMax(float x)
     mMax = x;
 }
 
-float RangedCurve::getMax() const
+float RangedCurve::max() const
 {
     return mMax;
 }

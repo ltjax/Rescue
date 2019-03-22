@@ -116,9 +116,9 @@ void addCurveTo(Curve const& curve, pugi::xml_node& node)
 
 void addRangedCurveTo(RangedCurve const& rangedCurve, pugi::xml_node& node)
 {
-  addCurveTo(rangedCurve.getCurve(), node);
-  node.append_attribute("min").set_value(rangedCurve.getMin());
-  node.append_attribute("max").set_value(rangedCurve.getMax());
+  addCurveTo(rangedCurve.normalized(), node);
+  node.append_attribute("min").set_value(rangedCurve.min());
+  node.append_attribute("max").set_value(rangedCurve.max());
 }
 
 Curve loadCurveFrom(pugi::xml_node const& node)
@@ -134,7 +134,7 @@ Curve loadCurveFrom(pugi::xml_node const& node)
 
 RangedCurve loadRangedCurveFrom(pugi::xml_node const& node)
 {
-  return { loadCurveFrom(node), node.attribute("min").as_float(0.f), node.attribute("max").as_float(1.f) };
+  return RangedCurve{ loadCurveFrom(node), node.attribute("min").as_float(0.f), node.attribute("max").as_float(1.f) };
 }
 
 LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const& document)

@@ -39,7 +39,7 @@ void GraphWidget::paintEvent(QPaintEvent* e)
 
     auto rect = this->rect();
     auto valueFor = [&](int pixel) {
-        float ry = mCurve.getCurve().evaluateFor((pixel + 0.5f) / rect.width());
+        float ry = mCurve.normalized().evaluateFor((pixel + 0.5f) / rect.width());
         return (1.f - ry) * rect.height();
     };
 
@@ -58,22 +58,22 @@ void GraphWidget::paintEvent(QPaintEvent* e)
         int py = valueFor(px);
         painter.drawEllipse({ px, py }, 5, 5);
 
-        float rangedX = x * (mCurve.getMax() - mCurve.getMin()) + mCurve.getMin();
+        float rangedX = x * (mCurve.max() - mCurve.min()) + mCurve.min();
         auto text =
-          QString("%1 -> %2").arg(rangedX, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(x), 4, 'f', 2);
+          QString("%1 -> %2").arg(rangedX, 4, 'f', 2).arg(mCurve.normalized().evaluateFor(x), 4, 'f', 2);
         painter.drawText(rect, Qt::AlignTop | Qt::AlignLeft, text);
     }
 
     if (mSimulatedInput)
     {
         float x = *mSimulatedInput;
-        float normalized = (*mSimulatedInput - mCurve.getMin()) / (mCurve.getMax() - mCurve.getMin());
+        float normalized = (*mSimulatedInput - mCurve.min()) / (mCurve.max() - mCurve.min());
         int px = normalized * rect.width();
         int py = valueFor(px);
         painter.drawEllipse({ px, py }, 5, 5);
 
         auto text =
-          QString("%1 -> %2").arg(x, 4, 'f', 2).arg(mCurve.getCurve().evaluateFor(normalized), 4, 'f', 2);
+          QString("%1 -> %2").arg(x, 4, 'f', 2).arg(mCurve.normalized().evaluateFor(normalized), 4, 'f', 2);
         painter.drawText(rect, Qt::AlignTop | Qt::AlignRight, text);
     }
 }

@@ -26,8 +26,8 @@ Inputs Rescue::adaptInputRanges(Inputs inputs, Group const& group)
       if (axis->inputId.is_nil())
         continue;
 
-      float a = axis->curve.getMin();
-      float b = axis->curve.getMax();
+      float a = axis->curve.min();
+      float b = axis->curve.max();
       // We support inverted ranges, but need them ordered now
       if (a > b)
         std::swap(a, b);

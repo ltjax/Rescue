@@ -100,8 +100,8 @@ void AxisWidget::emitChange(RangedCurve const& change)
 void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
 {
   auto ranged = currentCurve();
-  auto newCurve = modifier(ranged.getCurve());
-  emitChange(newCurve);
+  auto newCurve = modifier(ranged.normalized());
+  emitChange(RangedCurve{newCurve, ranged.min(), ranged.max()});
 }
 
 void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
@@ -109,12 +109,12 @@ void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
   SignalBlocker blocker(
     { mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input, mUi->comment });
 
-  mUi->m->setValue(axis->curve.getCurve().m());
-  mUi->k->setValue(axis->curve.getCurve().k());
-  mUi->c->setValue(axis->curve.getCurve().c());
-  mUi->b->setValue(axis->curve.getCurve().b());
-  mUi->min->setValue(axis->curve.getMin());
-  mUi->max->setValue(axis->curve.getMax());
+  mUi->m->setValue(axis->curve.normalized().m());
+  mUi->k->setValue(axis->curve.normalized().k());
+  mUi->c->setValue(axis->curve.normalized().c());
+  mUi->b->setValue(axis->curve.normalized().b());
+  mUi->min->setValue(axis->curve.min());
+  mUi->max->setValue(axis->curve.max());
   mUi->graphWidget->setRangedCurve(axis->curve);
   mUi->comment->setText(axis->comment.c_str());
 }
