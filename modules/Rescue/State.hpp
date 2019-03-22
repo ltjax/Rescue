@@ -69,6 +69,7 @@ public:
     axis = std::make_shared<Axis>(f(*axis));
 
     oldAction = newAction;
+    copy.inputs = adaptInputRanges(copy.inputs, copy.group);
     copy.outputs = computeOutputs(copy.inputs, copy.group);
     return copy;
   }
