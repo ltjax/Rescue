@@ -39,6 +39,13 @@ struct ModifyAxisInput
   Id inputId;
 };
 
+struct ModifyAxisComment
+{
+  Id actionId;
+  Id axisId;
+  std::string comment;
+};
+
 struct RemoveAxis
 {
   Id actionId;

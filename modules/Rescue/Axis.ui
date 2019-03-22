@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>461</width>
-    <height>320</height>
+    <height>347</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -376,6 +376,9 @@ font: 12pt &quot;Sans&quot;;</string>
          <bool>false</bool>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="comment"/>
       </item>
      </layout>
     </widget>

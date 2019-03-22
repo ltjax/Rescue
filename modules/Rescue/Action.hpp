@@ -25,13 +25,14 @@ using Inputs = std::vector<Ptr<ActionInput const>>;
 
 struct Axis
 {
-  Axis(Id id, Id inputId, RangedCurve curve);
+  Axis(Id id, Id inputId, RangedCurve curve, std::string comment);
 
   float evaluateFor(float x) const;
 
   Id id;
   Id inputId;
   RangedCurve curve;
+  std::string comment;
 };
 
 struct Action

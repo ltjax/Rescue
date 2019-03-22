@@ -164,7 +164,7 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
           input = newInput;
           inputs.push_back(input);
         }
-        auto axis = std::make_shared<Axis>(createId(), input->id, loadRangedCurveFrom(axisNode));
+        auto axis = std::make_shared<Axis>(createId(), input->id, loadRangedCurveFrom(axisNode), "");
         action->axisList.push_back(axis);
       }
       group.push_back(action);
@@ -191,7 +191,8 @@ LoadSave::Document loadWithLocaleFixed(std::shared_ptr<pugi::xml_document> const
       for (auto const& axisNode : actionNode.children("Axis"))
       {
         auto inputId = inputIds[axisNode.attribute("inputId").as_uint()];
-        auto axis = std::make_shared<Axis>(createId(), inputId, loadRangedCurveFrom(axisNode));
+        auto comment = axisNode.attribute("comment").as_string("");
+        auto axis = std::make_shared<Axis>(createId(), inputId, loadRangedCurveFrom(axisNode), comment);
         action->axisList.push_back(axis);
       }
       group.push_back(action);
@@ -245,6 +246,7 @@ std::shared_ptr<pugi::xml_document> LoadSave::save(Document const& source)
       auto axisNode = actionNode.append_child("Axis");
       axisNode.append_attribute("inputId").set_value(inputIds[axis->inputId]);
       addRangedCurveTo(axis->curve, axisNode);
+      axisNode.append_attribute("comment").set_value(axis->comment.c_str());
     }
   }
 

@@ -35,6 +35,7 @@ public:
                                 Events::AddAxisTo,
                                 Events::ModifyAxisCurve,
                                 Events::ModifyAxisInput,
+                                Events::ModifyAxisComment,
                                 Events::ModifyActionName,
                                 Events::RemoveAxis,
                                 Events::RemoveAction,
@@ -57,6 +58,7 @@ public:
   State apply(Events::ModifyActionInputValue const& event) const;
   State apply(Events::ModifyActionInputName const& event) const;
   State apply(Events::RemoveActionInput const& event) const;
+  State apply(Events::ModifyAxisComment const& event) const;
 
   template <typename T> State modifyAxis(Id actionId, Id axisId, T f) const
   {

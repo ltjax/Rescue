@@ -37,7 +37,8 @@ State State::apply(Rescue::Events::AddAxisTo const& event) const
   auto copy = *this;
   auto const& oldAction = locate(group, event.actionId);
   auto newAction = std::make_shared<Action>(*oldAction);
-  newAction->axisList.push_back(std::make_shared<Axis>(event.newId, boost::uuids::nil_generator{}(), RangedCurve{}));
+  newAction->axisList.push_back(
+    std::make_shared<Axis>(event.newId, boost::uuids::nil_generator{}(), RangedCurve{}, ""));
   locate(copy.group, event.actionId) = newAction;
   return copy;
 }
@@ -99,23 +100,25 @@ State State::apply(Events::CreateActionInput const& event) const
 
 State State::apply(Events::ModifyActionInputValue const& event) const
 {
-  return modifyObject(&State::inputs, event.id, [&](ActionInput& input)
-  {
-    input.value = event.value;
-  });
+  return modifyObject(&State::inputs, event.id, [&](ActionInput& input) { input.value = event.value; });
 }
 
 State State::apply(Events::ModifyActionInputName const& event) const
 {
-  return modifyObject(&State::inputs, event.id, [&](ActionInput& input)
-  {
-    input.name = event.name;
-  });
+  return modifyObject(&State::inputs, event.id, [&](ActionInput& input) { input.name = event.name; });
 }
 
 State State::apply(Events::RemoveActionInput const& event) const
 {
   return removeObject(&State::inputs, event.id);
+}
+
+State State::apply(Events::ModifyAxisComment const& event) const
+{
+  return modifyAxis(event.actionId, event.axisId, [&](Axis axis) {
+    axis.comment = event.comment;
+    return axis;
+  });
 }
 
 Outputs Rescue::computeOutputs(Inputs const& inputs, Group const& group)

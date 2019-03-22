@@ -3,6 +3,7 @@
 #include "ui_Axis.h"
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QLineEdit>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -57,17 +58,21 @@ AxisWidget::AxisWidget(Ptr<ushiro::event_bus> bus, ushiro::link<State> link, Id 
 
   connect(mUi->min, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
-    curve.setMin(rhs);
+    curve.setMin(static_cast<float>(rhs));
     emitChange(curve);
   });
 
   connect(mUi->max, valueChanged, [this](double rhs) {
     auto curve = currentCurve();
-    curve.setMax(rhs);
+    curve.setMax(static_cast<float>(rhs));
     emitChange(curve);
   });
 
   connect(mUi->remove, &QToolButton::clicked, [this](bool) { mBus->dispatch<Events::RemoveAxis>(mActionId, mAxisId); });
+
+  connect(mUi->comment, &QLineEdit::textChanged, [this](QString const& text) {
+    mBus->dispatch<Events::ModifyAxisComment>(mActionId, mAxisId, text.toStdString());
+  });
 
   mObserver.observe(
     [this](State const& state) {
@@ -101,7 +106,8 @@ void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
 
 void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
 {
-  SignalBlocker blocker({ mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input });
+  SignalBlocker blocker(
+    { mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input, mUi->comment });
 
   mUi->m->setValue(axis->curve.getCurve().m());
   mUi->k->setValue(axis->curve.getCurve().k());
@@ -110,7 +116,7 @@ void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
   mUi->min->setValue(axis->curve.getMin());
   mUi->max->setValue(axis->curve.getMax());
   mUi->graphWidget->setRangedCurve(axis->curve);
-  // mUi->input->setText(axis->input.c_str());
+  mUi->comment->setText(axis->comment.c_str());
 }
 
 Rescue::RangedCurve const& AxisWidget::currentCurve() const
