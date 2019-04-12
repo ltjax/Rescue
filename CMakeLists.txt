@@ -7,11 +7,13 @@ set(CMAKE_CXX_STANDARD 17)
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC OFF)
 
-# Find the QtWidgets library
+# Find the QtWidgets library (we're not using conan here)
 find_package(Qt5Widgets)
-find_package(Boost REQUIRED)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
 
 # External modules
 add_subdirectory(externals/pugixml)

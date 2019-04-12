@@ -45,9 +45,10 @@ public:
 
     // Add new widgets
     int target_index = 0;
+    auto N = static_cast<int>(children_.size());
     for (auto const& each : container)
     {
-      if (target_index < children_.size() && extract_id(each) == children_[target_index].first)
+      if (target_index < N && extract_id(each) == children_[target_index].first)
       {
         target_index++;
         continue;

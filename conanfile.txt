@@ -1,0 +1,11 @@
+[requires]
+boost_lexical_cast/1.68.0@bincrafters/stable
+boost_uuid/1.68.0@bincrafters/stable
+boost_algorithm/1.68.0@bincrafters/stable
+boost_functional/1.68.0@bincrafters/stable
+
+[options]
+boost:shared=False
+
+[generators]
+cmake

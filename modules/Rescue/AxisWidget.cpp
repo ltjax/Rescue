@@ -130,7 +130,8 @@ void AxisWidget::updateInputSelect(Inputs const& inputs, Id current)
   auto extractId = [](auto const& input) { return boost::lexical_cast<std::string>(input->id) + input->name; };
 
   auto insert = [&](Ptr<ActionInput const> const& input, int index) {
-    mUi->input->insertItem(index + OFFSET, input->name.c_str(), boost::lexical_cast<std::string>(input->id).c_str());
+    mUi->input->insertItem(index + OFFSET, input->name.c_str(),
+        boost::lexical_cast<std::string>(input->id).c_str());
     return index;
   };
 
