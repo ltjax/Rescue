@@ -12,7 +12,7 @@ platform:
 environment:
   MSVC_DEFAULT_OPTIONS: ON
   QTDIR: C:\Qt\5.9\msvc2017_64
-  CMAKE_PREFIX_PATH: C:\Qt\5.9\msvc2017_64;C:\Libraries\boost_1_69_0
+  CMAKE_PREFIX_PATH: C:\Qt\5.9\msvc2017_64
 
 # build configuration, i.e. Debug, Release, etc.
 configuration:
@@ -30,21 +30,23 @@ clone_folder: C:\projects\Rescue
 # branches to build
 branches:
   # whitelist
-  # only: 
-  #   - master
-  #   - master
-  # blacklist
-  except:
-    - gh-pages
+  only: 
+    - master
 
 # scripts that run after cloning repository
-# install: off
-
+install:
+  - cmd: echo "Downloading conan..."
+  - cmd: set PATH=%PATH%;%PYTHON%/Scripts/
+  - cmd: pip.exe install conan
+  - cmd: conan user # Create the conan data directory
+  - cmd: conan --version
+      
 # scripts to run before build
 before_build:
   - cmd: cd C:\projects\Rescue
   - cmd: md build
   - cmd: cd build
+  - cmd: conan install ..
   - cmd: set CMAKE_GENERATOR_NAME=Visual Studio 15 2017 Win64
   - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" ..
 
