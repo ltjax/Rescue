@@ -39,6 +39,7 @@ install:
   - cmd: set PATH=%PATH%;%PYTHON%/Scripts/
   - cmd: pip.exe install conan
   - cmd: conan user # Create the conan data directory
+  - cmd: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   - cmd: conan --version
       
 # scripts to run before build
