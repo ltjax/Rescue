@@ -24,7 +24,12 @@ template <class Model> class observation_manager
 {
 public:
   using ChangeHandler = std::function<void(Model const& current, Model const& previous)>;
-  using HandlerList = std::list<ChangeHandler>;
+  struct Entry
+  {
+    ChangeHandler handler;
+    bool was_just_added;
+  };
+  using HandlerList = std::list<Entry>;
 
   struct token
   {
@@ -38,11 +43,14 @@ public:
 
   void message_changed(Model const& from, Model const& to)
   {
+    for (auto& each : m_just_added)
+      each.was_just_added = false;
+
     m_list.splice(m_list.end(), m_just_added);
 
-    for (auto const& handler : m_list)
+    for (auto const& each : m_list)
     {
-      handler(to, from);
+      each.handler(to, from);
     }
   }
 
@@ -60,7 +68,7 @@ public:
     };
 
     // Queue change handler for later
-    auto where = m_just_added.insert(m_just_added.end(), change_handler);
+    auto where = m_just_added.insert(m_just_added.end(), Entry{change_handler, true});
 
     // Do an initial execution of the handler at once
     handler(projection(m_state));
@@ -77,6 +85,11 @@ public:
 
   void forget(token what)
   {
+    if (what.detail->was_just_added)
+    {
+      m_just_added.erase(what.detail);
+      return;
+    }
     m_list.erase(what.detail);
   }
 
@@ -104,8 +117,8 @@ private:
   };
 
   Model const& m_state;
-  std::list<ChangeHandler> m_list;
-  std::list<ChangeHandler> m_just_added;
+  HandlerList m_list;
+  HandlerList m_just_added;
 };
 
 template <class Model>

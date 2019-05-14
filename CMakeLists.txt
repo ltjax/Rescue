@@ -21,6 +21,7 @@ add_subdirectory(externals/pugixml)
 # Own modules
 add_subdirectory(modules/Rescue)
 add_subdirectory(modules/ushiro)
+add_subdirectory(tests)
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "NSIS")  

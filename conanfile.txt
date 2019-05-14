@@ -3,6 +3,7 @@ boost_lexical_cast/1.68.0@bincrafters/stable
 boost_uuid/1.68.0@bincrafters/stable
 boost_algorithm/1.68.0@bincrafters/stable
 boost_functional/1.68.0@bincrafters/stable
+Catch2/2.7.2@catchorg/stable 
 
 [options]
 boost:shared=False
