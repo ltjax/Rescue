@@ -53,10 +53,7 @@ target_link_libraries(${TARGET_NAME}
   PUBLIC pugixml
   PUBLIC Qt5::Widgets
   PUBLIC ushiro
-  PUBLIC CONAN_PKG::boost_lexical_cast
-  PUBLIC CONAN_PKG::boost_uuid
-  PUBLIC CONAN_PKG::boost_algorithm
-  PUBLIC CONAN_PKG::boost_functional)
+  PUBLIC CONAN_PKG::boost)
 
 install(TARGETS ${TARGET_NAME}
   RUNTIME DESTINATION Frontend)
