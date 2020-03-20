@@ -5,3 +5,6 @@
 /.idea/misc.xml
 /.idea/Rescue.iml
 /.idea/vcs.xml
+
+/.vs/
+/CMakeSettings.json

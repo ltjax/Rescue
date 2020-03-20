@@ -107,7 +107,7 @@ void AxisWidget::modifyCurve(std::function<Curve(Curve)> modifier)
 void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
 {
   SignalBlocker blocker(
-    { mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input, mUi->comment });
+    { mUi->m, mUi->k, mUi->c, mUi->b, mUi->min, mUi->max, mUi->graphWidget, mUi->input, mUi->comment, mUi->type });
 
   mUi->m->setValue(axis->curve.normalized().m());
   mUi->k->setValue(axis->curve.normalized().k());
@@ -117,6 +117,11 @@ void AxisWidget::updateFrom(Ptr<Rescue::Axis const> const& axis)
   mUi->max->setValue(axis->curve.max());
   mUi->graphWidget->setRangedCurve(axis->curve);
   mUi->comment->setText(axis->comment.c_str());
+
+  auto typeFound = std::find_if(typeToString.begin(), typeToString.end(),
+      [&](auto const& info) {return info.first == axis->curve.normalized().type(); });
+  if (typeFound != typeToString.end())
+    mUi->type->setCurrentIndex(typeFound - typeToString.begin());
 }
 
 Rescue::RangedCurve const& AxisWidget::currentCurve() const
