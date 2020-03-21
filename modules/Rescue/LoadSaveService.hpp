@@ -1,7 +1,7 @@
 #pragma once
 
-#include "event_bus.hpp"
-#include "store.hpp"
+#include <ushiro/event_bus.hpp>
+#include <ushiro/store.hpp>
 #include "Vocabulary.hpp"
 #include "State.hpp"
 
@@ -16,7 +16,7 @@ public:
 private:
   Ptr<ushiro::event_bus> mBus;
   ushiro::store<State> const& mStore;
-  ushiro::event_bus::subscription_list mSubscriptions;
+  ushiro::subscription_list mSubscriptions;
 };
 
 }

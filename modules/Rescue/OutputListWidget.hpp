@@ -1,14 +1,14 @@
 #pragma once
 
 #include "State.hpp"
-#include "state_observer.hpp"
 #include <QtCore/QAbstractTableModel>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QStyledItemDelegate>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QWidget>
-#include <diffable_list.hpp>
+#include <ushiro/diffable_list.hpp>
+#include <ushiro/state_observer.hpp>
 
 namespace Rescue
 {

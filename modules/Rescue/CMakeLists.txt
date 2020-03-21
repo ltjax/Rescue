@@ -52,7 +52,7 @@ target_include_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME}
   PUBLIC pugixml
   PUBLIC Qt5::Widgets
-  PUBLIC ushiro
+  PUBLIC CONAN_PKG::ushiro
   PUBLIC CONAN_PKG::boost)
 
 install(TARGETS ${TARGET_NAME}

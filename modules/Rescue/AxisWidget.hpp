@@ -1,12 +1,12 @@
 #pragma once
 #include "Action.hpp"
 #include "State.hpp"
-#include "event_bus.hpp"
 #include <QtWidgets/QWidget>
-#include <diffable_list.hpp>
 #include <functional>
 #include <memory>
-#include <state_observer.hpp>
+#include <ushiro/diffable_list.hpp>
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
 
 namespace Ui
 {

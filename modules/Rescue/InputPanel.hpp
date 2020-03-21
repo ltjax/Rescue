@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
-#include "event_bus.hpp"
-#include "state_observer.hpp"
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
 #include "State.hpp"
 
 namespace Ui

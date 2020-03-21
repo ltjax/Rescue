@@ -2,8 +2,8 @@
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QBoxLayout>
-#include "event_bus.hpp"
-#include "state_observer.hpp"
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
 #include "State.hpp"
 #include "InputPanel.hpp"
 #include "CuteDiffableList.hpp"

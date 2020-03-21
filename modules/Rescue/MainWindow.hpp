@@ -1,15 +1,15 @@
 #pragma once
+#include "CuteDiffableList.hpp"
 #include "State.hpp"
 #include "Vocabulary.hpp"
-#include "diffable_list.hpp"
-#include "state_observer.hpp"
-#include "CuteDiffableList.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QMainWindow>
 #include <boost/uuid/random_generator.hpp>
-#include <event_bus.hpp>
 #include <functional>
 #include <memory>
+#include <ushiro/diffable_list.hpp>
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
 
 namespace Ui
 {

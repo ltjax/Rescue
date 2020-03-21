@@ -3,10 +3,10 @@
 #include "LoadSave.hpp"
 #include "MainWindow.hpp"
 #include "State.hpp"
-#include "event_bus.hpp"
-#include "state_observer.hpp"
-#include "store.hpp"
-#include "subscribe_event_list.hpp"
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
+#include <ushiro/store.hpp>
+#include <ushiro/subscribe_event_list.hpp>
 #include "LoadSaveService.hpp"
 #include <QtCore/QCommandLineParser>
 #include <QtWidgets/QApplication>

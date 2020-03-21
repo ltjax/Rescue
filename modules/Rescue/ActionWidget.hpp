@@ -1,14 +1,14 @@
 #pragma once
 #include "Action.hpp"
+#include "CuteDiffableList.hpp"
 #include "State.hpp"
 #include "Vocabulary.hpp"
-#include "event_bus.hpp"
-#include "state_observer.hpp"
-#include "CuteDiffableList.hpp"
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QWidget>
 #include <memory>
-#include <diffable_list.hpp>
+#include <ushiro/diffable_list.hpp>
+#include <ushiro/event_bus.hpp>
+#include <ushiro/state_observer.hpp>
 
 namespace Ui
 {
@@ -31,7 +31,6 @@ public:
   void onAddAxis();
 
 private:
-
   std::unique_ptr<Ui::Action> mUi;
   Ptr<ushiro::event_bus> mBus;
   ushiro::state_observer<State> mObserver;
