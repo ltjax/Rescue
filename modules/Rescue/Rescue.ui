@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Rescue</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../icons.qrc">
+    <normaloff>:/icon/assets/rescue.ico</normaloff>:/icon/assets/rescue.ico</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -46,8 +50,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>992</width>
-         <height>794</height>
+         <width>994</width>
+         <height>802</height>
         </rect>
        </property>
       </widget>
@@ -61,7 +65,7 @@
      <x>0</x>
      <y>0</y>
      <width>1430</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -123,7 +127,7 @@
           <x>0</x>
           <y>0</y>
           <width>428</width>
-          <height>154</height>
+          <height>317</height>
          </rect>
         </property>
        </widget>
@@ -136,7 +140,7 @@
    <property name="minimumSize">
     <size>
      <width>430</width>
-     <height>123</height>
+     <height>125</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -203,7 +207,7 @@
             <x>0</x>
             <y>0</y>
             <width>426</width>
-            <height>560</height>
+            <height>403</height>
            </rect>
           </property>
          </widget>

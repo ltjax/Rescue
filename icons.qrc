@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>assets/rescue.ico</file>
     <file alias="add">assets/ligature-symbols_2-11-0_add_48_0_2c3e50_none.png</file>
     <file alias="remove">assets/ligature-symbols_2-11-0_remove_48_0_2c3e50_none.png</file>
   </qresource>
