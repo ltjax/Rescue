@@ -8,7 +8,7 @@ qt5_wrap_ui(UI_HEADERS
   Axis.ui
   InputPanel.ui)
 
-add_executable(${TARGET_NAME}
+add_executable(${TARGET_NAME} WIN32
   Action.hpp
   Action.cpp
   Curve.hpp
