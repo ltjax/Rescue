@@ -8,6 +8,12 @@ qt5_wrap_ui(UI_HEADERS
   Axis.ui
   InputPanel.ui)
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+  set(RESOURCE_FILE
+    Rescue.rc
+  )
+endif()
+
 add_executable(${TARGET_NAME} WIN32
   Action.hpp
   Action.cpp
@@ -44,6 +50,7 @@ add_executable(${TARGET_NAME} WIN32
   OutputListWidget.cpp
   OutputListWidget.hpp
   ../icons.qrc
+  ${RESOURCE_FILE}
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}
