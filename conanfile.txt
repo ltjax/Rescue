@@ -1,7 +1,7 @@
 [requires]
 boost/1.71.0@conan/stable
 Catch2/2.7.2@catchorg/stable
-ushiro/0.3@ltjax/testing
+ushiro/0.3@ltjax/stable
 
 [options]
 boost:shared=False
