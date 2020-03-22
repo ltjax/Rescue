@@ -133,7 +133,13 @@ Outputs Rescue::computeOutputs(Inputs const& inputs, Group const& group)
     float total = 1.f;
     for (auto const& axis : each->axisList)
     {
-      float value = axis->evaluateFor(valueForInput.at(axis->inputId));
+      auto found = valueForInput.find(axis->inputId);
+      if (found == valueForInput.end())
+      {
+          total = 0.f;
+          break;
+      }
+      float value = axis->evaluateFor(found->second);
       total *= value;
     }
     auto output = std::make_shared<Output>(each->id);
