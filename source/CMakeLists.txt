@@ -43,11 +43,11 @@ add_executable(${TARGET_NAME} WIN32
   CuteDiffableList.hpp
   OutputListWidget.cpp
   OutputListWidget.hpp
-  ../../icons.qrc
+  ../icons.qrc
   ${UI_HEADERS})
   
 target_include_directories(${TARGET_NAME}
-  PUBLIC ../../externals/optional)
+  PUBLIC ../externals/optional)
   
 target_link_libraries(${TARGET_NAME}
   PUBLIC pugixml
@@ -56,4 +56,4 @@ target_link_libraries(${TARGET_NAME}
   PUBLIC CONAN_PKG::boost)
 
 install(TARGETS ${TARGET_NAME}
-  RUNTIME DESTINATION Frontend)
+  RUNTIME DESTINATION .)

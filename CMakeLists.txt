@@ -19,7 +19,7 @@ conan_basic_setup(TARGETS)
 add_subdirectory(externals/pugixml)
 
 # Own modules
-add_subdirectory(modules/Rescue)
+add_subdirectory(source)
 add_subdirectory(tests)
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
